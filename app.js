@@ -18,6 +18,10 @@ c) Parses json requests for route handlers & other middleware to interact with
 */
 app.use(express.json());
 
+// Client is asking server to get the information for a specific path..
+// ..retrieving web pages, images, data; any data from the server
+// ..the callback function tells what to do once the information is retrieved
+// ..it can also handle query strings (appearing after the ?)
 app.get('/', async (req, res) => {
 
   try {
@@ -61,16 +65,24 @@ app.get('/', async (req, res) => {
   
 });
 
+
+/*
+app.post: creates a route for a POST request to the /api/submit-task endpoint
+async: asynchronous function, allowing for operations such as database queries
+*/
 app.post('/api/submit-task', async (req, res) => {
   try {
+    // Destructuring to extract the data to serve to the database
     const { start_time, end_time, task_description } = req.body;
     
-    // Add your logic to save the data to the PostgreSQL database
-    // For example, using a pool.query with a parameterized SQL query
+    // Logic to save data in PostgreSQL database in 3 steps
+    // 1. Setup the query
     const query = 'INSERT INTO tasks (start_time, end_time, task_description) VALUES ($1, $2, $3)';
+    // 2. Setup the parameterized data, protecting against SQL injection attacks
     const values = [start_time, end_time, task_description];
+    // 3. Asynchronously apply the query, and await the resolution of the promise
     await pool.query(query, values);
-
+    // Ending the request/response cycle: server response with JSON success object msg
     res.json({ message: 'Task added successfully' });
   } catch (error) {
     console.error('Error adding task:', error);
