@@ -8,6 +8,7 @@ function App() {
   return (
     <div className="pageContainer">
       <HomePage />
+      <div style={{margin: '12px'}}></div>
       <TaskForm />
     </div>
   )

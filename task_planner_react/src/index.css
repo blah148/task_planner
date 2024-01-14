@@ -20,37 +20,64 @@ body {
   justify-content: center;
 }
 
-
-.header_task-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.6fr 0.4fr 1fr ;
-  grid-template-rows: 60px;
-  column-gap: 16px;
-  width: 80%;
+.form_create-task {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.form_field {
+  border-radius: 7px;
+  margin: 0 4px;
+}
+.form_field.description {
+  width: 35ch;
+  height: 7ch;
+  margin-right: 8px;
 }
 
-.header_title {
+.header_task-list {
+  display: flex;
+  width: 80%;
+}
+.header_title.time {
+  width: 15ch;
+  font-size: 16px;
+  font-weight: 600;
+}
+.header_title.description {
+  width: 30ch;
+}
+h2.header_title {
   font-size: 16px;
   font-weight: 600;
 }
 
 .buffer_container {
-  width: 80%;
+  display: flex;
+  width: 80%
+}
+.buffer_task-list {
   display: grid;
   grid-template-columns: 0.9fr 0.1fr;
 }
-
 .buffered_task {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.6fr 0.4fr;
-  grid-template-rows: 40px;
-  column-gap: 16px;
+  display: flex;
 }
-
-.buffer_time, .buffer_description {
+.buffer {
   align-self: center;
 }
+.buffer.time {
+  width: 15ch;
+}
+.buffer.description {
+  width: 30ch;
+}
 
+.row_controls {
+  display: grid;
+  grid-template-rows: 40px;
+  grid-template-columns: 1fr 1fr;
+}
 .custom-checkbox {
   width: 10px;
   height: 10px;
@@ -60,18 +87,6 @@ body {
   cursor: pointer;
   align-self: center;
 }
-
-.row_controls {
-  display: grid;
-  grid-template-rows: 40px;
-  grid-template-columns: 1fr 1fr;
-}
-
-
 .edit, .delete {
   margin: auto 3px;
-}
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }

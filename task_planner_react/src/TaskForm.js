@@ -164,19 +164,18 @@ function TaskForm() {
       </form>
 
       <div className="header_task-list">
-        <h2 className="header_title">Start time</h2>
-        <h2 className="header_title">End time</h2>
-        <h2 className="header_title">Task description</h2>
+        <h2 className="header_title time">Start time</h2>
+        <h2 className="header_title time">End time</h2>
+        <h2 className="header_title description">Task description</h2>
       </div>
       
-
       <div className="buffer_container">
       <div className="buffer_task-list">
         {tasks.map((task, index) => (
           <div key={index} className="buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
-            <div className="buffer_time">{task.start_time}</div>
-            <div className="buffer_time">{task.end_time}</div>
-            <div className="buffer_description">{task.task_description}</div>
+            <div className="buffer time">{task.start_time}</div>
+            <div className="buffer time">{task.end_time}</div>
+            <div className="buffer description">{task.task_description}</div>
             <input
                type="checkbox"
                checked={task.isComplete}
@@ -201,8 +200,8 @@ function TaskForm() {
             {task.isEditing ? (
               <>
                 <input type="form_field time_input start" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
-                <input type="form_field time_input start" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
-                <input type="form_field time_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
+                <input type="form_field time_input end" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
+                <input type="form_field text_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
                 <button onClick={() => toggleEditMode(index)}>Save</button>
               </>
             ) : (
