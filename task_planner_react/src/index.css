@@ -1,12 +1,76 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.homeBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.h1_home {
+  margin-bottom: 12px;
+}
+
+body {
+  margin: 0;
+  width: 80%;
+  height: 100%;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.header_task-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.6fr 0.4fr 1fr ;
+  grid-template-rows: 60px;
+  column-gap: 16px;
+  width: 80%;
+}
+
+.header_title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.buffer_container {
+  width: 80%;
+  display: grid;
+  grid-template-columns: 0.9fr 0.1fr;
+}
+
+.buffered_task {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.6fr 0.4fr;
+  grid-template-rows: 40px;
+  column-gap: 16px;
+}
+
+.buffer_time, .buffer_description {
+  align-self: center;
+}
+
+.custom-checkbox {
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid #a4a4a4;
+  cursor: pointer;
+  align-self: center;
+}
+
+.row_controls {
+  display: grid;
+  grid-template-rows: 40px;
+  grid-template-columns: 1fr 1fr;
+}
+
+
+.edit, .delete {
+  margin: auto 3px;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

@@ -1,5 +1,6 @@
 // Imports react & the useState hook
 import React, { useState } from 'react';
+import './index.css';
 
 // Defines the form component, also handling its submission
 function TaskForm() {
@@ -138,60 +139,83 @@ function TaskForm() {
 
   return (
     <>  
-      <form onSubmit={handleSubmit}>
+      <form className = "form_create-task" onSubmit={handleSubmit}>
         <input
           type="time"
           name="start_time"
           value={formData.start_time}
-         onChange={handleChange}
+          onChange={handleChange}
+          className="form_field time_input start"
         />
         <input
           type="time"
           name="end_time"
           value={formData.end_time}
           onChange={handleChange}
+          className="form_field time_input end"
         />
         <textarea
           name="task_description"
           value={formData.task_description}
           onChange={handleChange}
+          className="form_field description"
         />
-        <button type="submit">Submit Task</button>
+        <button type="submit" className="form_button submit">Submit Task</button>
       </form>
 
+      <div className="header_task-list">
+        <h2 className="header_title">Start time</h2>
+        <h2 className="header_title">End time</h2>
+        <h2 className="header_title">Task description</h2>
+      </div>
+      
 
-      <div>
+      <div className="buffer_container">
+      <div className="buffer_task-list">
         {tasks.map((task, index) => (
-          <div key={index} className="task" style={{opacity: task.isComplete ? 0.5 : 1}} >
-            <div>Start time: {task.start_time}</div>
-            <div>End time: {task.end_time}</div>
-            <div>Description: {task.task_description}</div>
+          <div key={index} className="buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
+            <div className="buffer_time">{task.start_time}</div>
+            <div className="buffer_time">{task.end_time}</div>
+            <div className="buffer_description">{task.task_description}</div>
             <input
-              type="checkbox"
-              value={checkboxState.is_complete}
-              onChange={() => handleCheckbox(index)}
-            />
+               type="checkbox"
+               checked={task.isComplete}
+               onChange={() => handleCheckbox(index)}
+               className="buffer_is_Complete"
+               style={{display: 'none'}}
+             />
+
+            {/* Custom label for the checkbox */}
+             <label
+               className="custom-checkbox"
+               onClick={() => handleCheckbox(index)}
+               style={{backgroundColor: task.isComplete ? '#b9b9b9' : 'transparent'}}
+             ></label>
           </div>
-        ))}<div>
+        ))}
+        </div>
+
+        <div className="buffer_task-controls">
         {tasks.map((task, index) => (
-          <div key={index} className="task">
+          <div key={index} className="row_controls">
             {task.isEditing ? (
               <>
-                <input type="time" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
-                <input type="time" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
-                <input type="text" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
+                <input type="form_field time_input start" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
+                <input type="form_field time_input start" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
+                <input type="form_field time_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
                 <button onClick={() => toggleEditMode(index)}>Save</button>
               </>
             ) : (
               <>
-                <button onClick={() => toggleEditMode(index)}>Edit</button>
-                <button onClick={() => rowDeletion(index)} style = {{display: task.display_none ? "none" : false }}>Delete</button>
+                <button className="form_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
+                <button className="form_button delete" onClick={() => rowDeletion(index)} style = {{display: task.display_none ? "none" : false }}>Delete</button>
               </>
             )}
           </div>
         ))}
       </div>
       </div>
+
     </>
   );
 }

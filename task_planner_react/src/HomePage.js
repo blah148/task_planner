@@ -1,10 +1,11 @@
 import React from 'react';
+import './index.css';
 
 function HomePage() {
   return (
-    <div>
-      <h1>Hello World!</h1>
-      <p>This is the task planner app</p>
+    <div className="homeBanner">
+      <h1 className="h1_home">the Task Planner App</h1>
+      <p>Create tasks on-the-fly</p>
     </div>
   )
 }
