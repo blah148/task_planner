@@ -78,6 +78,14 @@ function TaskForm() {
     setTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
   };
 
+  const convert12hr = fullDate => {
+    // i) Parse the 24-hr time in hh:mm format.. 5 chars
+    let time_24hr = fullDate.slice(-5);
+    if (time_24hr.substr(0,2) > 12) {
+      return `${time_24hr.substr(0,2) - 12}:${fullDate.slice(-2)} pm`;
+    } else return `${fullDate.slice(-5)} am`;
+  }
+
   
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
@@ -174,8 +182,8 @@ function TaskForm() {
           <div className="buffer_task-list">
             {tasks.map((task, index) => (
               <div key={index} className="row_item buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
-                <div className="buffer time">{task.start_time}</div>
-                <div className="buffer time">{task.end_time}</div>
+                <div className="buffer time">{convert12hr(task.start_time.slice(-5))}</div>
+                <div className="buffer time">{convert12hr(task.end_time.slice(-5))}</div>
                 <div className="buffer description">{task.task_description}</div>
                 <input
                    type="checkbox"
