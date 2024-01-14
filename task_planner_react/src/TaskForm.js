@@ -7,6 +7,7 @@ function TaskForm() {
   // Initializes empty strings as the initial field states
     const[tasks, setTasks] = useState([]);
     const[checkboxState, setCheckbox] = useState({is_complete: "No"});
+    const[deleteState, rowDeleter] = useState({display_none: '' });
     const [formData, setFormData] = useState({
     start_time: '',
     end_time: '',
@@ -37,7 +38,7 @@ function TaskForm() {
   }
 
 
-  const handleEditChange = (index, field, value) => {
+  const editTime = (index, field, value) => {
    const currentDate = new Date().toDateString();
    const newStartTime = `${currentDate} ${value}`;
    setTasks(prevTasks =>
@@ -45,7 +46,16 @@ function TaskForm() {
         i === index ? { ...task, [field]: newStartTime } : task
       )
     );
-  };  
+  }; 
+
+  const editDescription = (index, field, value) => {
+    setTasks(prevTasks =>
+      prevTasks.map((task, i) =>
+        i === index ? { ...task, task_description: value } : task
+      )
+    );
+  };
+
 
   const toggleEditMode = (index) => {
     setTasks(prevTasks => {
@@ -62,8 +72,12 @@ function TaskForm() {
       return updatedTasks;
     });
   };
+  
+  const rowDeletion = (index) => {
+    setTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
+  };
 
-
+  
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
    
@@ -86,7 +100,8 @@ function TaskForm() {
       start_time: startTime_string,
       end_time: endTime_string,
       task_description: formData.task_description,
-      isComplete: false // to-do tasks always begin as false
+      isComplete: false, // to-do tasks always begin as false
+      display_none: false
     };
     
     setTasks(prevTasks => {
@@ -162,17 +177,15 @@ function TaskForm() {
           <div key={index} className="task">
             {task.isEditing ? (
               <>
-                <input type="time" value={task.start_time} onChange={(e) => handleEditChange(index, 'start_time', e.target.value)} />
-                <input type="time" value={task.end_time} onChange={(e) => handleEditChange(index, 'end_time', e.target.value)} />
-                <input type="text" value={task.task_description} onChange={(e) => handleEditChange(index, 'task_description', e.target.value)} />
+                <input type="time" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
+                <input type="time" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
+                <input type="text" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
                 <button onClick={() => toggleEditMode(index)}>Save</button>
               </>
             ) : (
               <>
-                <div>Start time: {task.start_time}</div>
-                <div>End time: {task.end_time}</div>
-                <div>Description: {task.task_description}</div>
                 <button onClick={() => toggleEditMode(index)}>Edit</button>
+                <button onClick={() => rowDeletion(index)} style = {{display: task.display_none ? "none" : false }}>Delete</button>
               </>
             )}
           </div>
