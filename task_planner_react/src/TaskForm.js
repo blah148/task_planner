@@ -162,57 +162,57 @@ function TaskForm() {
         />
         <button type="submit" className="form_button submit">Submit Task</button>
       </form>
-
-      <div className="header_task-list">
-        <h2 className="header_title time">Start time</h2>
-        <h2 className="header_title time">End time</h2>
-        <h2 className="header_title description">Task description</h2>
-      </div>
       
-      <div className="buffer_container">
-      <div className="buffer_task-list">
-        {tasks.map((task, index) => (
-          <div key={index} className="row_item buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
-            <div className="buffer time">{task.start_time}</div>
-            <div className="buffer time">{task.end_time}</div>
-            <div className="buffer description">{task.task_description}</div>
-            <input
-               type="checkbox"
-               checked={task.isComplete}
-               onChange={() => handleCheckbox(index)}
-               className="buffer_is_Complete"
-               style={{display: 'none'}}
-             />
-
-            {/* Custom label for the checkbox */}
-             <label
-               className="custom-checkbox"
-               onClick={() => handleCheckbox(index)}
-               style={{backgroundColor: task.isComplete ? '#b9b9b9' : 'transparent'}}
-             ></label>
+      <div className="task_table">
+          <div className="header_task-list">
+            <h2 className="header_title time">Start time</h2>
+            <h2 className="header_title time">End time</h2>
+            <h2 className="header_title description">Task description</h2>
           </div>
-        ))}
+          
+          <div className="buffer_container">
+          <div className="buffer_task-list">
+            {tasks.map((task, index) => (
+              <div key={index} className="row_item buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
+                <div className="buffer time">{task.start_time}</div>
+                <div className="buffer time">{task.end_time}</div>
+                <div className="buffer description">{task.task_description}</div>
+                <input
+                   type="checkbox"
+                   checked={task.isComplete}
+                   onChange={() => handleCheckbox(index)}
+                   className="buffer_is_Complete"
+                   style={{display: 'none'}}
+                 />
+
+                {/* Custom label for the checkbox */}
+                 <label
+                   className="custom-checkbox"
+                   onClick={() => handleCheckbox(index)}
+                   style={{backgroundColor: task.isComplete ? '#b9b9b9' : 'transparent'}}
+                 ></label>
+                    
+              {/* Edit and Delete buttons */}
+              {task.isEditing ? (
+                <>
+                  <input type="time" className="form_field time_input start" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
+                  <input type="time" className="form_field time_input end" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
+                  <input type="text" className="form_field text_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
+                  <button onClick={() => toggleEditMode(index)}>Save</button>
+                </>
+              ) : (
+                <>
+                  <div className="edit_panel">
+                      <button className="edit_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
+                      <button className="edit_button delete" onClick={() => rowDeletion(index)} style={{display: task.display_none ? 'none' : 'block'}}>Delete</button>
+                  </div> 
+                </>
+              )}
+
+              </div>
+            ))}
+            </div>
         </div>
-
-        <div className="buffer_task-controls">
-        {tasks.map((task, index) => (
-          <div key={index} className="row_item row_controls">
-            {task.isEditing ? (
-              <>
-                <input type="form_field time_input start" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
-                <input type="form_field time_input end" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
-                <input type="form_field text_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
-                <button onClick={() => toggleEditMode(index)}>Save</button>
-              </>
-            ) : (
-              <>
-                <button className="edit_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
-                <button className="edit_button delete" onClick={() => rowDeletion(index)} style = {{display: task.display_none ? "none" : false }}>Delete</button>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
       </div>
 
     </>

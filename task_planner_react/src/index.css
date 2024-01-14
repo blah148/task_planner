@@ -37,7 +37,6 @@ body {
 
 .header_task-list {
   display: flex;
-  width: 80%;
 }
 .header_title.time {
   width: 15ch;
@@ -54,7 +53,6 @@ h2.header_title {
 
 .buffer_container {
   display: flex;
-  width: 80%;
 }
 .buffer_task-list {
   display: flex;
@@ -78,12 +76,10 @@ h2.header_title {
 .row_item {
 }
 
-.row_controls {
+.edit_panel {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: auto;
-  height: 75px;
 }
 .custom-checkbox {
   width: 10px;
