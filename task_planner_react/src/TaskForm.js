@@ -172,7 +172,7 @@ function TaskForm() {
       <div className="buffer_container">
       <div className="buffer_task-list">
         {tasks.map((task, index) => (
-          <div key={index} className="buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
+          <div key={index} className="row_item buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
             <div className="buffer time">{task.start_time}</div>
             <div className="buffer time">{task.end_time}</div>
             <div className="buffer description">{task.task_description}</div>
@@ -196,7 +196,7 @@ function TaskForm() {
 
         <div className="buffer_task-controls">
         {tasks.map((task, index) => (
-          <div key={index} className="row_controls">
+          <div key={index} className="row_item row_controls">
             {task.isEditing ? (
               <>
                 <input type="form_field time_input start" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
@@ -206,8 +206,8 @@ function TaskForm() {
               </>
             ) : (
               <>
-                <button className="form_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
-                <button className="form_button delete" onClick={() => rowDeletion(index)} style = {{display: task.display_none ? "none" : false }}>Delete</button>
+                <button className="edit_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
+                <button className="edit_button delete" onClick={() => rowDeletion(index)} style = {{display: task.display_none ? "none" : false }}>Delete</button>
               </>
             )}
           </div>

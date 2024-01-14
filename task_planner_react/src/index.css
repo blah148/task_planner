@@ -54,14 +54,16 @@ h2.header_title {
 
 .buffer_container {
   display: flex;
-  width: 80%
+  width: 80%;
 }
 .buffer_task-list {
-  display: grid;
-  grid-template-columns: 0.9fr 0.1fr;
+  display: flex;
+  flex-direction: column;
 }
 .buffered_task {
   display: flex;
+  border-bottom: 1px solid #d9d9d9;
+  height: 75px;
 }
 .buffer {
   align-self: center;
@@ -73,10 +75,15 @@ h2.header_title {
   width: 30ch;
 }
 
+.row_item {
+}
+
 .row_controls {
-  display: grid;
-  grid-template-rows: 40px;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  height: 75px;
 }
 .custom-checkbox {
   width: 10px;
@@ -85,8 +92,9 @@ h2.header_title {
   border-radius: 50%;
   border: 2px solid #a4a4a4;
   cursor: pointer;
+  margin-right: 5vw;
   align-self: center;
 }
-.edit, .delete {
-  margin: auto 3px;
+.edit_button {
+  margin: 3px;
 }
