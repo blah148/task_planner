@@ -1,8 +1,15 @@
 const express = require('express'); // Make Express framework available
 const pool = require('./dbConfig'); // Import database connection pool config
+const passport = require('passport');
+const session = require('express-session');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+
+require('dotenv').config(); // to retrieve the cryptographic key
 
 const app = express(); // Initialize instance of Express app for HTTP requests
 
+app.use(cors());
 /* 
 a) Process: global object provided by Node.js for info/control of current Node.js process
 b) env: property of process, representing user environment (such as variables)
@@ -18,11 +25,29 @@ c) Parses json requests for route handlers & other middleware to interact with
 */
 app.use(express.json());
 
+// Initialize Passport and session handling
+app.use(session({
+    secret: process.env.SESSION_SECRET, // retrieving cryptographic key from .env
+    resave: false,
+    saveUninitialized: false
+//    cookie: {
+//      httpOnly: true, // Prevents client-side JS from accessing the cookie
+//      secure: true, // Ensures the cookie is sent over HTTPS
+//      maxAge: 1000 * 60 * 60 * 24 * 7 // sets cookie expiry to 7 days
+//  }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport configuration
+require('./passportConfig')(passport);
+
 // Client is asking server to get the information for a specific path..
 // ..retrieving web pages, images, data; any data from the server
 // ..the callback function tells what to do once the information is retrieved
 // ..it can also handle query strings (appearing after the ?)
 app.get('/', async (req, res) => {
+res.send('You successfully logged in.');
 
   try {
    
@@ -65,29 +90,52 @@ app.get('/', async (req, res) => {
   
 });
 
+// Login route
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login-failure'
+}));
 
-/*
-app.post: creates a route for a POST request to the /api/submit-task endpoint
-async: asynchronous function, allowing for operations such as database queries
-*/
-app.post('/api/submit-task', async (req, res) => {
-  try {
-    // Destructuring to extract the data to serve to the database
-    const { start_time, end_time, task_description } = req.body;
-    
-    // Logic to save data in PostgreSQL database in 3 steps
-    // 1. Setup the query
-    const query = 'INSERT INTO tasks (start_time, end_time, task_description) VALUES ($1, $2, $3)';
-    // 2. Setup the parameterized data, protecting against SQL injection attacks
-    const values = [start_time, end_time, task_description];
-    // 3. Asynchronously apply the query, and await the resolution of the promise
-    await pool.query(query, values);
-    // Ending the request/response cycle: server response with JSON success object msg
-    res.json({ message: 'Task added successfully' });
-  } catch (error) {
-    console.error('Error adding task:', error);
-    res.status(500).send(error.message);
+// Logout route
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+// Login success
+app.get('/login-success', (req, res) => {
+  res.send('You successfully logged in.');
+});
+
+// Login failure
+app.get('/login-failure', (req, res) => {
+  res.send('Failed to log in.');
+});
+
+// secure routes by checking if the user is authenticated:
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
   }
+  res.redirect('/login');
+}
+
+app.get('/protected-route', checkAuthenticated, (req, res) => {
+  res.send('This is a protected route.');
+});
+
+// route where users can register
+app.post('/register', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        // Insert the new user into the database
+        await pool.query('INSERT INTO users (username, hashed_password) VALUES ($1, $2)', [username, hashedPassword]);
+        res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        console.error('Error registering new user:', error);
+        res.status(500).send(error.message);
+    }
 });
 
 

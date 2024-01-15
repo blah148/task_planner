@@ -193,28 +193,6 @@ function TaskForm() {
       task_description: '', // Clear task description as well
     });
 
-    try { // Make a POST request at the endpoint using JSON in req body
-
-          // fetch(<api_endpoint>, <type of request>, <body_payload_in_json>)
-          // Note: the default fetch if unspecified is a GET request
-          const response = await fetch('/api/submit-task', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            // Turns formData obj into JSON string..
-            // Difference: keys & strings in double quotes / no fcns or methods
-            // If any methods are present or executable code, it's ignored
-            body: JSON.stringify(formData)
-          });
-          // Waits for reply from the server & parses body as json 
-          const data = await response.json();
-          // Logs the parsed json to the console
-          console.log("Client-side: post-attempt complete");
-
-        } catch (error) {
-            console.error('Error submitting form:', error);
-        }
   };
 
 
@@ -248,7 +226,7 @@ function TaskForm() {
         <label
           type="checkbox" 
           className="view_completed-tasks_label"
-          for="completion" >View completed tasks</label>
+          for="completion" >Hide completed tasks</label>
         <input
           type="checkbox"
           id="completion"
