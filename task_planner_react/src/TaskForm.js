@@ -24,14 +24,45 @@ function TaskForm() {
     }, []);
 
 
-    const[hideCompletedTasks, setHideCompletedTasks] = useState(true);
-    const [formData, setFormData] = useState({
-    start_time: '',
-    end_time: '',
+    const[hideCompletedTasks, setHideCompletedTasks] = useState(false);
+  
+  const getTimeWithOffset = (offsetMinutes) => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + offsetMinutes); // Add the offset
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+    // Helper function to format a Date object into a "HH:mm" string
+  const getTime = (date) => {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  // Initializes the form state with the current time
+  const [formData, setFormData] = useState({
+    start_time: getTimeWithOffset(0),
+    end_time: getTimeWithOffset(15),
     task_description: '',
   });
   
+  useEffect(() => {
+      const interval = setInterval(() => {
+        const currentTime = new Date();
+        const endTime = new Date(currentTime.getTime() + 15 * 60000); // 15 minutes ahead
 
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          start_time: getTime(currentTime),
+          end_time: getTime(endTime),
+        }));
+      }, 60000); // Update every minute
+
+      // Clear the interval when the component is unmounted
+      return () => clearInterval(interval);
+    }, []);
 
   // Pimp: if form fields are modified, the form useState fields get modified
   const handleChange = (e) => {
@@ -91,8 +122,13 @@ function TaskForm() {
   };
   
   const rowDeletion = (index) => {
-    setTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
+    setTasks(prevTasks => {
+      const updatedTasks = prevTasks.filter((_, i) => i !== index);
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Save updated tasks to localStorage
+      return updatedTasks;
+    });
   };
+
 
   const convert12hr = fullDate => {
     // i) Parse the 24-hr time in hh:mm format.. 5 chars
@@ -194,7 +230,7 @@ function TaskForm() {
           onChange={handleChange}
           className="form_field description"
         />
-        <button type="submit" className="form_button submit">Submit Task</button>
+        <button type="submit" className="form_button submit">Add task</button>
       </form>
       
       <div className="completedTasks">
