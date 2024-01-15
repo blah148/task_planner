@@ -39,18 +39,16 @@ function TaskForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   
-    const handleCheckbox = (index) => {
-    setTasks(prevTasks =>
-     // Using the .map() method, the inner function is applied to each item of the array
-     // 2 arguments: current task of the .map() process  & its index
-     prevTasks.map((task, i) =>
-        // Checks if the current index being iterated through matches the target "index"
-        // If false: leaves the task as-is
-        // If true: it creates a new obj with all the same props of the current task, & toggles the isComplete value on/off
+  const handleCheckbox = (index) => {
+    setTasks(prevTasks => {
+      const updatedTasks = prevTasks.map((task, i) =>
         i === index ? { ...task, isComplete: !task.isComplete } : task
-      )
-    );
-  }; // Updated state: the result of .map() is a new array where one specific task (at "index") has isComplete toggled
+      );
+      // Save updated tasks to localStorage
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      return updatedTasks;
+    });
+  };
 
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
