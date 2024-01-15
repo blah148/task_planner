@@ -1,5 +1,5 @@
 // Imports react & the useState hook
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 
 // Defines the form component, also handling its submission
@@ -7,20 +7,39 @@ function TaskForm() {
   
   // Initializes empty strings as the initial field states
     const[tasks, setTasks] = useState([]);
+
+    useEffect(() => {
+      const savedTasks = localStorage.getItem('tasks');
+      if (savedTasks) {
+        try {
+          // Parse the saved tasks and sort them
+          const loadedTasks = JSON.parse(savedTasks);
+          const sortedTasks = sortTasks(loadedTasks);
+          setTasks(sortedTasks);
+        } catch (e) {
+          console.error("Error reading tasks from localStorage:", e);
+          // Handle the error or reset the localStorage item if necessary
+        }
+      }
+    }, []);
+
+
     const[hideCompletedTasks, setHideCompletedTasks] = useState(true);
     const [formData, setFormData] = useState({
     start_time: '',
     end_time: '',
     task_description: '',
   });
+  
+
 
   // Pimp: if form fields are modified, the form useState fields get modified
   const handleChange = (e) => {
     // Spread operator to acknowledge the other fields before or after the target field
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  const handleCheckbox = (index) => {
+  
+    const handleCheckbox = (index) => {
     setTasks(prevTasks =>
      // Using the .map() method, the inner function is applied to each item of the array
      // 2 arguments: current task of the .map() process  & its index
@@ -123,6 +142,7 @@ function TaskForm() {
     
     setTasks(prevTasks => {
       const updatedTasks = [...prevTasks, taskObject];
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Save new task
       return sortTasks(updatedTasks);
     });
 
