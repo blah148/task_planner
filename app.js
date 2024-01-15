@@ -103,11 +103,13 @@ app.post('/login', async (req, res) => {
         const token = jwt.sign(
             { sub: user.id }, // The 'sub' property represents the subject of the JWT, which is typically the user ID
             process.env.JWT_SECRET, // The secret key to sign the JWT, which should be in your .env file
-            { expiresIn: '1h' } // Set the token to expire in 1 hour
+            { expiresIn: '7d' } // Set the token to expire in 1 hour
         );
+        
+        // Send the token to the client along with the success message and redirect URL
+        res.json({ message: "Login successful", token: token, redirectTo: "/" }); // Change the redirectTo value to the desired URL
 
-        // Send the token to the client
-        res.json({ message: "Login successful", token: token });
+
     } catch (error) {
         console.error("error here", error);
         res.status(500).json({ error: error.message });
