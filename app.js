@@ -4,6 +4,8 @@ const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 require('dotenv').config(); // to retrieve the cryptographic key
 
@@ -25,23 +27,7 @@ c) Parses json requests for route handlers & other middleware to interact with
 */
 app.use(express.json());
 
-// Initialize Passport and session handling
-app.use(session({
-    secret: process.env.SESSION_SECRET, // retrieving cryptographic key from .env
-    resave: false,
-    saveUninitialized: false
-//    cookie: {
-//      httpOnly: true, // Prevents client-side JS from accessing the cookie
-//      secure: true, // Ensures the cookie is sent over HTTPS
-//      maxAge: 1000 * 60 * 60 * 24 * 7 // sets cookie expiry to 7 days
-//  }
-}));
 app.use(passport.initialize());
-app.use(passport.session());
-
-// Passport configuration
-require('./passportConfig')(passport);
-
 // Client is asking server to get the information for a specific path..
 // ..retrieving web pages, images, data; any data from the server
 // ..the callback function tells what to do once the information is retrieved
@@ -91,10 +77,42 @@ res.send('You successfully logged in.');
 });
 
 // Login route
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login-failure'
-}));
+app.post('/login', async (req, res) => {
+    try {
+        // Extract username and password from request body
+        const { username, password } = req.body;
+
+        // Query the database for the user by username
+        const userResult = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+
+        // If no user is found, return an error
+        if (userResult.rows.length === 0) {
+            return res.status(401).json({ message: "Invalid username or password." });
+        }
+
+        // User is found, now compare the provided password with the stored hash
+        const user = userResult.rows[0];
+        const isValid = await bcrypt.compare(password, user.hashed_password);
+
+        // If the password is not valid, return an error
+        if (!isValid) {
+            return res.status(401).json({ message: "Invalid username or password." });
+        }
+
+        // Password is valid, create the JWT with the user's id
+        const token = jwt.sign(
+            { sub: user.id }, // The 'sub' property represents the subject of the JWT, which is typically the user ID
+            process.env.JWT_SECRET, // The secret key to sign the JWT, which should be in your .env file
+            { expiresIn: '1h' } // Set the token to expire in 1 hour
+        );
+
+        // Send the token to the client
+        res.json({ message: "Login successful", token: token });
+    } catch (error) {
+        console.error("error here", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // Logout route
 app.get('/logout', (req, res) => {

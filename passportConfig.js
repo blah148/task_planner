@@ -1,50 +1,28 @@
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
-const pool = require('./dbConfig'); // Make sure this path is correct based on your project structure
+// Load the necessary modules
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const pool = require('./dbConfig'); // Assuming you have a pool for your database
+const passport = require('passport');
 
-module.exports = function(passport) {
-    // Passport Local Strategy
-    passport.use(new LocalStrategy(
-        async (username, password, done) => {
-            try {
-                // Find user by username
-                const userResult = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-                if (userResult.rows.length > 0) {
-                    const user = userResult.rows[0];
+// At the top of your file where you are configuring passport
+require('dotenv').config(); // Load environment variables
 
-                    // Compare hashed password
-                    const isValid = await bcrypt.compare(password, user.hashed_password);
-                    if (isValid) {
-                        return done(null, user); // User authenticated
-                    } else {
-                        return done(null, false, { message: 'Incorrect password.' });
-                    }
-                } else {
-                    return done(null, false, { message: 'Incorrect username.' });
-                }
-            } catch (e) {
-                return done(e);
-            }
-        }
-    ));
-
-    // Serialize user to store in session
-    passport.serializeUser((user, done) => {
-        done(null, user.id);
-    });
-
-    // Deserialize user from session
-    passport.deserializeUser(async (id, done) => {
-        try {
-            const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-            if (userResult.rows.length > 0) {
-                done(null, userResult.rows[0]);
-            } else {
-                done(new Error('User not found'));
-            }
-        } catch (e) {
-            done(e);
-        }
-    });
+const options = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET // Make sure to add this to your .env file
 };
+
+passport.use(new JwtStrategy(options, async (jwt_payload, done) => {
+  try {
+    // Find the user in the database based on their ID in the JWT
+    const user = await pool.query('SELECT * FROM users WHERE id = $1', [jwt_payload.sub]);
+    if (user.rows.length > 0) {
+      return done(null, user.rows[0]);
+    } else {
+      return done(null, false);
+    }
+  } catch (error) {
+    return done(error, false);
+  }
+}));
 

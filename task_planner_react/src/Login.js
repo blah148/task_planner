@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Login() {
+function Login({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -14,14 +14,16 @@ function Login() {
             },
             body: JSON.stringify({ username, password }),
         });
-        // Handle the response from the server
 
-        if (response.redirected && response.url.includes('/login-failure')) {
-          console.error("Login failed");
-          // Handle login failure, e.g., show error message
+        const data = await response.json(); // Get JSON response body
+        
+        if (response.ok) {
+            console.log("Login successful");
+            // Store the token
+            localStorage.setItem('token', data.token);
         } else {
-          console.log("Login successful");
-          // Handle successful login, e.g., redirect or update UI
+            console.error("Login failed:", data.message);
+            // Handle login failure, e.g., show error message
         }
     };
 
