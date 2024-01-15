@@ -7,8 +7,7 @@ function TaskForm() {
   
   // Initializes empty strings as the initial field states
     const[tasks, setTasks] = useState([]);
-    const[checkboxState, setCheckbox] = useState({is_complete: "No"});
-    const[deleteState, rowDeleter] = useState({display_none: '' });
+    const[hideCompletedTasks, setHideCompletedTasks] = useState(true);
     const [formData, setFormData] = useState({
     start_time: '',
     end_time: '',
@@ -86,6 +85,14 @@ function TaskForm() {
     } else return `${fullDate.slice(-5)} am`;
   }
 
+  const modify_taskVisibility = () => {
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.isComplete ? {...task, visibility: "none"} : {...task, visibility: "flex"} 
+      )
+    );
+  };
+
   
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
@@ -110,7 +117,8 @@ function TaskForm() {
       end_time: endTime_string,
       task_description: formData.task_description,
       isComplete: false, // to-do tasks always begin as false
-      display_none: false
+      display_none: false,
+      visibility: "flex"
     };
     
     setTasks(prevTasks => {
@@ -171,6 +179,19 @@ function TaskForm() {
         <button type="submit" className="form_button submit">Submit Task</button>
       </form>
       
+      <div className="completedTasks">
+        <label
+          type="checkbox" 
+          className="view_completed-tasks_label"
+          for="completion" >View completed tasks</label>
+        <input
+          type="checkbox"
+          id="completion"
+          onChange={() => setHideCompletedTasks(prevState => !prevState)}
+          className=""
+        />
+      </div>
+      
       <div className="task_table">
           <div className="header_task-list">
             <h2 className="header_title time">Start time</h2>
@@ -181,7 +202,14 @@ function TaskForm() {
           <div className="buffer_container">
           <div className="buffer_task-list">
             {tasks.map((task, index) => (
-              <div key={index} className="row_item buffered_task" style={{opacity: task.isComplete ? 0.5 : 1}} >
+              <div
+                key={index}
+                className="row_item buffered_task"
+                style={{
+                  opacity: task.isComplete ? 0.5 : 1,
+                  display: task.isComplete && hideCompletedTasks ? "none" : "flex"
+                }}
+              > 
                 <div className="buffer time">{convert12hr(task.start_time.slice(-5))}</div>
                 <div className="buffer time">{convert12hr(task.end_time.slice(-5))}</div>
                 <div className="buffer description">{task.task_description}</div>
@@ -192,7 +220,6 @@ function TaskForm() {
                    className="buffer_is_Complete"
                    style={{display: 'none'}}
                  />
-
                 {/* Custom label for the checkbox */}
                  <label
                    className="custom-checkbox"
@@ -208,7 +235,7 @@ function TaskForm() {
                   <input type="text" className="form_field text_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
                   <button onClick={() => toggleEditMode(index)}>Save</button>
                 </>
-              ) : (
+                ) : (
                 <>
                   <div className="edit_panel">
                       <button className="edit_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
