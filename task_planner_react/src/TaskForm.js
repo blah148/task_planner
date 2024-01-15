@@ -25,6 +25,14 @@ function TaskForm() {
 
 
     const[hideCompletedTasks, setHideCompletedTasks] = useState(false);
+    const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
+
+
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+      setLastUserInteractionTime(Date.now());
+    };
+
   
   const getTimeWithOffset = (offsetMinutes) => {
     const now = new Date();
@@ -49,27 +57,20 @@ function TaskForm() {
   });
   
   useEffect(() => {
-      const interval = setInterval(() => {
-        const currentTime = new Date();
-        const endTime = new Date(currentTime.getTime() + 15 * 60000); // 15 minutes ahead
+  const interval = setInterval(() => {
+    if (Date.now() - lastUserInteractionTime > 180000) { // 180000 milliseconds = 3 minutes
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        start_time: getTimeWithOffset(0),
+        end_time: getTimeWithOffset(15),
+      }));
+    }
+  }, 60000); // Check every minute
 
-        setFormData(prevFormData => ({
-          ...prevFormData,
-          start_time: getTime(currentTime),
-          end_time: getTime(endTime),
-        }));
-      }, 60000); // Update every minute
+  return () => clearInterval(interval);
+}, [lastUserInteractionTime]);
 
-      // Clear the interval when the component is unmounted
-      return () => clearInterval(interval);
-    }, []);
 
-  // Pimp: if form fields are modified, the form useState fields get modified
-  const handleChange = (e) => {
-    // Spread operator to acknowledge the other fields before or after the target field
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  
   const handleCheckbox = (index) => {
     setTasks(prevTasks => {
       const updatedTasks = prevTasks.map((task, i) =>
@@ -87,9 +88,9 @@ function TaskForm() {
 
 
   const editTime = (index, field, value) => {
-   const currentDate = new Date().toDateString();
-   const newStartTime = `${currentDate} ${value}`;
-   setTasks(prevTasks =>
+    const currentDate = new Date().toDateString();
+    const newStartTime = `${currentDate} ${value}`;
+    setTasks(prevTasks =>
       prevTasks.map((task, i) =>
         i === index ? { ...task, [field]: newStartTime } : task
       )
@@ -135,6 +136,10 @@ function TaskForm() {
     let time_24hr = fullDate.slice(-5);
     if (time_24hr.substr(0,2) > 12) {
       return `${time_24hr.substr(0,2) - 12}:${fullDate.slice(-2)} pm`;
+    } else if (time_24hr.substr(0,2) < 1) {
+      
+      return `12:${fullDate.slice(-2)} am`; 
+      
     } else return `${fullDate.slice(-5)} am`;
   }
 
@@ -156,12 +161,13 @@ function TaskForm() {
     // Create values to eventually compare start & end times
     const currentDate = new Date().toDateString();
     const startTime_string = `${currentDate} ${formData.start_time}`;
-    const endTime_string = `${currentDate} ${formData.end_time}`;
-    
+    let endTime_string = `${currentDate} ${formData.end_time}`;
     // Ensure that end-time comes after the start-time
     if (endTime_string <= startTime_string) {
-      alert ("Error: end-time should be later than the start-time");
-      return
+      let nextDay = new Date(currentDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      let tmrw = nextDay.toDateString();
+      endTime_string = `${tmrw} ${formData.end_time}`;
     }
       
     // When handleSubmit is called, store the task details in this task object
@@ -180,7 +186,12 @@ function TaskForm() {
       return sortTasks(updatedTasks);
     });
 
-    setFormData({start_time: '', end_time: '', task_description: ''});
+    setFormData({
+      ...formData,
+      start_time: getTimeWithOffset(0),
+      end_time: getTimeWithOffset(15),
+      task_description: '', // Clear task description as well
+    });
 
     try { // Make a POST request at the endpoint using JSON in req body
 
