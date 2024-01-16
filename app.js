@@ -100,6 +100,7 @@ app.post('/login', async (req, res) => {
         }
 
         // Password is valid, create the JWT with the user's id
+        // The keyname of the token in localStorage will appear as "token" per below line
         const token = jwt.sign(
             { sub: user.id }, // The 'sub' property represents the subject of the JWT, which is typically the user ID
             process.env.JWT_SECRET, // The secret key to sign the JWT, which should be in your .env file
