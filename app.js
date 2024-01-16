@@ -108,7 +108,7 @@ app.post('/login', async (req, res) => {
         );
         
         // Send the token to the client along with the success message and redirect URL
-        res.json({ message: "Login successful", token: token, redirectTo: "/" }); // Change the redirectTo value to the desired URL
+        res.json({ message: "Login successful app.js", token: token, user_id: user.id, redirectTo: "/" }); // Change the redirectTo value to the desired URL
 
 
     } catch (error) {

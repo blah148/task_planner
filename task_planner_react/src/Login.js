@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import http from './services/http'; // Adjust the path according to your project structure
+
 
 
 function Login({ onLoginSuccess }) {
@@ -21,9 +23,9 @@ function Login({ onLoginSuccess }) {
         const data = await response.json(); // Get JSON response body
         
         if (response.ok) {
-            console.log("Login successful");
-            // Store the token
+            // Store the token & user_id
             localStorage.setItem('token', data.token);
+            localStorage.setItem('user_id', data.user_id);
             navigate('/');
         } else {
             console.error("Login failed:", data.message);
