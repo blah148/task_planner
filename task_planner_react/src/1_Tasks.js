@@ -59,16 +59,17 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
   return () => clearInterval(interval);
 }, [lastUserInteractionTime]);
 
-
-  const handleCheckbox = (index) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map((task, i) =>
-        i === index ? { ...task, isComplete: !task.isComplete } : task
+  const handleCheckbox = async (id) => {
+    try {
+      await axios.patch(`/tasks/toggleComplete/${id}`);
+      setTasks((prevTasks) =>
+        prevTasks.map((item) =>
+          item.id === id ? { ...item, isComplete: !item.isComplete } : item
+        )
       );
-      // Save updated tasks to localStorage
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      return updatedTasks;
-    });
+    } catch (error) {
+      console.error('Error toggling is_complete', error);
+    }
   };
 
   function sortTasks(tasksArray) {
@@ -111,12 +112,13 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     });
   };
   
-  const rowDeletion = (index) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.filter((_, i) => i !== index);
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Save updated tasks to localStorage
-      return updatedTasks;
-    });
+  const rowDeletion = async (id) => {
+    try {
+      const response = await axios.delete(`/tasks/delete/${id}`);
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
 
 
@@ -168,12 +170,24 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
       display_none: false,
       visibility: "flex"
     };
+
+    let taskObject_withId;
+
+    try {
+      const response = await axios.post('/tasks/new', taskObject);
+      taskObject_withId = {...taskObject, id: response.data.id};
+    } catch(error) {
+      console.error(error);
+    }
     
     setTasks(prevTasks => {
-      const updatedTasks = [...prevTasks, taskObject];
+      const updatedTasks = [...prevTasks, taskObject_withId];
       return sortTasks(updatedTasks);
     });
 
+
+
+    // Resets form data to have the current times
     setFormData({
       ...formData,
       start_time: getTimeWithOffset(0),
@@ -248,14 +262,14 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
                 <input
                    type="checkbox"
                    checked={task.isComplete}
-                   onChange={() => handleCheckbox(index)}
+                   onChange={() => handleCheckbox(task.id)}
                    className="buffer_is_Complete"
                    style={{display: 'none'}}
                  />
                 {/* Custom label for the checkbox */}
                  <label
                    className="custom-checkbox"
-                   onClick={() => handleCheckbox(index)}
+                   onClick={() => handleCheckbox(task.id)}
                    style={{backgroundColor: task.isComplete ? '#b9b9b9' : 'transparent'}}
                  ></label>
                     
@@ -271,7 +285,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
                 <>
                   <div className="edit_panel">
                       <button className="edit_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
-                      <button className="edit_button delete" onClick={() => rowDeletion(index)} style={{display: task.display_none ? 'none' : 'block'}}>Delete</button>
+                      <button className="edit_button delete" onClick={() => rowDeletion(task.id)} style={{display: task.display_none ? 'none' : 'block'}}>Delete</button>
                   </div> 
                 </>
               )}

@@ -168,6 +168,45 @@ app.post('/api/saveTasks', async (req, res) => {
 
 });
 
+app.post('/tasks/new', async (req, res) => {
+  try {
+    const task = req.body;
+    const userToken = req.cookies['user_id'];
+    task.user_id = userToken; // Extending the task object with the user_id/token
+    const { start_time, end_time, task_description, isComplete, display_none, visibility,     user_id } = task;
+    const insertedRow = await pool.query('INSERT INTO tasks (start_time, end_time, task_description, is_complete, display_none, visibility, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;', [start_time, end_time, task_description, isComplete, display_none, visibility, user_id]);
+    const taskId = insertedRow.rows[0].id;
+    res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId});
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ message: 'Add new task - server error.. app.js' });
+  }
+
+})
+
+app.delete('/tasks/delete/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    await pool.query('DELETE FROM tasks WHERE id = $1', [taskId]);
+    res.status(200).json({ message: 'Delete task - server success.. app.js' });
+  } catch(error) {
+    res.status(500).json({ message: 'Delete task - server error.. app.js' });
+  }
+})
+
+app.patch('/tasks/toggleComplete/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    await pool.query('UPDATE tasks SET is_complete = NOT is_complete WHERE id = $1', [taskId]);
+    res.status(200).json({  message: 'Update is_complete - server success.. app.js'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Update is_complete  - server error.. app.js" })
+  }
+  
+
+});
+
 // Logout route
 app.get('/logout', (req, res) => {
   req.logout();
