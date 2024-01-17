@@ -23,10 +23,9 @@ function Login({ onLoginSuccess }) {
         const data = await response.json(); // Get JSON response body
         
         if (response.ok) {
-            // Store the token & user_id
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user_id', data.user_id);
-            navigate('/');
+          const retrieved_tasks = data.tasks;
+        //  retrieved_tasks.forEach((task) => console.log(task));
+          navigate('/', { state: { tasks_afterLogin: retrieved_tasks } });
         } else {
             console.error("Login failed:", data.message);
             alert("Login failed!");

@@ -5,6 +5,7 @@ const session = require('express-session');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 
 require('dotenv').config(); // to retrieve the cryptographic key
@@ -12,6 +13,7 @@ require('dotenv').config(); // to retrieve the cryptographic key
 const app = express(); // Initialize instance of Express app for HTTP requests
 
 app.use(cors());
+app.use(cookieParser());
 /* 
 a) Process: global object provided by Node.js for info/control of current Node.js process
 b) env: property of process, representing user environment (such as variables)
@@ -28,6 +30,7 @@ c) Parses json requests for route handlers & other middleware to interact with
 app.use(express.json());
 
 app.use(passport.initialize());
+
 // Client is asking server to get the information for a specific path..
 // ..retrieving web pages, images, data; any data from the server
 // ..the callback function tells what to do once the information is retrieved
@@ -84,19 +87,17 @@ app.post('/login', async (req, res) => {
 
         // Query the database for the user by username
         const userResult = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-
         // If no user is found, return an error
         if (userResult.rows.length === 0) {
-            return res.status(401).json({ message: "Invalid username or password." });
+            return res.status(401).json({ message: "Invalid username" });
         }
 
         // User is found, now compare the provided password with the stored hash
         const user = userResult.rows[0];
         const isValid = await bcrypt.compare(password, user.hashed_password);
-
         // If the password is not valid, return an error
         if (!isValid) {
-            return res.status(401).json({ message: "Invalid username or password." });
+            return res.status(401).json({ message: "Invalid password." });
         }
 
         // Password is valid, create the JWT with the user's id
@@ -107,14 +108,64 @@ app.post('/login', async (req, res) => {
             { expiresIn: '7d' } // Set the token to expire in 1 hour
         );
         
-        // Send the token to the client along with the success message and redirect URL
-        res.json({ message: "Login successful app.js", token: token, user_id: user.id, redirectTo: "/" }); // Change the redirectTo value to the desired URL
+        // Inside your login route after successful authentication
+        res.cookie('token', token, {
+          httpOnly: false, // change to 'true' in production
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+        });
 
+        res.cookie('user_id', user.id, {
+          httpOnly: false, // change to 'true' in production
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+        
+        try {
+          const taskResults = await pool.query('SELECT * FROM tasks WHERE user_id = $1', [user.id]);
+          const tasks = taskResults.rows;
+          res.json({
+            message: "Login successful",
+            redirectTo: "/",
+            tasks: tasks
+          });
+        } catch (taskError) {
+          console.error("Error fetching tasks in app.js after login:", taskError);
+        }
 
     } catch (error) {
-        console.error("error here", error);
+        console.error("Error during login in app.js", error);
         res.status(500).json({ error: error.message });
     }
+});
+
+app.post('/api/saveTasks', async (req, res) => {
+  try {
+
+   const { tasks } = req.body;
+   const task_objects = JSON.parse(tasks);
+   const userToken = req.cookies['user_id'];
+
+   await pool.query('DELETE FROM tasks WHERE user_id = $1', [userToken]);
+
+   await pool.query('BEGIN');
+
+   for (const row of task_objects) {
+     row.user_id = userToken;
+     console.log(row.user_id)
+     const { start_time, end_time, task_description, isComplete, display_none, visibility, user_id } = row;
+     await pool.query('INSERT INTO tasks (start_time, end_time, task_description, is_complete, display_none, visibility, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)', [start_time, end_time, task_description, isComplete, display_none, visibility, user_id]);
+   }
+   await pool.query('COMMIT');
+   res.status(200).json({ message: 'Tasks received successfully by app.js '});
+
+  } catch(error) {
+
+    console.error(error);
+    await pool.query('ROLLBACK');
+    res.status(500).json({ message: 'Problem saving tasks.. app.js' });
+  }
+
 });
 
 // Logout route

@@ -1,15 +1,32 @@
 // Imports react & the useState hook
 import React, { useState, useEffect } from 'react';
 import './index.css';
+import SaveButton from './e_button_Save';
+import { useLocation } from 'react-router-dom';
 
 // Defines the form component, also handling its submission
-function TaskForm() {
+function TaskForm({ isLoggedIn }) {
   
   // Initializes empty strings as the initial field states
-    const[tasks, setTasks] = useState([]);
+  const[tasks, setTasks] = useState([]);
 
-    useEffect(() => {
-      const savedTasks = localStorage.getItem('tasks');
+  // Receive database tasks after login
+  const location = useLocation(); // initializiing the lib obj containing the data
+  const { tasks_afterLogin } = location.state || {}; // isolating the stored task data
+
+  useEffect(() => {
+
+    if (isLoggedIn) {
+      // Set 'tasks' to 'retrieved_tasks' when the component mounts
+      setTasks(tasks_afterLogin);
+    } else {
+      setTasks([]);
+    }
+
+  }, [isLoggedIn]); // Empty dependency array ensures this code runs only once
+
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('tasks');
       if (savedTasks) {
         try {
           // Parse the saved tasks and sort them
@@ -21,17 +38,16 @@ function TaskForm() {
           // Handle the error or reset the localStorage item if necessary
         }
       }
-    }, []);
+  }, []);
 
 
-    const[hideCompletedTasks, setHideCompletedTasks] = useState(false);
-    const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
+  const[hideCompletedTasks, setHideCompletedTasks] = useState(false);
+  const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
 
-
-    const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-      setLastUserInteractionTime(Date.now());
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setLastUserInteractionTime(Date.now());
+  };
 
   
   const getTimeWithOffset = (offsetMinutes) => {
@@ -182,7 +198,6 @@ function TaskForm() {
     
     setTasks(prevTasks => {
       const updatedTasks = [...prevTasks, taskObject];
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Save new task
       return sortTasks(updatedTasks);
     });
 
@@ -194,8 +209,7 @@ function TaskForm() {
     });
 
   };
-
-
+  
   return (
     <>  
       <form className = "form_create-task" onSubmit={handleSubmit}>
@@ -234,6 +248,8 @@ function TaskForm() {
           className=""
         />
       </div>
+
+      <SaveButton tasks={JSON.stringify(tasks)} />
       
       <div className="task_table">
           <div className="header_task-list">
