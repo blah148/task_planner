@@ -4,45 +4,17 @@ import './index.css';
 import SaveButton from './e_button_Save';
 import { useLocation } from 'react-router-dom';
 import LogoutButton from './e_button_Logout';
+import axios from 'axios';
 
 
-function TaskForm({ isLoggedIn, setIsLoggedIn }) {
-  
-  // Initializes empty strings as the initial field states
-  const[tasks, setTasks] = useState([]);
-
-  // Receive database tasks after login
-  const location = useLocation(); // initializiing the lib obj containing the data
-  const { tasks_afterLogin } = location.state || {}; // isolating the stored task data
+function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
   useEffect(() => {
-
-    if (isLoggedIn) {
-      // Set 'tasks' to 'retrieved_tasks' when the component mounts
-      console.log(`Login stats: ${isLoggedIn}`);
-      setTasks(tasks_afterLogin);
-    } else {
+    if (!isLoggedIn) {
       setTasks([]);
-    }
-
-  }, [isLoggedIn]); // Empty dependency array ensures this code runs only once
-
-  useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-      if (savedTasks) {
-        try {
-          // Parse the saved tasks and sort them
-          const loadedTasks = JSON.parse(savedTasks);
-          const sortedTasks = sortTasks(loadedTasks);
-          setTasks(sortedTasks);
-        } catch (e) {
-          console.error("Error reading tasks from localStorage:", e);
-          // Handle the error or reset the localStorage item if necessary
-        }
-      }
-  }, []);
-
-
+    }   
+  }, [isLoggedIn]);
+  
   const[hideCompletedTasks, setHideCompletedTasks] = useState(false);
   const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
 
@@ -51,7 +23,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn }) {
     setLastUserInteractionTime(Date.now());
   };
 
-  
   const getTimeWithOffset = (offsetMinutes) => {
     const now = new Date();
     now.setMinutes(now.getMinutes() + offsetMinutes); // Add the offset
