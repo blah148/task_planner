@@ -1,21 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const LogoutButton = () => {
-  const navigate = useNavigate();
+const LogoutButton = ({ setIsLoggedIn, isLoggedIn }) => {
+  // const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(`isLoggedIn updated: ${isLoggedIn}`);
+  }, [isLoggedIn]); // This useEffect will run when isLoggedIn changes
 
   const handleLogout = () => {
-    // Clear the JWT or session data from storage
     console.log("Logout clicked");
-    localStorage.removeItem('token');
-    console.log("Token after logout:", localStorage.getItem('token'));
-    // If using cookies, uncomment the next line
-    // document.cookie = 'jwt=; Max-Age=0';
 
-    // Redirect to login or home page
-    navigate('/');
-    if(localStorage.getItem('token')===null) {
-      alert('You have successfully logged out!');
+    setIsLoggedIn(!isLoggedIn); // Toggle isLoggedIn state
+    document.cookie = 'token=; Max-Age=0';
+    document.cookie = 'user_id=; Max-Age=0';
+
+    if (!document.cookie.includes('token=')) {
+      alert("Logout successful.. e_button_Logout.js");
+      // navigate('/');
+    } else {
+      alert("Logout failed.. e_button_Logout.js");
     }
   };
 

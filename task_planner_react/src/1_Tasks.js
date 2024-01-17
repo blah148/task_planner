@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 import SaveButton from './e_button_Save';
 import { useLocation } from 'react-router-dom';
+import LogoutButton from './e_button_Logout';
+
 
 // Defines the form component, also handling its submission
-function TaskForm({ isLoggedIn }) {
+function TaskForm({ isLoggedIn, setIsLoggedIn }) {
   
   // Initializes empty strings as the initial field states
   const[tasks, setTasks] = useState([]);
@@ -18,6 +20,7 @@ function TaskForm({ isLoggedIn }) {
 
     if (isLoggedIn) {
       // Set 'tasks' to 'retrieved_tasks' when the component mounts
+      console.log(`Login stats: ${isLoggedIn}`);
       setTasks(tasks_afterLogin);
     } else {
       setTasks([]);

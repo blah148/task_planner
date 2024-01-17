@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import http from './services/http'; // Adjust the path according to your project structure
 
-
-
-function Login({ onLoginSuccess }) {
+function Login({ setIsLoggedIn }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -24,7 +22,7 @@ function Login({ onLoginSuccess }) {
         
         if (response.ok) {
           const retrieved_tasks = data.tasks;
-        //  retrieved_tasks.forEach((task) => console.log(task));
+          setIsLoggedIn(true);
           navigate('/', { state: { tasks_afterLogin: retrieved_tasks } });
         } else {
             console.error("Login failed:", data.message);
