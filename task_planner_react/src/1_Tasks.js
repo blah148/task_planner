@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import LogoutButton from './e_button_Logout';
 
 
-// Defines the form component, also handling its submission
 function TaskForm({ isLoggedIn, setIsLoggedIn }) {
   
   // Initializes empty strings as the initial field states
