@@ -143,35 +143,6 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
   }
 });
 
-app.post('/api/saveTasks', async (req, res) => {
-  try {
-
-   const { tasks } = req.body;
-   const task_objects = JSON.parse(tasks);
-   const userToken = req.cookies['user_id'];
-
-   await pool.query('DELETE FROM tasks WHERE user_id = $1', [userToken]);
-
-   await pool.query('BEGIN');
-
-   for (const row of task_objects) {
-     row.user_id = userToken;
-     console.log(row.user_id)
-     const { start_time, end_time, task_description, isComplete, display_none, visibility, user_id } = row;
-     await pool.query('INSERT INTO tasks (start_time, end_time, task_description, is_complete, display_none, visibility, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)', [start_time, end_time, task_description, isComplete, display_none, visibility, user_id]);
-   }
-   await pool.query('COMMIT');
-   res.status(200).json({ message: 'Tasks received successfully by app.js '});
-
-  } catch(error) {
-
-    console.error(error);
-    await pool.query('ROLLBACK');
-    res.status(500).json({ message: 'Problem saving tasks.. app.js' });
-  }
-
-});
-
 app.post('/tasks/new', verifyJWT, async (req, res) => {
   try {
     const task = req.body;

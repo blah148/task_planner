@@ -17,6 +17,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
             if (response.ok) {
                 const data = await response.json();
+                console.log(data.tasks);
                 setTasks(data.tasks); // Update the tasks state with the fetched data
             } else {
                 console.error('Failed to fetch tasks');
@@ -110,17 +111,19 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     }
   };
 
-  const convert12hr = fullDate => {
-    // i) Parse the 24-hr time in hh:mm format.. 5 chars
-    let time_24hr = fullDate.slice(-5);
-    if (time_24hr.substr(0,2) > 12) {
-      return `${time_24hr.substr(0,2) - 12}:${fullDate.slice(-2)} pm`;
-    } else if (time_24hr.substr(0,2) < 1) {
-      
-      return `12:${fullDate.slice(-2)} am`; 
-      
-    } else return `${fullDate.slice(-5)} am`;
-  }
+  function convertIsoTo12HourFormat(isoString) {
+    const date = new Date(isoString);
+
+    let hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${hours}:${minutesStr} ${ampm}`;
+  } 
 
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
@@ -130,6 +133,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
    
     // Create values to eventually compare start & end times
     const currentDate = new Date().toDateString();
+    console.log(formData.start_time);
     const startTime_string = `${currentDate} ${formData.start_time}`;
     let endTime_string = `${currentDate} ${formData.end_time}`;
     // Ensure that end-time comes after the start-time
@@ -204,7 +208,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
         <label
           type="checkbox" 
           className="view_completed-tasks_label"
-          for="completion" >Hide completed tasks</label>
+          htmlFor="completion" >Hide completed tasks</label>
         <input
           type="checkbox"
           id="completion"
@@ -231,8 +235,8 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
                   display: task.isComplete && hideCompletedTasks ? "none" : "flex"
                 }}
               > 
-                <div className="buffer time">{convert12hr(task.start_time.slice(-5))}</div>
-                <div className="buffer time">{convert12hr(task.end_time.slice(-5))}</div>
+                <div className="buffer time">{convertIsoTo12HourFormat(task.start_time)}</div>
+                <div className="buffer time">{convertIsoTo12HourFormat(task.end_time)}</div>
                 <div className="buffer description">{task.task_description}</div>
                 <input
                    type="checkbox"
