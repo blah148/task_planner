@@ -6,30 +6,32 @@ function Login({ setIsLoggedIn, tasks, setTasks }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
+    
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        // Perform the login operation
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-        });
+    e.preventDefault();
 
+    // Perform the login operation
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include' // Ensure cookies are included with the request
+    });
+
+    if (response.ok) {
+        // If the login is successful
+        console.log("Login successful");
+        navigate('/'); // Navigate to the home page or dashboard
+    } else {
+        // If the login fails, handle it accordingly
         const data = await response.json(); // Get JSON response body
-        
-        if (response.ok) {
-          setTasks(data.tasks); 
-          setIsLoggedIn(true);
-          navigate('/');
-        } else {
-            console.error("Login failed:", data.message);
-            alert("Login failed!");
-            // Handle login failure, e.g., show error message
-        }
-    };
+        console.error("Login failed:", data.message);
+        alert("Login failed: " + data.message);
+        // Additional logic for failed login can be added here
+    }
+};
 
     return (
         <div>

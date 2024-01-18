@@ -14,7 +14,7 @@ function HomePage({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
         {/* Pass tasks and setTasks to TaskForm */}
         <TaskForm isLoggedIn={isLoggedIn} tasks={tasks} setTasks={setTasks} />
         <LoginButton />
-        <LogoutButton isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <LogoutButton setTasks={setTasks} />
       </div>
     </div>
   );

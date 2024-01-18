@@ -1,20 +1,25 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const LogoutButton = ({ setIsLoggedIn, isLoggedIn }) => {
-  // const navigate = useNavigate();
+const LogoutButton = ({ setTasks }) => {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+        // Clear client-side state
+        setTasks([]);
 
-  const handleLogout = () => {
+        // Request the server to clear cookies
+        const response = await fetch('/logout', {
+            method: 'POST',
+            credentials: 'include' // Ensures cookies are included
+        });
 
-    setIsLoggedIn(false);
-    document.cookie = 'token=; Max-Age=0';
-    document.cookie = 'user_id=; Max-Age=0';
-
-    if (!document.cookie.includes('token=')) {
-      alert("Logout successful.. e_button_Logout.js");
-      // navigate('/');
-    } else {
-      alert("Logout failed.. e_button_Logout.js");
+        if (response.ok) {
+            // Redirect to login or home page
+            navigate('/login');
+        }
+    } catch (error) {
+        console.error('Logout failed:', error);
     }
   };
 

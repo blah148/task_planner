@@ -1,23 +1,47 @@
 // Imports react & the useState hook
 import React, { useState, useEffect } from 'react';
 import './index.css';
-import SaveButton from './e_button_Save';
 import { useLocation } from 'react-router-dom';
-import LogoutButton from './e_button_Logout';
 import axios from 'axios';
 
 
 function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      setTasks([]);
-    }   
-  }, [isLoggedIn]);
-  
-  const[hideCompletedTasks, setHideCompletedTasks] = useState(false);
-  const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
+    const fetchTasks = async () => {
+        try {
+            const response = await fetch('/fetch-tasks', {
+                method: 'GET',
+                credentials: 'include' // Ensures that cookies are sent with the request
+            });
 
+            if (response.ok) {
+                const data = await response.json();
+                setTasks(data.tasks); // Update the tasks state with the fetched data
+            } else {
+                console.error('Failed to fetch tasks');
+                // Handle failure to fetch tasks here
+            }
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+            // Handle errors in fetching tasks here
+        }
+    };
+
+    fetchTasks();
+  }, []); // The empty dependency array ensures this runs only once on component mount
+
+  const[hideCompletedTasks, setHideCompletedTasks] = useState(() => {
+    const saved = localStorage.getItem('hideCompletedTasks');
+    return saved === null ? false : JSON.parse(saved);
+  });
+
+  useEffect (() => {
+    localStorage.setItem('hideCompletedTasks', JSON.stringify(hideCompletedTasks));
+  }, [hideCompletedTasks]);
+
+  const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setLastUserInteractionTime(Date.now());
@@ -46,18 +70,18 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
   });
   
   useEffect(() => {
-  const interval = setInterval(() => {
-    if (Date.now() - lastUserInteractionTime > 180000) { // 180000 milliseconds = 3 minutes
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        start_time: getTimeWithOffset(0),
-        end_time: getTimeWithOffset(15),
-      }));
-    }
-  }, 60000); // Check every minute
+    const interval = setInterval(() => {
+      if (Date.now() - lastUserInteractionTime > 180000) { // 180000 milliseconds = 3 minutes
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          start_time: getTimeWithOffset(0),
+          end_time: getTimeWithOffset(15),
+        }));
+      }
+    }, 60000); // Check every minute
 
-  return () => clearInterval(interval);
-}, [lastUserInteractionTime]);
+    return () => clearInterval(interval);
+  }, [lastUserInteractionTime]);
 
   const handleCheckbox = async (id) => {
     try {
@@ -77,41 +101,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
   }
 
 
-  const editTime = (index, field, value) => {
-    const currentDate = new Date().toDateString();
-    const newStartTime = `${currentDate} ${value}`;
-    setTasks(prevTasks =>
-      prevTasks.map((task, i) =>
-        i === index ? { ...task, [field]: newStartTime } : task
-      )
-    );
-  }; 
-
-  const editDescription = (index, field, value) => {
-    setTasks(prevTasks =>
-      prevTasks.map((task, i) =>
-        i === index ? { ...task, task_description: value } : task
-      )
-    );
-  };
-
-
-  const toggleEditMode = (index) => {
-    setTasks(prevTasks => {
-      // Toggle the editing state and potentially update the task
-      let updatedTasks = prevTasks.map((task, i) =>
-        i === index ? { ...task, isEditing: !task.isEditing } : task
-      );
-
-      // Sort the tasks if we are saving the task
-      if (prevTasks[index].isEditing) {
-        updatedTasks = sortTasks(updatedTasks);
-      }  
-
-      return updatedTasks;
-    });
-  };
-  
   const rowDeletion = async (id) => {
     try {
       const response = await axios.delete(`/tasks/delete/${id}`);
@@ -120,7 +109,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
       console.error('Error deleting task:', error);
     }
   };
-
 
   const convert12hr = fullDate => {
     // i) Parse the 24-hr time in hh:mm format.. 5 chars
@@ -134,15 +122,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     } else return `${fullDate.slice(-5)} am`;
   }
 
-  const modify_taskVisibility = () => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.isComplete ? {...task, visibility: "none"} : {...task, visibility: "flex"} 
-      )
-    );
-  };
-
-  
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
    
@@ -184,8 +163,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
       const updatedTasks = [...prevTasks, taskObject_withId];
       return sortTasks(updatedTasks);
     });
-
-
 
     // Resets form data to have the current times
     setFormData({
@@ -236,8 +213,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
         />
       </div>
 
-      <SaveButton tasks={JSON.stringify(tasks)} />
-      
       <div className="task_table">
           <div className="header_task-list">
             <h2 className="header_title time">Start time</h2>
@@ -274,21 +249,9 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
                  ></label>
                     
               {/* Edit and Delete buttons */}
-              {task.isEditing ? (
-                <>
-                  <input type="time" className="form_field time_input start" value={task.start_time} onChange={(e) => editTime(index, 'start_time', e.target.value)} />
-                  <input type="time" className="form_field time_input end" value={task.end_time} onChange={(e) => editTime(index, 'end_time', e.target.value)} />
-                  <input type="text" className="form_field text_input description" value={task.task_description} onChange={(e) => editDescription(index, 'task_description', e.target.value)} />
-                  <button onClick={() => toggleEditMode(index)}>Save</button>
-                </>
-                ) : (
-                <>
                   <div className="edit_panel">
-                      <button className="edit_button edit" onClick={() => toggleEditMode(index)}>Edit</button>
                       <button className="edit_button delete" onClick={() => rowDeletion(task.id)} style={{display: task.display_none ? 'none' : 'block'}}>Delete</button>
                   </div> 
-                </>
-              )}
 
               </div>
             ))}
