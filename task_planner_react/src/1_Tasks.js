@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
@@ -19,6 +21,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
                 const data = await response.json();
                 console.log(data.tasks);
                 setTasks(data.tasks); // Update the tasks state with the fetched data
+                sortTasks(data.tasks);
             } else {
                 console.error('Failed to fetch tasks');
                 // Handle failure to fetch tasks here
@@ -43,46 +46,16 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
   const [lastUserInteractionTime, setLastUserInteractionTime] = useState(Date.now());
   
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setLastUserInteractionTime(Date.now());
-  };
+  const [startDate, setStartDate] = useState(new Date());
 
-  const getTimeWithOffset = (offsetMinutes) => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + offsetMinutes); // Add the offset
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
-    // Helper function to format a Date object into a "HH:mm" string
-  const getTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
-  // Initializes the form state with the current time
-  const [formData, setFormData] = useState({
-    start_time: getTimeWithOffset(0),
-    end_time: getTimeWithOffset(15),
-    task_description: '',
+  const [taskObject, setTaskObject] = useState({
+    start_time: new Date(),
+    end_time: new Date(),
+    task_description: "",
+    isComplete: false,
+    display_none: false,
+    visibility: "flex"
   });
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Date.now() - lastUserInteractionTime > 180000) { // 180000 milliseconds = 3 minutes
-        setFormData(prevFormData => ({
-          ...prevFormData,
-          start_time: getTimeWithOffset(0),
-          end_time: getTimeWithOffset(15),
-        }));
-      }
-    }, 60000); // Check every minute
-
-    return () => clearInterval(interval);
-  }, [lastUserInteractionTime]);
 
   const handleCheckbox = async (id) => {
     try {
@@ -114,16 +87,26 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
   function convertIsoTo12HourFormat(isoString) {
     const date = new Date(isoString);
 
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'pm' : 'am';
 
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
 
-    return `${hours}:${minutesStr} ${ampm}`;
-  } 
+    return `${month} ${day}, ${year} ${hours}:${minutesStr}${ampm}`;
+  }
+
+
 
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
@@ -131,29 +114,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     //Prevents "default" form submission behaviour aka reload
     e.preventDefault();
    
-    // Create values to eventually compare start & end times
-    const currentDate = new Date().toDateString();
-    console.log(formData.start_time);
-    const startTime_string = `${currentDate} ${formData.start_time}`;
-    let endTime_string = `${currentDate} ${formData.end_time}`;
-    // Ensure that end-time comes after the start-time
-    if (endTime_string <= startTime_string) {
-      let nextDay = new Date(currentDate);
-      nextDay.setDate(nextDay.getDate() + 1);
-      let tmrw = nextDay.toDateString();
-      endTime_string = `${tmrw} ${formData.end_time}`;
-    }
-      
-    // When handleSubmit is called, store the task details in this task object
-    const taskObject = {
-      start_time: startTime_string,
-      end_time: endTime_string,
-      task_description: formData.task_description,
-      isComplete: false, // to-do tasks always begin as false
-      display_none: false,
-      visibility: "flex"
-    };
-
     let taskObject_withId;
 
     try {
@@ -168,37 +128,56 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
       return sortTasks(updatedTasks);
     });
 
-    // Resets form data to have the current times
-    setFormData({
-      ...formData,
-      start_time: getTimeWithOffset(0),
-      end_time: getTimeWithOffset(15),
-      task_description: '', // Clear task description as well
-    });
-
   };
   
   return (
     <>  
       <form className = "form_create-task" onSubmit={handleSubmit}>
-        <input
-          type="time"
+        <DatePicker
+          selected={taskObject.start_time}
+          onChange={(date) => {
+            setStartDate(date);
+            setTaskObject((prevTaskObject) => ({
+              ...prevTaskObject,
+              start_time: date
+            }));
+          }}
+          showTimeSelect
+          timeFormat="HH:mm"
+          timeIntervals={1}
+          timeCaption="time"
+          dateFormat="MMMM d, yyyy h:mm aa"
           name="start_time"
-          value={formData.start_time}
-          onChange={handleChange}
           className="form_field time_input start"
-        />
-        <input
           type="time"
+        />
+        <DatePicker
+          selected={taskObject.end_time}
+          onChange={(date) => {
+            setStartDate(date);
+            setTaskObject((prevTaskObject) => ({
+              ...prevTaskObject,
+              end_time: date
+            }));
+          }}
+          showTimeSelect
+          timeFormat="HH:mm"
+          timeIntervals={1}
+          timeCaption="time"
+          dateFormat="MMMM d, yyyy h:mm aa"
           name="end_time"
-          value={formData.end_time}
-          onChange={handleChange}
           className="form_field time_input end"
+          type="time"
         />
         <textarea
           name="task_description"
-          value={formData.task_description}
-          onChange={handleChange}
+          onChange={(e) => {
+            const description = e.target.value;
+            setTaskObject((prevTaskObject) => ({
+              ...prevTaskObject,
+              task_description: description
+              }));
+            }}
           className="form_field description"
         />
         <button type="submit" className="form_button submit">Add task</button>
