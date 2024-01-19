@@ -88,24 +88,28 @@ app.post('/register', async (req, res) => {
     try {
         const { email, password } = req.body;
         // Use Supabase client to create a new user
-        const { user, error } = await supabase.auth.signUp({
+        const signUpResponse = await supabase.auth.signUp({
             email: email,
             password: password,
         });
-if (!user || !user.id) throw new Error('User ID is undefined');
-        console.log(user.id);
-        console.log(email);
 
-        if (error) throw error;
+        // Check for error first before checking for user object
+        if (signUpResponse.error) throw signUpResponse.error;
+
+        // Now check for user object and user ID
+        if (!signUpResponse.user || !signUpResponse.user.id) throw new Error('User ID is undefined');
+
+        // Log the user ID
+        console.log('User ID:', signUpResponse.user.id);
 
         // Insert additional user details into your custom 'users' table
-        // You can add additional fields as necessary
         const { data: userData, error: userInsertError } = await supabase
             .from('users')
             .insert([
                 {
+                    auth_id: signUpResponse.user.id, // Store the Supabase Auth user ID in auth_id
                     email: email, // Email from the user object or from req.body
-                    // Include additional user fields here
+                    // Other fields...
                 },
             ]);
 
