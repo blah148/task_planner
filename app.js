@@ -1,5 +1,5 @@
 const express = require('express'); // Make Express framework available
-const pool = require('./dbConfig'); // Import database connection pool config
+// const pool = require('./dbConfig'); // Import LOCAL database connection pool config
 const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
@@ -46,14 +46,16 @@ app.post('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
-// route where users can register
 app.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        // Insert the new user into the database
-        await pool.query('INSERT INTO users (username, hashed_password) VALUES ($1, $2)', [username, hashedPassword]);
-        res.status(201).json({ message: 'User created successfully' });
+        const { email, password } = req.body;
+        // Use Supabase client to create a new user
+        const { user, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+        });
+        if (error) throw error;
+        res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
         console.error('Error registering new user:', error);
         res.status(500).send(error.message);
@@ -61,44 +63,34 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const userResult = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    try {
+        const { email, password } = req.body;
+        // Use Supabase client to authenticate the user
+        const { user, session, error } = await supabase.auth.signIn({
+            email: email,
+            password: password,
+        });
 
-    if (userResult.rows.length === 0) {
-      return res.status(401).json({ message: "Invalid username" });
+        if (error) {
+            // Handle authentication error (e.g., user not found or incorrect password)
+            return res.status(401).json({ message: error.message });
+        }
+
+        // If login is successful, you can use the session token and user information as needed
+        // Optionally set cookies or return the session/user data to the client
+
+        res.json({
+            message: "Login successful",
+            user: user,
+            session: session,
+            redirectTo: "/fetch-tasks" // Redirect to fetch tasks
+        });
+    } catch (error) {
+        console.error("Error during login", error);
+        res.status(500).json({ error: error.message });
     }
-
-    const user = userResult.rows[0];
-    const isValid = await bcrypt.compare(password, user.hashed_password);
-
-    if (!isValid) {
-      return res.status(401).json({ message: "Invalid password." });
-    }
-
-    const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-    res.cookie('token', token, {
-      httpOnly: false, // change to 'true' in production
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
-    res.cookie('user_id', user.id, {
-      httpOnly: false, // change to 'true' in production
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
-    res.json({
-      message: "Login successful",
-      redirectTo: "/fetch-tasks" // Redirect to fetch tasks
-    });
-  } catch (error) {
-    console.error("Error during login in app.js", error);
-    res.status(500).json({ error: error.message });
-  }
 });
+
 
 // Middleware to verify JWT
 const verifyJWT = (req, res, next) => {
@@ -136,84 +128,113 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/fetch-tasks', verifyJWT, async (req, res) => {
-  try {
-    const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
-    const taskResults = await pool.query('SELECT * FROM tasks WHERE user_id = $1', [user_id]);
-    const tasks = taskResults.rows;
-    res.json({ tasks: tasks });
-  } catch (taskError) {
-    console.error("Error fetching tasks:", taskError);
-    res.status(500).json({ message: "Error fetching tasks" });
-  }
+    try {
+        const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
+
+        // Use Supabase client to fetch tasks
+        const { data: tasks, error } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('user_id', user_id);
+
+        if (error) {
+            throw error;
+        }
+
+        res.json({ tasks: tasks });
+    } catch (taskError) {
+        console.error("Error fetching tasks:", taskError);
+        res.status(500).json({ message: "Error fetching tasks" });
+    }
 });
 
 app.post('/tasks/new', verifyJWT, async (req, res) => {
-  try {
-    const task = req.body;
+    try {
+        const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
+        const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
-    // Assuming the JWT middleware adds the user's ID to req.user
-    const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+        // Use Supabase client to insert a new task
+        const { data, error } = await supabase
+            .from('tasks')
+            .insert([
+                {
+                    start_time,
+                    end_time,
+                    task_description,
+                    is_complete: isComplete,
+                    display_none,
+                    visibility,
+                    user_id
+                }
+            ]);
 
-    // Destructure the task object directly, appending user_id from the verified JWT
-    const { start_time, end_time, task_description, isComplete, display_none, visibility } = task;
-    
-    const insertedRow = await pool.query(
-      'INSERT INTO tasks (start_time, end_time, task_description, is_complete, display_none, visibility, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;', 
-      [start_time, end_time, task_description, isComplete, display_none, visibility, user_id]
-    );
+        if (error) {
+            throw error;
+        }
 
-    const taskId = insertedRow.rows[0].id;
-    res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId});
-  } catch(error) {
-    console.error(error);
-    res.status(500).json({ message: 'Add new task - server error.. app.js' });
-  }
+        const taskId = data[0].id;
+        res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId });
+    } catch (error) {
+        console.error('Add new task - server error.. app.js:', error);
+        res.status(500).json({ message: error.message });
+    }
 });
 
 app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
-  try {
-    const taskId = req.params.id;
-    const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+    try {
+        const taskId = req.params.id;
+        const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
-    // Perform a delete operation only if the task belongs to the authenticated user
-    const deleteResult = await pool.query('DELETE FROM tasks WHERE id = $1 AND user_id = $2', [taskId, userId]);
+        // Use Supabase client to perform a delete operation
+        const { data, error } = await supabase
+            .from('tasks')
+            .delete()
+            .match({ id: taskId, user_id: userId });
 
-    // Check if any row was actually deleted
-    if (deleteResult.rowCount === 0) {
-      return res.status(404).json({ message: 'Task not found or not owned by user' });
+        if (error) {
+            throw error;
+        }
+
+        // Check if any row was actually deleted
+        if (data.length === 0) {
+            return res.status(404).json({ message: 'Task not found or not owned by user' });
+        }
+
+        res.status(200).json({ message: 'Delete task - server success.. app.js' });
+    } catch (error) {
+        console.error('Delete task - server error.. app.js:', error);
+        res.status(500).json({ message: error.message });
     }
-
-    res.status(200).json({ message: 'Delete task - server success.. app.js' });
-  } catch(error) {
-    console.error(error);
-    res.status(500).json({ message: 'Delete task - server error.. app.js' });
-  }
 });
 
-
 app.patch('/tasks/toggleComplete/:id', verifyJWT, async (req, res) => {
-  try {
-    const taskId = req.params.id;
-    const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+    try {
+        const taskId = req.params.id;
+        const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
-    // Update the task only if it belongs to the authenticated user
-    const updateResult = await pool.query(
-      'UPDATE tasks SET is_complete = NOT is_complete WHERE id = $1 AND user_id = $2 RETURNING *', 
-      [taskId, userId]
-    );
+        // Use Supabase client to update the task
+        const { data, error } = await supabase
+            .from('tasks')
+            .update({ is_complete: supabase.raw('NOT is_complete') })
+            .match({ id: taskId, user_id: userId })
+            .single();
 
-    // Check if any row was actually updated
-    if (updateResult.rowCount === 0) {
-      return res.status(404).json({ message: 'Task not found or not owned by user' });
+        if (error) {
+            throw error;
+        }
+
+        // Check if any row was actually updated
+        if (!data) {
+            return res.status(404).json({ message: 'Task not found or not owned by user' });
+        }
+
+        res.status(200).json({
+            message: 'Update is_complete - server success.. app.js',
+            task: data // Return the updated task
+        });
+    } catch (error) {
+        console.error('Update is_complete - server error.. app.js:', error);
+        res.status(500).json({ message: error.message });
     }
-
-    res.status(200).json({ 
-      message: 'Update is_complete - server success.. app.js',
-      task: updateResult.rows[0] // Return the updated task
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Update is_complete - server error.. app.js" });
-  }
 });
 
