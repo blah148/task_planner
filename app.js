@@ -84,24 +84,15 @@ app.post('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
-const bcrypt = require('bcrypt');
-
 app.post('/register', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Hash the password using bcrypt
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-        // Use Supabase client to create a new user
+        // Use Supabase client to create a new user with the plaintext password
         const signUpResponse = await supabase.auth.signUp({
             email: email,
-            password: hashedPassword,
+            password: password,
         });
-
-        // Log the full signUp response for debugging purposes
-        console.log('signUpResponse:', signUpResponse);
 
         // Check if signUpResponse.data exists and has a user object
         if (!signUpResponse.data || !signUpResponse.data.user) {
@@ -117,9 +108,9 @@ app.post('/register', async (req, res) => {
         // Ensure user ID is defined
         if (!user.id) throw new Error('User ID is undefined');
 
-        // Log the user ID and email
-        console.log('User ID:', user.id);
-        console.log('Email:', email);
+        // Hash the password for your custom users table
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Insert additional user details into your custom 'users' table
         const { data: userData, error: userInsertError } = await supabase
@@ -128,7 +119,7 @@ app.post('/register', async (req, res) => {
                 {
                     auth_id: user.id,
                     email: email,
-                    hashed_password: hashedPassword,
+                    hashed_password: hashedPassword, // Store the hashed password for your custom use
                     // Other fields...
                 },
             ]);
@@ -142,7 +133,6 @@ app.post('/register', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
