@@ -92,13 +92,31 @@ app.post('/register', async (req, res) => {
             email: email,
             password: password,
         });
+
         if (error) throw error;
-        res.status(201).json({ message: 'User created successfully', user });
+
+        // Insert additional user details into your custom 'users' table
+        // You can add additional fields as necessary
+        const { data: userData, error: userInsertError } = await supabase
+            .from('users')
+            .insert([
+                {
+                    id: user.id, // Use the id from the created user in Supabase auth
+                    email: email, // Email from the user object or from req.body
+                    // Include additional user fields here
+                },
+            ]);
+
+        if (userInsertError) throw userInsertError;
+
+        // Respond with success message
+        res.status(201).json({ message: 'User created successfully', user: userData });
     } catch (error) {
         console.error('Error registering new user:', error);
         res.status(500).send(error.message);
     }
 });
+
 
 app.post('/login', async (req, res) => {
     try {
