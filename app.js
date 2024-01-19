@@ -84,12 +84,14 @@ app.post('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
+const bcrypt = require('bcrypt');
+
 app.post('/register', async (req, res) => {
     try {
         const { email, password } = req.body;
 
         // Hash the password using bcrypt
-        const saltRounds = 10; // You can adjust the salt rounds as needed
+        const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Use Supabase client to create a new user
@@ -98,22 +100,43 @@ app.post('/register', async (req, res) => {
             password: hashedPassword,
         });
 
-        // ... [rest of your existing code] ...
+        // Log the full signUp response for debugging purposes
+        console.log('signUpResponse:', signUpResponse);
+
+        // Check if signUpResponse.data exists and has a user object
+        if (!signUpResponse.data || !signUpResponse.data.user) {
+            throw new Error('Failed to get user data from signUp response');
+        }
+
+        // Destructure the response to get the user and error
+        const { user, error } = signUpResponse.data;
+
+        // Check for error first before checking for user object
+        if (error) throw error;
+
+        // Ensure user ID is defined
+        if (!user.id) throw new Error('User ID is undefined');
+
+        // Log the user ID and email
+        console.log('User ID:', user.id);
+        console.log('Email:', email);
 
         // Insert additional user details into your custom 'users' table
         const { data: userData, error: userInsertError } = await supabase
             .from('users')
             .insert([
                 {
-                    auth_id: user.id, // Store the Supabase Auth user ID in auth_id
-                    email: email, // Email from the user object or from req.body
-                    hashed_password: hashedPassword, // Store the hashed password
+                    auth_id: user.id,
+                    email: email,
+                    hashed_password: hashedPassword,
                     // Other fields...
                 },
             ]);
 
-        // ... [rest of your existing code] ...
+        if (userInsertError) throw userInsertError;
 
+        // Respond with success message
+        res.status(201).json({ message: 'User created successfully', user: userData });
     } catch (error) {
         console.error('Error registering new user:', error);
         res.status(500).send(error.message);
