@@ -10,8 +10,7 @@ const app = express(); // Initialize instance of Express app for HTTP requests
 const PORT = process.env.PORT || 8080;
 const path = require('path');
 require('dotenv').config(); // to retrieve the cryptographic key
-// const { createClient } = require('@supabase/supabase-js');
-import { createClient } from '@supabase/supabase-js'
+const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
