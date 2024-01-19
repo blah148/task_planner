@@ -298,11 +298,17 @@ app.post('/tasks/new', verifyJWT, async (req, res) => {
             ]);
 
         if (error) {
+            console.error('Supabase Insert Error:', error);
             throw error;
         }
 
-        const taskId = data[0].id;
-        res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId });
+        if (data && data.length > 0) {
+            const taskId = data[0].id;
+            res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId });
+        } else {
+            console.error('No data received from the database.');
+            res.status(500).json({ message: 'No data received from the database.' });
+        }
     } catch (error) {
         console.error('Add new task - server error.. app.js:', error);
         res.status(500).json({ message: error.message });
