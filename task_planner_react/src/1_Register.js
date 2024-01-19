@@ -2,29 +2,35 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
-    const [email, setEmail] = useState(''); // New state variable for email
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }), // Send email instead of username
-        });
-        // Handle the response from the server
-        if (response.ok) {
-            console.log("Registration successful");
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Registration failed');
+            }
+
+            const data = await response.json();
+            console.log("Registration successful", data);
+
+            // Explicitly check for the redirectTo value
             if (data.redirectTo) {
                 navigate(data.redirectTo);
             }
-            // Redirect or update UI
-        } else {
-            console.error("Registration failed");
-            // Show error message
+        } catch (error) {
+            console.error(error.message);
+            // Handle the error (show message to the user, etc.)
         }
     };
 
@@ -33,7 +39,7 @@ function Register() {
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Email: {/* Updated label */}
+                    Email:
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
                 </label>
                 <label>
