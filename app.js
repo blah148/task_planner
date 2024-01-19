@@ -66,24 +66,35 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         // Use Supabase client to authenticate the user
-        const { user, session, error } = await supabase.auth.signIn({
+        const { user, error: authError } = await supabase.auth.signIn({
             email: email,
             password: password,
         });
 
-        if (error) {
+        if (authError || !user) {
             // Handle authentication error (e.g., user not found or incorrect password)
-            return res.status(401).json({ message: error.message });
+            return res.status(401).json({ message: authError?.message || 'Invalid credentials' });
         }
 
-        // If login is successful, you can use the session token and user information as needed
-        // Optionally set cookies or return the session/user data to the client
+        // Generate JWT manually
+        const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        // Set JWT in HTTP-only cookies
+        res.cookie('token', token, {
+            httpOnly: true, // Make it HTTP-only
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        res.cookie('user_id', user.id, {
+            httpOnly: true, // Make it HTTP-only
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
 
         res.json({
             message: "Login successful",
-            user: user,
-            session: session,
-            redirectTo: "/fetch-tasks" // Redirect to fetch tasks
+            redirectTo: "/fetch-tasks"
         });
     } catch (error) {
         console.error("Error during login", error);
