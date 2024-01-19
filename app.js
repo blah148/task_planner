@@ -126,13 +126,35 @@ app.post('/register', async (req, res) => {
 
         if (userInsertError) throw userInsertError;
 
-        // Respond with success message
-        res.status(201).json({ message: 'User created successfully', user: userData });
+        // Generate JWT manually
+        const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        // Set JWT in HTTP-only cookies
+        res.cookie('token', token, {
+            httpOnly: true, // Make it HTTP-only
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        res.cookie('user_id', user.id, {
+            httpOnly: true, // Make it HTTP-only
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        // Respond with success message and redirect
+        res.status(201).json({
+            message: 'User created successfully',
+            user: userData,
+            redirectTo: "/fetch-tasks"
+        });
     } catch (error) {
         console.error('Error registering new user:', error);
         res.status(500).send(error.message);
     }
 });
+
+
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
