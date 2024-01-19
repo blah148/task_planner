@@ -54,6 +54,8 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`); // Uses template literals for embedded expressions ${}
 });
 
+console.log("this is a test... is it running?");
+
 app.post('/logout', (req, res) => {
     // Clear the cookies
     res.cookie('token', '', { expires: new Date(0) });
