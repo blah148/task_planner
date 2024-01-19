@@ -87,27 +87,18 @@ app.post('/logout', (req, res) => {
 app.post('/register', async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Hash the password using bcrypt
+        const saltRounds = 10; // You can adjust the salt rounds as needed
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         // Use Supabase client to create a new user
         const signUpResponse = await supabase.auth.signUp({
             email: email,
-            password: password,
+            password: hashedPassword,
         });
 
-        // Log the full signUp response for debugging purposes
-        console.log('signUpResponse:', signUpResponse);
-
-        // Destructure the response to get the user and error
-        const { user, error } = signUpResponse.data;
-
-        // Check for error first before checking for user object
-        if (error) throw error;
-
-        // Now check for user object and user ID
-        if (!user || !user.id) throw new Error('User ID is undefined');
-
-        // Log the user ID and email
-        console.log('User ID:', user.id);
-        console.log('Email:', email);
+        // ... [rest of your existing code] ...
 
         // Insert additional user details into your custom 'users' table
         const { data: userData, error: userInsertError } = await supabase
@@ -116,20 +107,18 @@ app.post('/register', async (req, res) => {
                 {
                     auth_id: user.id, // Store the Supabase Auth user ID in auth_id
                     email: email, // Email from the user object or from req.body
+                    hashed_password: hashedPassword, // Store the hashed password
                     // Other fields...
                 },
             ]);
 
-        if (userInsertError) throw userInsertError;
+        // ... [rest of your existing code] ...
 
-        // Respond with success message
-        res.status(201).json({ message: 'User created successfully', user: userData });
     } catch (error) {
         console.error('Error registering new user:', error);
         res.status(500).send(error.message);
     }
 });
-
 
 app.post('/login', async (req, res) => {
     try {
