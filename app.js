@@ -27,6 +27,14 @@ c) Parses json requests for route handlers & other middleware to interact with
 app.use(express.json());
 app.use(passport.initialize());
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'task_planner_react', 'build')));
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'task_planner_react', 'build', 'index.html'));
+});
+
 /* 
 - App.listen(): On the 'app' instance of the Express application, method listens on specified host & port
 - PORT: port number where Express server listens for incoming HTTP requests, typically set with env var
