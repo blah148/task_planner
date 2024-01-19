@@ -277,13 +277,13 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
     }
 });
 
-app.post('/tasks/new', verifyJWT, async (req, res) => {
+app.post('/tasks/new', verifyJWT, async (req, res, next) => {
     try {
         const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
         // Use Supabase client to insert a new task
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('tasks')
             .insert([
                 {
@@ -295,22 +295,15 @@ app.post('/tasks/new', verifyJWT, async (req, res) => {
                     visibility,
                     user_id
                 }
-            ])
-            .returning('*');
+            ]);
 
         if (error) {
             console.error('Supabase Insert Error:', error);
             throw error;
         }
 
-        if (data && data.length > 0) {
-            const taskId = data[0].id;
-            res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId });
-        } else {
-            console.error('No data received from the database.');
-            console.log('Data from Supabase:', data);
-            res.status(500).json({ message: 'No data received from the database.' });
-        }
+        // Successfully inserted task, pass control to the next middleware
+        next();
     } catch (error) {
         console.error('Add new task - server error.. app.js:', error);
         res.status(500).json({ message: error.message });
