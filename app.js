@@ -11,13 +11,21 @@ const PORT = process.env.PORT || 8080;
 const path = require('path');
 require('dotenv').config(); // to retrieve the cryptographic key
 const { createClient } = require('@supabase/supabase-js');
-
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 app.use(cors());
+
+// HTTPS redirect middleware
+app.use((req, res, next) => {
+  if (req.header('x-forwarded-proto') !== 'https' && process.env.NODE_ENV === 'production') {
+    res.redirect(`https://${req.header('host')}${req.url}`);
+  } else {
+    next();
+  }
+});
+
 app.use(cookieParser());
 
 /*
