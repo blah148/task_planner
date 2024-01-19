@@ -154,40 +154,47 @@ app.post('/register', async (req, res) => {
     }
 });
 
-
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        // Use Supabase client to authenticate the user
-        const { user, error: authError } = await supabase.auth.signIn({
-            email: email,
-            password: password,
-        });
 
-        if (authError || !user) {
-            // Handle authentication error (e.g., user not found or incorrect password)
-            return res.status(401).json({ message: authError?.message || 'Invalid credentials' });
+        // Query the custom 'users' table to find the user
+        const { data: userData, error: userQueryError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+        // Handle user not found or query error
+        if (userQueryError || !userData) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Verify the password
+        const validPassword = await bcrypt.compare(password, userData.hashed_password);
+        if (!validPassword) {
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         // Generate JWT manually
-        const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ sub: userData.auth_id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-        // Set JWT in HTTP-only cookies
+        // Set JWT and user_id in HTTP-only cookies
         res.cookie('token', token, {
-            httpOnly: true, // Make it HTTP-only
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+        res.cookie('user_id', userData.auth_id, {
+            httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
-        res.cookie('user_id', user.id, {
-            httpOnly: true, // Make it HTTP-only
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        });
-
+        // Respond with success message
         res.json({
             message: "Login successful",
-            redirectTo: "/fetch-tasks"
+            redirectTo: "/"
         });
     } catch (error) {
         console.error("Error during login", error);
