@@ -156,35 +156,35 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        let { email, password } = req.body;
+        console.log("Received login request:", req.body);
+        const { email, password } = req.body;
 
-        // Convert email to lowercase to match the database's case sensitivity
-        email = email.toLowerCase();
+        // Ensure email and password are provided
+        if (!email || !password) {
+            console.log("Email or password not provided");
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
 
+        console.log("Attempting to find user with email:", email);
         // Query the custom 'users' table to find the user
-        const { data: userArray, error: userQueryError } = await supabase
+        const { data: userData, error: userQueryError } = await supabase
             .from('users')
             .select('*')
-            .ilike('email', email); // using ilike for case-insensitive search
+            .eq('email', email)
+            .single();
 
+        // Detailed logging for debugging
         if (userQueryError) {
             console.error("Database query error:", userQueryError);
             return res.status(500).json({ message: 'Internal server error' });
         }
 
-        if (!userArray || userArray.length === 0) {
+        if (!userData) {
             console.log("User not found for email:", email);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        if (userArray.length > 1) {
-            console.error("Multiple users found for email:", email);
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-
-        // Now we can safely take the first element of the array
-        const userData = userArray[0];
-
+        console.log("Found user, verifying password...");
         // Verify the password
         const validPassword = await bcrypt.compare(password, userData.hashed_password);
         if (!validPassword) {
@@ -192,9 +192,11 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
+        console.log("Password verified, generating JWT...");
         // Generate JWT manually
         const token = jwt.sign({ sub: userData.auth_id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
+        console.log("JWT generated, setting cookies...");
         // Set JWT and user_id in HTTP-only cookies
         res.cookie('token', token, {
             httpOnly: true,
@@ -207,6 +209,7 @@ app.post('/login', async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
+        console.log("Cookies set, sending response...");
         // Respond with success message
         res.json({
             message: "Login successful",
