@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
     const [email, setEmail] = useState(''); // New state variable for email
     const [password, setPassword] = useState('');
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,6 +18,9 @@ function Register() {
         // Handle the response from the server
         if (response.ok) {
             console.log("Registration successful");
+            if (data.redirectTo) {
+                navigate(data.redirectTo);
+            }
             // Redirect or update UI
         } else {
             console.error("Registration failed");
