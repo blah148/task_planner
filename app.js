@@ -92,6 +92,9 @@ app.post('/register', async (req, res) => {
             email: email,
             password: password,
         });
+if (!user || !user.id) throw new Error('User ID is undefined');
+        console.log(user.id);
+        console.log(email);
 
         if (error) throw error;
 
