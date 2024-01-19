@@ -44,6 +44,27 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'task_planner_react', 'build', 'index.html'));
 });
 
+async function testSupabaseConnection() {
+  try {
+    let { data: tasks, error } = await supabase
+      .from('tasks')
+      .select('start_time');
+
+    if (error) {
+      console.error('Error fetching data from Supabase:', error);
+      return;
+    }
+
+    console.log('Successfully fetched data:', tasks);
+  } catch (error) {
+    console.error('Supabase connection error:', error);
+  }
+}
+
+// Call the function to test the connection
+testSupabaseConnection();
+
+
 /* 
 - App.listen(): On the 'app' instance of the Express application, method listens on specified host & port
 - PORT: port number where Express server listens for incoming HTTP requests, typically set with env var
@@ -53,8 +74,6 @@ app.listen(PORT, () => {
   // String is displayed on server's console (CLI or terminal where the server was started using '>> node app.js')
   console.log(`Server is running on port ${PORT}`); // Uses template literals for embedded expressions ${}
 });
-
-console.log("this is a test... is it running?");
 
 app.post('/logout', (req, res) => {
     // Clear the cookies
