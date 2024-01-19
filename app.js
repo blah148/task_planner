@@ -156,25 +156,34 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
+
+        // Convert email to lowercase to match the database's case sensitivity
+        email = email.toLowerCase();
 
         // Query the custom 'users' table to find the user
-        const { data: userData, error: userQueryError } = await supabase
+        const { data: userArray, error: userQueryError } = await supabase
             .from('users')
             .select('*')
-            .eq('email', email)
-            .single();
+            .ilike('email', email); // using ilike for case-insensitive search
 
-        // Detailed logging for debugging
         if (userQueryError) {
             console.error("Database query error:", userQueryError);
             return res.status(500).json({ message: 'Internal server error' });
         }
 
-        if (!userData) {
+        if (!userArray || userArray.length === 0) {
             console.log("User not found for email:", email);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+
+        if (userArray.length > 1) {
+            console.error("Multiple users found for email:", email);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+
+        // Now we can safely take the first element of the array
+        const userData = userArray[0];
 
         // Verify the password
         const validPassword = await bcrypt.compare(password, userData.hashed_password);
@@ -208,7 +217,6 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 // Middleware to verify JWT
 const verifyJWT = (req, res, next) => {
