@@ -146,7 +146,7 @@ app.post('/register', async (req, res) => {
         res.status(201).json({
             message: 'User created successfully',
             user: userData,
-            redirectTo: "/fetch-tasks"
+            redirectTo: "/"
         });
     } catch (error) {
         console.error('Error registering new user:', error);
