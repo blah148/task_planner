@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const app = express(); // Initialize instance of Express app for HTTP requests
 const PORT = process.env.PORT || 8080;
+const path = require('path');
 require('dotenv').config(); // to retrieve the cryptographic key
 const { createClient } = require('@supabase/supabase-js');
 
