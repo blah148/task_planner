@@ -165,14 +165,21 @@ app.post('/login', async (req, res) => {
             .eq('email', email)
             .single();
 
-        // Handle user not found or query error
-        if (userQueryError || !userData) {
+        // Detailed logging for debugging
+        if (userQueryError) {
+            console.error("Database query error:", userQueryError);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+
+        if (!userData) {
+            console.log("User not found for email:", email);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         // Verify the password
         const validPassword = await bcrypt.compare(password, userData.hashed_password);
         if (!validPassword) {
+            console.log("Invalid password for user:", email);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
@@ -194,10 +201,10 @@ app.post('/login', async (req, res) => {
         // Respond with success message
         res.json({
             message: "Login successful",
-            redirectTo: "/"
+            redirectTo: "/fetch-tasks"
         });
     } catch (error) {
-        console.error("Error during login", error);
+        console.error("Error during login:", error);
         res.status(500).json({ error: error.message });
     }
 });
