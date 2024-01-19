@@ -307,6 +307,7 @@ app.post('/tasks/new', verifyJWT, async (req, res) => {
             res.status(200).json({ message: 'Add new task - server success.. app.js', id: taskId });
         } else {
             console.error('No data received from the database.');
+            console.log('Data from Supabase:', data);
             res.status(500).json({ message: 'No data received from the database.' });
         }
     } catch (error) {
