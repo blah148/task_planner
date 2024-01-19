@@ -277,7 +277,11 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
     }
 });
 
-app.post('/tasks/new', verifyJWT, async (req, res, next) => {
+// Middleware for inserting a new task
+app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
+
+// Middleware function for inserting a task
+async function insertTaskMiddleware(req, res, next) {
     try {
         const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
@@ -308,7 +312,39 @@ app.post('/tasks/new', verifyJWT, async (req, res, next) => {
         console.error('Add new task - server error.. app.js:', error);
         res.status(500).json({ message: error.message });
     }
-});
+}
+
+// Separate function for retrieving the task ID
+async function retrieveTaskId(req, res) {
+    try {
+        const user_id = req.user.sub; // Extract user ID
+        console.log(`this is the user_id on line 321 ${user_id)}`);
+
+        // Query to find the most recently added task for the user
+        let { data: tasks, error } = await supabase
+            .from('tasks')
+            .select('id')
+            .eq('user_id', user_id)
+            .order('start_time', { ascending: false })
+            .limit(1);
+
+        if (error) {
+            console.error('Error fetching data from Supabase:', error);
+            res.status(500).json({ message: 'Error fetching task ID' });
+            return;
+        }
+
+        if (tasks.length > 0) {
+            const taskId = tasks[0].id;
+            res.status(200).json({ message: 'Task created successfully', id: taskId });
+        } else {
+            res.status(404).json({ message: 'No task found' });
+        }
+    } catch (error) {
+        console.error('Supabase connection error:', error);
+        res.status(500).json({ message: error.message });
+    }
+}
 
 app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
     try {
