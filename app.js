@@ -104,7 +104,6 @@ if (!user || !user.id) throw new Error('User ID is undefined');
             .from('users')
             .insert([
                 {
-                    id: user.id, // Use the id from the created user in Supabase auth
                     email: email, // Email from the user object or from req.body
                     // Include additional user fields here
                 },
