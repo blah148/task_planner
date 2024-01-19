@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function Register() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState(''); // New state variable for email
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
@@ -11,7 +11,7 @@ function Register() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ email, password }), // Send email instead of username
         });
         // Handle the response from the server
         if (response.ok) {
@@ -28,8 +28,8 @@ function Register() {
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Username:
-                    <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+                    Email: {/* Updated label */}
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
                 </label>
                 <label>
                     Password:
