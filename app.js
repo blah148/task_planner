@@ -295,7 +295,8 @@ app.post('/tasks/new', verifyJWT, async (req, res) => {
                     visibility,
                     user_id
                 }
-            ]);
+            ])
+            .returning('*');
 
         if (error) {
             console.error('Supabase Insert Error:', error);
