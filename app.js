@@ -318,7 +318,7 @@ async function insertTaskMiddleware(req, res, next) {
 async function retrieveTaskId(req, res) {
     try {
         const user_id = req.user.sub; // Extract user ID
-        console.log(`this is the user_id on line 321 ${user_id)}`);
+        console.log(`this is the user_id on line 321 ${user_id}`);
 
         // Query to find the most recently added task for the user
         let { data: tasks, error } = await supabase
