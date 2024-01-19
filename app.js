@@ -96,18 +96,25 @@ app.post('/register', async (req, res) => {
         // Log the full signUp response for debugging purposes
         console.log('signUpResponse:', signUpResponse);
 
+        // Destructure the response to get the user and error
+        const { user, error } = signUpResponse.data;
+
         // Check for error first before checking for user object
-        if (signUpResponse.error) throw signUpResponse.error;
+        if (error) throw error;
 
         // Now check for user object and user ID
-        if (!signUpResponse.user || !signUpResponse.user.id) throw new Error('User ID is undefined');
+        if (!user || !user.id) throw new Error('User ID is undefined');
+
+        // Log the user ID and email
+        console.log('User ID:', user.id);
+        console.log('Email:', email);
 
         // Insert additional user details into your custom 'users' table
         const { data: userData, error: userInsertError } = await supabase
             .from('users')
             .insert([
                 {
-                    auth_id: signUpResponse.user.id, // Store the Supabase Auth user ID in auth_id
+                    auth_id: user.id, // Store the Supabase Auth user ID in auth_id
                     email: email, // Email from the user object or from req.body
                     // Other fields...
                 },
@@ -119,8 +126,6 @@ app.post('/register', async (req, res) => {
         res.status(201).json({ message: 'User created successfully', user: userData });
     } catch (error) {
         console.error('Error registering new user:', error);
-        // Log the full error for debugging purposes
-        console.error(JSON.stringify(error, null, 2));
         res.status(500).send(error.message);
     }
 });
