@@ -37,11 +37,8 @@ c) Parses json requests for route handlers & other middleware to interact with
 */
 app.use(express.json());
 app.use(passport.initialize());
-const testkey = "5QhMQaoe67YkwBb0XBV0cSizNfwgt9qV";
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'task_planner_react', 'build')));
-console.log('Key length:', testkey.length);
-console.log(cryptoKey);
 // Function to encrypt data
 function encrypt(text, secretKey) {
     const iv = crypto.randomBytes(16); // Initialization vector
@@ -255,7 +252,7 @@ app.use((err, req, res, next) => {
 
 app.get('/fetchtasks', verifyJWT, async (req, res) => {
     try {
-       const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
+        const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
 
         // Use Supabase client to fetch tasks
         const { data: tasks, error } = await supabase
@@ -264,12 +261,20 @@ app.get('/fetchtasks', verifyJWT, async (req, res) => {
             .eq('user_id', user_id);
 
         if (error) {
-          res.status(500).json({ message: "Error fetching tasks from Supabase" });
-          return;
+            res.status(500).json({ message: "Error fetching tasks from Supabase" });
+            return;
         }
 
         if (tasks) {
-            res.status(200).json({ tasks: tasks });
+            // Decrypt the task_description for each task
+            const decryptedTasks = tasks.map(task => {
+                if (task.task_description) {
+                    task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
+                }
+                return task;
+            });
+
+            res.status(200).json({ tasks: decryptedTasks });
         }
 
     } catch (taskError) {
