@@ -364,20 +364,14 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
 
 
         // Use Supabase client to perform a delete operation
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('tasks')
             .delete()
             .eq('id', taskId)
-            .eq('user_id', user_id)
-            .single(); // Use .single() to return the deleted row
+            .eq('user_id', user_id);
 
         if (error) {
             throw error;
-        }
-
-        // Check if any row was actually deleted
-        if (!data) {
-            return res.status(404).json({ message: 'Task not found or not owned by user' });
         }
 
         // If the deletion was successful, you can send a 200 response
