@@ -335,6 +335,7 @@ async function retrieveTaskId(req, res) {
 
         if (tasks.length > 0) {
             const taskId = tasks[0].id;
+            console.log(`The returned taskId that was just created is: ${taskId}`);
             res.status(200).json({ message: 'Task created successfully', id: taskId });
         } else {
             res.status(404).json({ message: 'No task found' });
