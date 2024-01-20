@@ -261,7 +261,7 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
 
         // Use Supabase client to fetch tasks
-        const { data, error } = await supabase
+        const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
             .eq('user_id', user_id);
@@ -269,7 +269,7 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         if (error) {
             throw error;
         }
-        console.log(`the array of rows is: ${data}`);
+        console.log(`the array of rows is: ${tasks}`);
 
       if (data) {
         res.status(200).json({ tasks: data });
