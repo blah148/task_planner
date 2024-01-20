@@ -269,7 +269,7 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         if (error) {
             throw error;
         }
-
+        console.log(data);
         res.status(200).json({ tasks: data });
     } catch (taskError) {
         console.error("Error fetching tasks:", taskError);
