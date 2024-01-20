@@ -276,6 +276,7 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         }
 
         if (tasks) {
+            console.log(JSON.stringify(tasks, null, 2));
             res.status(200).json({ tasks: tasks });
 
         }
@@ -285,6 +286,20 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         res.status(500).json({ message: "Error fetching tasks" });
     }
 });
+
+async function testThis () {
+
+        // Use Supabase client to fetch tasks
+        let { data:tasks, error } = await supabase
+            .from('tasks')
+            .select();
+
+        console.log(`the array of rows is: ${tasks}`);
+        console.log(`the array of rows with stringify is: ${JSON.stringify(tasks)}`);
+
+}
+
+testThis();
 
 // Middleware for inserting a new task
 app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
