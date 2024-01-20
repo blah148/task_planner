@@ -369,15 +369,17 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
         }
 });
 
-app.patch('/tasks/toggleComplete/:id', verifyJWT, async (req, res) => {
+app.patch('/tasks/toggleComplete/:id/:isComplete', verifyJWT, async (req, res) => {
     try {
         const taskId = req.params.id;
-        const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+        const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+        const isComplete = req.params.isComplete
+        const toggle = isComplete === 'true' ? 'false' : 'true';
 
         // Use Supabase client to update the task
         const { error } = await supabase
             .from('tasks')
-            .update({ is_complete: !is_complete })
+            .update({ is_complete: toggle })
             .eq('id', taskId)
             .eq('user_id', user_id);
 
