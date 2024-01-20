@@ -19,7 +19,6 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.tasks);
                 setTasks(data.tasks); // Update the tasks state with the fetched data
                 sortTasks(data.tasks);
             } else {
