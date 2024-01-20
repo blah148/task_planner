@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
- // useEffect(() => {
+  useEffect(() => {
     const fetchTasks = async () => {
         try {
             const response = await fetch('/fetch-tasks', {
@@ -33,8 +33,28 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     };
 
     fetchTasks();
- // }, []); // The empty dependency array ensures this runs only once on component mount
+  }, []); // The empty dependency array ensures this runs only once on component mount
 
+ fetch('/fetch-tasks')
+  .then(response => {
+    console.log("Response received:", response);
+    if (!response.ok) {
+      throw new Error(`Network response was not ok, status: ${response.status}`);
+    }
+    return response.text(); // First get the text
+  })
+  .then(text => {
+    console.log("Response text:", text);
+    return JSON.parse(text); // Then try to parse it as JSON
+  })
+  .then(data => {
+    console.log("Data received:", data);
+    // Process your data here
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+ 
   const[hideCompletedTasks, setHideCompletedTasks] = useState(() => {
     const saved = localStorage.getItem('hideCompletedTasks');
     return saved === null ? false : JSON.parse(saved);
