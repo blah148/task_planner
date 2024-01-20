@@ -352,22 +352,24 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
         // Use Supabase client to perform a delete operation
-        const { data: tasks, error } = await supabase
+        const { data, error } = await supabase
             .from('tasks')
             .delete()
             .eq('id', taskId)
-            .eq('user_id', user_id);
+            .eq('user_id', user_id)
+            .single(); // Use .single() to return the deleted row
 
         if (error) {
             throw error;
         }
 
         // Check if any row was actually deleted
-        if (data.length === 0) {
+        if (!data) {
             return res.status(404).json({ message: 'Task not found or not owned by user' });
         }
 
-        res.status(200).json({ message: 'Delete task - server success.. app.js' });
+        // If the deletion was successful, you can send a 200 response
+        res.status(200).json({ message: 'Task deleted successfully' });
     } catch (error) {
         console.error('Delete task - server error.. app.js:', error);
         res.status(500).json({ message: error.message });
