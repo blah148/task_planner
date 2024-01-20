@@ -292,9 +292,9 @@ async function testThis () {
         // Use Supabase client to fetch tasks
         let { data:tasks, error } = await supabase
             .from('tasks')
-            .select();
+            .select()
+            .eq('user_id', '501d4e7c-92b7-438a-b29b-d003621695bc');
 
-        console.log(`the array of rows is: ${tasks}`);
         console.log(`the array of rows with stringify is: ${JSON.stringify(tasks)}`);
 
 }
