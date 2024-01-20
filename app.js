@@ -335,7 +335,6 @@ async function retrieveTaskId(req, res) {
 
         if (tasks.length > 0) {
             const taskId = tasks[0].id;
-            console.log(`The returned taskId that was just created is: ${taskId}`);
             res.status(200).json({ message: 'Task created successfully', id: taskId });
         } else {
             res.status(404).json({ message: 'No task found' });
@@ -351,18 +350,6 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
         const taskId = req.params.id;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
-        console.log(user_id);
-        console.log(taskId);
-
-        console.log('Supabase query:', supabase
-    .from('tasks')
-    .delete()
-    .eq('id', taskId)
-    .eq('user_id', user_id));
-
-
-
-
         // Use Supabase client to perform a delete operation
         const { error } = await supabase
             .from('tasks')
@@ -376,10 +363,10 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
 
         // If the deletion was successful, you can send a 200 response
         res.status(200).json({ message: 'Task deleted successfully' });
-    } catch (error) {
-        console.error('Delete task - server error.. app.js:', error);
-        res.status(500).json({ message: error.message });
-    }
+        } catch (error) {
+          console.error('Delete task - server error.. app.js:', error);
+          res.status(500).json({ message: error.message });
+        }
 });
 
 app.patch('/tasks/toggleComplete/:id', verifyJWT, async (req, res) => {
@@ -388,19 +375,14 @@ app.patch('/tasks/toggleComplete/:id', verifyJWT, async (req, res) => {
         const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
         // Use Supabase client to update the task
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('tasks')
             .update({ is_complete: supabase.raw('NOT is_complete') })
-            .match({ id: taskId, user_id: userId })
-            .single();
+            .eq('id', taskId)
+            .eq('user_id', user_id);
 
         if (error) {
             throw error;
-        }
-
-        // Check if any row was actually updated
-        if (!data) {
-            return res.status(404).json({ message: 'Task not found or not owned by user' });
         }
 
         res.status(200).json({
