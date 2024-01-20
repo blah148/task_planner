@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
 
-  useEffect(() => {
+ // useEffect(() => {
     const fetchTasks = async () => {
         try {
             const response = await fetch('/fetch-tasks', {
@@ -33,7 +33,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     };
 
     fetchTasks();
-  }, []); // The empty dependency array ensures this runs only once on component mount
+ // }, []); // The empty dependency array ensures this runs only once on component mount
 
   const[hideCompletedTasks, setHideCompletedTasks] = useState(() => {
     const saved = localStorage.getItem('hideCompletedTasks');
