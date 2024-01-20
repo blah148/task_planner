@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Baloo 2';
+  src: local('Baloo 2'), url('./Baloo2-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Baloo 2';
+  src: local('Baloo 2 Medium'), url('./Baloo2-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Baloo 2';
+  src: local('Baloo 2 SemiBold'), url('./Baloo2-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Baloo 2';
+  src: local('Baloo 2 Bold'), url('./Baloo2-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Baloo 2';
+  src: local('Baloo 2 ExtraBold'), url('./Baloo2-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+

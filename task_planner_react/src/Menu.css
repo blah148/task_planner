@@ -1,0 +1,31 @@
+.menu {
+  display: none;
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  position: absolute; /* or fixed depending on requirement */
+  top: 50px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  width: 250px; /* Adjust as needed */
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.menu.show {
+  display: block;
+  opacity: 1;
+}
+
+.menu-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  /* Add more styles as needed */
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+/* Add more styling for menu items, icons, and hover effects as needed */
+

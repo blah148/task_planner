@@ -1,6 +1,6 @@
 // Imports react & the useState hook
 import React, { useState, useEffect } from 'react';
-import './index.css';
+import './feed.css';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
