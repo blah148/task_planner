@@ -269,8 +269,16 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         if (error) {
             throw error;
         }
-        console.log(data);
+        console.log(`the array of rows is: ${data}`);
+
+      if (data) {
         res.status(200).json({ tasks: data });
+      }
+
+      else {
+        res.status(404).json({"Returned nothing for rows"});
+      }
+
     } catch (taskError) {
         console.error("Error fetching tasks:", taskError);
         res.status(500).json({ message: "Error fetching tasks" });
