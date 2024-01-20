@@ -373,13 +373,11 @@ app.patch('/tasks/toggleComplete/:id', verifyJWT, async (req, res) => {
     try {
         const taskId = req.params.id;
         const userId = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
-        console.log(`the is_complete before the toggle is ${is_complete}`);
-        const toggleOnOff = !is_complete;
 
         // Use Supabase client to update the task
         const { error } = await supabase
             .from('tasks')
-            .update({ is_complete: toggleOnOff })
+            .update({ is_complete: !is_complete })
             .eq('id', taskId)
             .eq('user_id', user_id);
 
