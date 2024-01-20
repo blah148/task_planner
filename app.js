@@ -37,7 +37,7 @@ c) Parses json requests for route handlers & other middleware to interact with
 */
 app.use(express.json());
 app.use(passport.initialize());
-const testkey = "5QhMQaoe67YkwBb0XBV0cSizNfwgt9qVE/r7n706zmM=";
+const testkey = "5QhMQaoe67YkwBb0XBV0cSizNfwgt9qV";
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'task_planner_react', 'build')));
 console.log('Key length:', testkey.length);
