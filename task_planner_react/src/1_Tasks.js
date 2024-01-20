@@ -57,9 +57,9 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     visibility: "flex"
   });
 
-  const handleCheckbox = async (id) => {
+  const handleCheckbox = async (id, isComplete) => {
     try {
-      await axios.patch(`/tasks/toggleComplete/${id}`);
+      await axios.patch(`/tasks/toggleComplete/${id}?isComplete=${isComplete}`);
       setTasks((prevTasks) =>
         prevTasks.map((item) =>
           item.id === id ? { ...item, isComplete: !item.isComplete } : item
