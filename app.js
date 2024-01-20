@@ -15,6 +15,7 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const cryptoKey = process.env.CRYPTO_KEY;
 
 app.use(cors());
 
@@ -59,6 +60,8 @@ function decrypt(text, secretKey) {
     decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
 }
+
+console.log(`this is the crypto key: ${cryptoKey}`);
 
 /* 
 - App.listen(): On the 'app' instance of the Express application, method listens on specified host & port
