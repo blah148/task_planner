@@ -40,7 +40,8 @@ app.use(passport.initialize());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'task_planner_react', 'build')));
-
+console.log('Key length:', Buffer.from(process.env.CRYPTO_KEY).length);
+console.log(cryptoKey);
 // Function to encrypt data
 function encrypt(text, secretKey) {
     const iv = crypto.randomBytes(16); // Initialization vector
