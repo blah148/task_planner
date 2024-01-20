@@ -351,6 +351,9 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
         const taskId = req.params.id;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
+        console.log(user_id);
+        console.log(taskId);
+
         // Use Supabase client to perform a delete operation
         const { data, error } = await supabase
             .from('tasks')
