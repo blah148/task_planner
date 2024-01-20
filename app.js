@@ -266,7 +266,6 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
             .select()
             .eq('user_id', user_id);
 
-        console.log(`the array of rows is: ${tasks}`);
         console.log(`the array of rows with stringify is: ${JSON.stringify(tasks)}`);
 
         if (error) {
@@ -295,7 +294,7 @@ async function testThis () {
             .select()
             .eq('user_id', '501d4e7c-92b7-438a-b29b-d003621695bc');
 
-        console.log(`the array of rows with stringify is: ${JSON.stringify(tasks)}`);
+        console.log(`testThis: the array of rows with stringify is: ${JSON.stringify(tasks)}`);
 
 }
 
