@@ -387,10 +387,7 @@ app.patch('/tasks/toggleComplete/:id/:isComplete', verifyJWT, async (req, res) =
             throw error;
         }
 
-        res.status(200).json({
-            message: 'Update is_complete - server success.. app.js',
-            task: data // Return the updated task
-        });
+        res.status(200).json({ message: 'Update is_complete - server success.. app.js' });
     } catch (error) {
         console.error('Update is_complete - server error.. app.js:', error);
         res.status(500).json({ message: error.message });
