@@ -44,27 +44,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'task_planner_react', 'build', 'index.html'));
 });
 
-async function testSupabaseConnection() {
-  try {
-    let { data: tasks, error } = await supabase
-      .from('tasks')
-      .select('start_time');
-
-    if (error) {
-      console.error('Error fetching data from Supabase:', error);
-      return;
-    }
-
-    console.log('Successfully fetched data:', tasks);
-  } catch (error) {
-    console.error('Supabase connection error:', error);
-  }
-}
-
-// Call the function to test the connection
-testSupabaseConnection();
-
-
 /* 
 - App.listen(): On the 'app' instance of the Express application, method listens on specified host & port
 - PORT: port number where Express server listens for incoming HTTP requests, typically set with env var
@@ -256,7 +235,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetch-tasks', verifyJWT, async (req, res) => {
+app.get('/fetch-tasks', async (req, res) => {
     try {
        // const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
 
@@ -275,9 +254,7 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
         }
 
         if (tasks) {
-            console.log(JSON.stringify(tasks, null, 2));
             res.status(200).json({ tasks: tasks });
-
         }
 
     } catch (taskError) {
