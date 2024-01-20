@@ -230,20 +230,17 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetchtasks', async (req, res) => {
+app.get('/fetchtasks', verifyJWT, async (req, res) => {
     try {
-       // const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
+       const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
 
         // Use Supabase client to fetch tasks
         const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
-            .eq('user_id', '501d4e7c-92b7-438a-b29b-d003621695bc');
-
-        console.log(`the array of rows with stringify is: ${JSON.stringify(tasks)}`);
+            .eq('user_id', user_id);
 
         if (error) {
-          console.error("Error fetching tasks from Supabase:", error);
           res.status(500).json({ message: "Error fetching tasks from Supabase" });
           return;
         }
@@ -257,20 +254,6 @@ app.get('/fetchtasks', async (req, res) => {
         res.status(500).json({ message: "Error fetching tasks" });
     }
 });
-
-async function testThis () {
-
-        // Use Supabase client to fetch tasks
-        const { data:tasks, error } = await supabase
-            .from('tasks')
-            .select()
-            .eq('user_id', '501d4e7c-92b7-438a-b29b-d003621695bc');
-
-        console.log(`testThis: the array of rows with stringify is: ${JSON.stringify(tasks)}`);
-
-}
-
-testThis();
 
 // Middleware for inserting a new task
 app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
