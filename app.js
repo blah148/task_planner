@@ -276,7 +276,7 @@ app.get('/fetch-tasks', verifyJWT, async (req, res) => {
       }
 
       else {
-        res.status(404).json({"Returned nothing for rows"});
+        res.status(404).json({ message: "Returned nothing for rows" });
       }
 
     } catch (taskError) {
