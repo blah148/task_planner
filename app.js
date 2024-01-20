@@ -115,14 +115,14 @@ app.post('/register', async (req, res) => {
         // Insert additional user details into your custom 'users' table
         const { data: userData, error: userInsertError } = await supabase
             .from('users')
-            .insert([
+            .insert(
                 {
                     auth_id: user.id,
                     email: email,
                     hashed_password: hashedPassword, // Store the hashed password for your custom use
                     // Other fields...
-                },
-            ]);
+                }
+            );
 
         if (userInsertError) throw userInsertError;
 
