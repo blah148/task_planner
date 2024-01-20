@@ -289,17 +289,16 @@ async function insertTaskMiddleware(req, res, next) {
         // Use Supabase client to insert a new task
         const { error } = await supabase
             .from('tasks')
-            .insert([
-                {
-                    start_time,
-                    end_time,
-                    task_description,
+            .insert({
+                    start_time: start_time,
+                    end_time: end_time,
+                    task_description: task_description,
                     is_complete: isComplete,
-                    display_none,
-                    visibility,
-                    user_id
-                }
-            ]);
+                    display_none: display_none,
+                    visibility: visibility,
+                    user_id: user_id
+              }
+            );
 
         if (error) {
             console.error('Supabase Insert Error:', error);
