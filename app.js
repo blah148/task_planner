@@ -61,8 +61,6 @@ function decrypt(text, secretKey) {
     return decrypted.toString();
 }
 
-console.log(`this is the crypto key: ${cryptoKey}`);
-
 /* 
 - App.listen(): On the 'app' instance of the Express application, method listens on specified host & port
 - PORT: port number where Express server listens for incoming HTTP requests, typically set with env var
@@ -288,13 +286,16 @@ async function insertTaskMiddleware(req, res, next) {
         const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
+        // Encrypt the task_description
+        const encryptedTaskDescription = encrypt(task_description, cryptoKey);
+
         // Use Supabase client to insert a new task
         const { error } = await supabase
             .from('tasks')
             .insert({
                     start_time: start_time,
                     end_time: end_time,
-                    task_description: task_description,
+                    task_description: encryptedTaskDescription,
                     is_complete: isComplete,
                     display_none: display_none,
                     visibility: visibility,
