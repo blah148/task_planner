@@ -4,7 +4,6 @@ const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const app = express(); // Initialize instance of Express app for HTTP requests
@@ -39,28 +38,6 @@ app.use(passport.initialize());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'task_planner_react', 'build')));
-
-
-// Function to encrypt data
-function encrypt(text, secretKey) {
-    const iv = crypto.randomBytes(16); // Initialization vector
-    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
-    let encrypted = cipher.update(text);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return iv.toString('hex') + ':' + encrypted.toString('hex');
-}
-
-// Function to decrypt data
-function decrypt(text, secretKey) {
-    let textParts = text.split(':');
-    let iv = Buffer.from(textParts.shift(), 'hex');
-    let encryptedText = Buffer.from(textParts.join(':'), 'hex');
-    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
-}
-
 
 /* 
 - App.listen(): On the 'app' instance of the Express application, method listens on specified host & port
@@ -284,12 +261,8 @@ app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
 // Middleware function for inserting a task
 async function insertTaskMiddleware(req, res, next) {
     try {
-        let { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
+        const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
-
-        // Encrypt the task_description
-        const secretKey = process.env.CRYPTO_KEY; // stored in .env
-        const encryptedTaskDescription = encrypt(task_description, secretKey);
 
         // Use Supabase client to insert a new task
         const { error } = await supabase
@@ -297,7 +270,7 @@ async function insertTaskMiddleware(req, res, next) {
             .insert({
                     start_time: start_time,
                     end_time: end_time,
-                    task_description: encryptedTaskDescription,
+                    task_description: task_description,
                     is_complete: isComplete,
                     display_none: display_none,
                     visibility: visibility,
