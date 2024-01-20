@@ -12,7 +12,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
   useEffect(() => {
     const fetchTasks = async () => {
         try {
-            const response = await fetch('/fetch-tasks', {
+            const response = await fetch('/fetchtasks', {
                 method: 'GET',
                 credentials: 'include' // Ensures that cookies are sent with the request
             });
@@ -35,7 +35,7 @@ function TaskForm({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
     fetchTasks();
   }, []); // The empty dependency array ensures this runs only once on component mount
 
- fetch('/fetch-tasks')
+ fetch('/fetchtasks')
   .then(response => {
     console.log("Response received:", response);
     if (!response.ok) {

@@ -235,7 +235,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetch-tasks', async (req, res) => {
+app.get('/fetchtasks', async (req, res) => {
     try {
        // const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
 
