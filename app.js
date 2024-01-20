@@ -354,6 +354,14 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
         console.log(user_id);
         console.log(taskId);
 
+        console.log('Supabase query:', supabase
+    .from('tasks')
+    .delete()
+//    .eq('id', taskId)
+  //  .eq('user_id', user_id)
+    .toSQL());
+
+
         // Use Supabase client to perform a delete operation
         const { data, error } = await supabase
             .from('tasks')
