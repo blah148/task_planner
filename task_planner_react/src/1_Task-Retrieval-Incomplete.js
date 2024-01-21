@@ -97,10 +97,6 @@ function TaskRetrievalIncomplete({ tasks, setTasks }) {
                 <div
                   key={index}
                   className="row_item buffered_task"
-                  style={{
-                    opacity: task.isComplete ? 0.5 : 1,
-                    display: "flex"
-                  }}
                 >
                   <div className="buffer time">
                     {convertIsoTo12HourFormat(task.start_time)}
@@ -120,7 +116,7 @@ function TaskRetrievalIncomplete({ tasks, setTasks }) {
                   <label
                     className="custom-checkbox"
                     onClick={() => handleCheckbox(task.id)}
-                    style={{ backgroundColor: task.isComplete ? '#b9b9b9' : 'transparent' }}
+                    style={{ backgroundColor: 'transparent' }}
                   ></label>
 
                   {/* Edit and Delete buttons */}

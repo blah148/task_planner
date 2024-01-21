@@ -47,7 +47,6 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
     }
   };
 
-
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
   }
@@ -98,10 +97,6 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
                 <div
                   key={index}
                   className="row_item buffered_task"
-                  style={{
-                    opacity: task.isComplete ? 0.5 : 1,
-                    display: "flex"
-                  }}
                 >
                   <div className="buffer time">
                     {convertIsoTo12HourFormat(task.start_time)}
@@ -121,7 +116,7 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
                   <label
                     className="custom-checkbox"
                     onClick={() => handleCheckbox(task.id)}
-                    style={{ backgroundColor: task.isComplete ? '#b9b9b9' : 'transparent' }}
+                    style={{ backgroundColor: '#b9b9b9' }}
                   ></label>
 
                   {/* Edit and Delete buttons */}
