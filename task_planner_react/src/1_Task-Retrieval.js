@@ -5,11 +5,11 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrieval({ tasks, setTasks }) {
+function TaskRetrieval({ tasks, setTasks, is_complete }) {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('/fetchtasks', {
+        const response = await fetch(`/fetchtasks/${is_complete}`, {
           method: 'GET',
           credentials: 'include' // Ensures that cookies are sent with the request
         });

@@ -13,9 +13,14 @@ function HomePage({ tasks, setTasks }) {
     <>
         <Sidebar />
         <div className="homeBanner">
-          <div style={{ marginTop: "18px" }}>
+          <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
             <TaskForm tasks={tasks} setTasks={setTasks} />
-            <TaskRetrieval tasks={tasks} setTasks={setTasks} />
+            <h2 className="task_feed_title">Incomplete tasks</h2>
+            <TaskRetrieval is_complete={true} tasks={tasks} setTasks={setTasks} />
+          </div>
+          <div className="task_feed complete">
+            <h2 className="task_feed_title">Completed tasks</h2>
+            <TaskRetrieval is_complete={false} tasks={tasks} setTasks={setTasks} />
           </div>
         </div>
         <Menu setTasks={setTasks} />
