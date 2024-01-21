@@ -5,19 +5,20 @@ import LogoutButton from './e_button_Logout';
 import LoginButton from './e_button_Login';
 import Sidebar from './1_Sidebar';
 import Menu from './Menu.js';
+import TaskRetrieval from './1_Task-Retrieval';
 
-function HomePage({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
+function HomePage({ tasks, setTasks }) {
   
   return (
     <>
         <Sidebar />
         <div className="homeBanner">
           <div style={{ marginTop: "18px" }}>
-            {/* Pass tasks and setTasks to TaskForm */}
-            <TaskForm isLoggedIn={isLoggedIn} tasks={tasks} setTasks={setTasks} />
+            <TaskForm tasks={tasks} setTasks={setTasks} />
+            <TaskRetrieval tasks={tasks} setTasks={setTasks} />
           </div>
         </div>
-        <Menu isLoggedIn={isLoggedIn} setTasks={setTasks} />
+        <Menu setTasks={setTasks} />
     </>
   );
 }
