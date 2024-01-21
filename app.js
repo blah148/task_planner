@@ -263,7 +263,7 @@ app.get('/fetchtasks/:isComplete', verifyJWT, async (req, res) => {
             .from('tasks')
             .select()
             .eq('user_id', user_id)
-            .eq('is_complete', isCompleteBool);
+            .eq('is_complete', true);
 
         if (error) {
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
@@ -405,7 +405,7 @@ app.patch('/tasks/toggleComplete/:id/:isComplete', verifyJWT, async (req, res) =
         res.status(200).json({ message: 'Update is_complete - server success.. app.js' });
     } catch (error) {
         console.error('Update is_complete - server error.. app.js:', error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message })
     }
 });
 
