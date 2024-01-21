@@ -263,7 +263,7 @@ app.get('/fetchtasks/:isComplete', verifyJWT, async (req, res) => {
             .from('tasks')
             .select()
             .eq('user_id', user_id)
-            .eq('is_complete', true);
+            .eq('is_complete', false);
 
         if (error) {
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
