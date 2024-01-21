@@ -22,25 +22,22 @@ function TaskForm({ tasks, setTasks }) {
 
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
-   
-    //Prevents "default" form submission behaviour aka reload
-    e.preventDefault();
-   
-    let taskObject_withId;
+  e.preventDefault();
 
-    try {
-      const response = await axios.post('/tasks/new', taskObject);
-      taskObject_withId = {...taskObject, id: response.data.id};
-    } catch(error) {
-      console.error(error);
-    }
-    
+  try {
+    const response = await axios.post('/tasks/new', taskObject);
+    const taskObject_withId = { ...taskObject, id: response.data.id };
+
     setTasks(prevTasks => {
       const updatedTasks = [...prevTasks, taskObject_withId];
+      return updatedTasks; // Return the updated tasks array
     });
+  } catch (error) {
+    console.error('Error in task submission:', error);
+    // Handle the error appropriately (e.g., show an error message to the user)
+  }
+};
 
-  };
-  
   return (
     <>  
       <form className = "form_create-task" onSubmit={handleSubmit}>
