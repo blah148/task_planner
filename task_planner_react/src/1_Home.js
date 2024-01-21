@@ -15,11 +15,9 @@ function HomePage({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
           <div style={{ marginTop: "18px" }}>
             {/* Pass tasks and setTasks to TaskForm */}
             <TaskForm isLoggedIn={isLoggedIn} tasks={tasks} setTasks={setTasks} />
-            <LoginButton />
-            <LogoutButton setTasks={setTasks} />
           </div>
         </div>
-        <Menu setTasks={setTasks} />
+        <Menu isLoggedIn={isLoggedIn} setTasks={setTasks} />
     </>
   );
 }

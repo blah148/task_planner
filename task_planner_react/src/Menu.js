@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Menu.css'; 
 
-function Menu({ setTasks }) {
+function Menu({ setTasks, isLoggedIn }) {
 
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
@@ -58,6 +58,10 @@ function Menu({ setTasks }) {
       </svg>
 
       <div ref={menuRef} className={`menu ${showMenu ? 'show' : ''}`}>
+
+        {isLoggedIn ? (
+        <>
+
         <a href="/register" className="menuItem">
           <svg id="icon" viewBox="0 0 32 32">
             <polygon points="32 14 28 14 28 10 26 10 26 14 22 14 22 16 26 16 26 20 28 20 28 16 32 16 32 14"/>
@@ -75,6 +79,12 @@ function Menu({ setTasks }) {
           </svg>
           <p className="menuLabel">Login</p>
         </a>
+
+        </>
+      ) : (
+        <>
+
+
         <a href="/account" className="menuItem">
           <svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
             <polygon points="28.07 21 22 15 28.07 9 29.5 10.41 24.86 15 29.5 19.59 28.07 21"/>
@@ -84,7 +94,7 @@ function Menu({ setTasks }) {
           </svg>
           <p className="menuLabel">My account</p>
         </a>
-        <a href="/login" className="menuItem" onClick={handleLogout}>
+        <a href="/login" className="menuItem">
           <svg id="icon" viewBox="0 0 32 32">
             <path d="M26,30H14a2,2,0,0,1-2-2V25h2v3H26V4H14V7H12V4a2,2,0,0,1,2-2H26a2,2,0,0,1,2,2V28A2,2,0,0,1,26,30Z"/>
             <polygon points="14.59 20.59 18.17 17 4 17 4 15 18.17 15 14.59 11.41 16 10 22 16 16 22 14.59 20.59"/>
@@ -92,6 +102,9 @@ function Menu({ setTasks }) {
           </svg>
           <p className="menuLabel">Logout</p>
         </a>
+        </>
+      )}
+
       </div>
     </>
   );
