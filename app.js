@@ -435,7 +435,7 @@ const fetchIsComplete = async (req, res, next) => {
         // Handle the case where no task was found
         throw new Error('Task not found');
       }
-    }
+   
     } catch (error) {
         console.error('Fetch is_complete - server error:', error);
         res.status(500).json({ message: error.message });
