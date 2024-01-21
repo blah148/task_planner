@@ -325,7 +325,7 @@ app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
 // Middleware function for inserting a task
 async function insertTaskMiddleware(req, res, next) {
     try {
-        const { start_time, end_time, task_description, display_none, visibility } = req.body;
+        const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
 
         // Encrypt the task_description
@@ -339,7 +339,7 @@ async function insertTaskMiddleware(req, res, next) {
                     end_time: end_time,
                     task_description: encryptedTaskDescription,
                     is_complete: false,
-                    display_none: "flex",
+                    display_none: display_none,
                     visibility: visibility,
                     user_id: user_id
               }
