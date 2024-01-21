@@ -6,6 +6,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function TaskRetrieval({ tasks, setTasks, is_complete }) {
+
+  console.log(`The requested completion type is: ${is_complete}`);
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -90,7 +93,6 @@ function TaskRetrieval({ tasks, setTasks, is_complete }) {
       <div className="buffer_container">
         <div className="buffer_task-list">
           {tasks.map((task, index) => {
-            if (!task.is_complete) {
               return (
                 <div
                   key={index}
@@ -132,8 +134,6 @@ function TaskRetrieval({ tasks, setTasks, is_complete }) {
                   </div>
                 </div>
               );
-            }
-            return null; // Don't render if task is complete
           })}
         </div>
       </div>
