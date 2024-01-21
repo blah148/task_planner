@@ -417,22 +417,24 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
 const fetchIsComplete = async (req, res, next) => {
     try {
         const taskId = req.params.id;
-        const user_id = req.user.sub;
-
+        console.log(`this is the taskId for fetchIsComplete: ${taskId}`);
         const { data: task, error } = await supabase
             .from('tasks')
             .select('is_complete')
-            .eq('id', taskId)
-            .eq('user_id', user_id);
+            .eq('id', taskId);
 
         if (error) {
             throw error;
         }
-
-        // Attach is_complete to the request object
-        req.isComplete = task.is_complete;
-        console.log(`this is the before status of is_complete: ${req.isComplete}`);
-        next();
+    if (tasks.length > 0) {
+      const task = tasks[0]; // This is your task object
+      req.isComplete = task.is_complete;
+      console.log(`this is the status of is_complete: ${req.isComplete}`);
+      next();
+    } else {
+      // Handle the case where no task was found
+    throw new Error('Task not found');
+}
     } catch (error) {
         console.error('Fetch is_complete - server error:', error);
         res.status(500).json({ message: error.message });
@@ -442,16 +444,15 @@ const fetchIsComplete = async (req, res, next) => {
 app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, res) => {
     try {
         const taskId = req.params.id;
-        const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+         console.log(`this is the taskId for the endpoint: ${taskId}`);
         const newIsCompleteValue = !req.isComplete; // Determine the new value
-        console.log(`this is the after status of is_complete: ${req.isComplete}`);
+        console.log(`this is the after status of is_complete: ${newIsCompleteValue}`);
 
         // Toggle the is_complete status
         const { error } = await supabase
             .from('tasks')
             .update({ is_complete: newIsCompleteValue })
-            .eq('id', taskId)
-            .eq('user_id', user_id);
+            .eq('id', taskId);
 
         if (error) {
             throw error;
