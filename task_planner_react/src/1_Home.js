@@ -19,7 +19,7 @@ function HomePage({ isLoggedIn, setIsLoggedIn, tasks, setTasks }) {
             <LogoutButton setTasks={setTasks} />
           </div>
         </div>
-        <Menu />
+        <Menu setTasks={setTasks} />
     </>
   );
 }

@@ -1,10 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Menu.css'; 
 
-function Menu() {
+function Menu({ setTasks }) {
 
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(); // Create a ref for the menu
+  
+  const handleLogout = async () => {
+    try {
+      // Clear client-side state
+      setTasks([]);
+
+      // Request the server to clear cookies
+      const response = await fetch('/logout', {
+        method: 'POST',
+        credentials: 'include' // Ensures cookies are included
+      });
+
+      if (response.ok) {
+        // Redirect to login or home page
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -61,6 +83,14 @@ function Menu() {
             <rect fill="none" id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/>
           </svg>
           <p className="menuLabel">My account</p>
+        </a>
+        <a href="/login" className="menuItem" onClick={handleLogout}>
+          <svg id="icon" viewBox="0 0 32 32">
+            <path d="M26,30H14a2,2,0,0,1-2-2V25h2v3H26V4H14V7H12V4a2,2,0,0,1,2-2H26a2,2,0,0,1,2,2V28A2,2,0,0,1,26,30Z"/>
+            <polygon points="14.59 20.59 18.17 17 4 17 4 15 18.17 15 14.59 11.41 16 10 22 16 16 22 14.59 20.59"/>
+            <rect fill="none" id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/>
+          </svg>
+          <p className="menuLabel">Logout</p>
         </a>
       </div>
     </>
