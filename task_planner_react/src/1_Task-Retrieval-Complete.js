@@ -31,21 +31,22 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
 
     fetchTasks();
   }, []); // The empty dependency array ensures this runs only once on component mount
-
-  const handleCheckbox = async (id, isComplete) => {
-    
-
+  
+  const handleCheckbox = async id => {
     try {
-      await axios.patch(`/tasks/toggleComplete/${id}/${isComplete}`);
-      setCompletedTasks((prevTasks) =>
-        prevTasks.map((item) =>
-          item.id === id ? { ...item, isComplete: !item.isComplete } : item
-        )
-      );
+      const response = await axios.patch(`/tasks/toggleComplete/${id}`);
+      if (response.status === 200) {
+        setCompletedTasks(prevTasks =>
+          prevTasks.map(item =>
+            item.id === id ? { ...item, isComplete: response.data.isComplete } : item
+          )
+        );
+      }
     } catch (error) {
       console.error('Error toggling is_complete', error);
     }
   };
+
 
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));

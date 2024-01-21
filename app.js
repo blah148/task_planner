@@ -362,7 +362,6 @@ async function insertTaskMiddleware(req, res, next) {
 async function retrieveTaskId(req, res) {
     try {
         const user_id = req.user.sub; // Extract user ID
-        console.log(`this is the user_id on line 321 ${user_id}`);
 
         // Query to find the most recently added task for the user
         let { data: tasks, error } = await supabase
@@ -414,17 +413,15 @@ app.delete('/tasks/delete/:id', verifyJWT, async (req, res) => {
         }
 });
 
-app.patch('/tasks/toggleComplete/:id/:isComplete', verifyJWT, async (req, res) => {
+// Middleware to fetch and attach is_complete status to req
+const fetchIsComplete = async (req, res, next) => {
     try {
         const taskId = req.params.id;
-        const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
-        const isComplete = req.params.isComplete
-        const toggle = isComplete === 'true' ? 'false' : 'true';
+        const user_id = req.user.sub;
 
-        // Use Supabase client to update the task
-        const { error } = await supabase
+        const { data: task, error } = await supabase
             .from('tasks')
-            .update({ is_complete: toggle })
+            .select('is_complete')
             .eq('id', taskId)
             .eq('user_id', user_id);
 
@@ -432,10 +429,41 @@ app.patch('/tasks/toggleComplete/:id/:isComplete', verifyJWT, async (req, res) =
             throw error;
         }
 
-        res.status(200).json({ message: 'Update is_complete - server success.. app.js' });
+        // Attach is_complete to the request object
+        req.isComplete = task.is_complete;
+        console.log(`this is the before status of is_complete: ${req.isComplete}`);
+        next();
     } catch (error) {
-        console.error('Update is_complete - server error.. app.js:', error);
-        res.status(500).json({ message: error.message })
+        console.error('Fetch is_complete - server error:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, res) => {
+    try {
+        const taskId = req.params.id;
+        const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+        const newIsCompleteValue = !req.isComplete; // Determine the new value
+
+        // Toggle the is_complete status
+        const { error } = await supabase
+            .from('tasks')
+            .update({ is_complete: newIsCompleteValue })
+            .eq('id', taskId)
+            .eq('user_id', user_id);
+
+        if (error) {
+            throw error;
+        }
+
+        // Return the new is_complete value in the response
+        res.status(200).json({
+            message: 'Toggled is_complete status successfully.',
+            isComplete: newIsCompleteValue
+        });
+    } catch (error) {
+        console.error('Error in toggling is_complete:', error);
+        res.status(500).json({ message: error.message });
     }
 });
 
