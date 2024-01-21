@@ -444,6 +444,7 @@ app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, r
         const taskId = req.params.id;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
         const newIsCompleteValue = !req.isComplete; // Determine the new value
+        console.log(`this is the after status of is_complete: ${req.isComplete}`);
 
         // Toggle the is_complete status
         const { error } = await supabase
