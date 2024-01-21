@@ -309,7 +309,7 @@ app.get('/fetchtaskscomplete', verifyJWT, async (req, res) => {
                 return task;
             });
 
-            res.status(200).json({ tasks: decryptedTasks });
+            res.status(200).json({ completedTasks: decryptedTasks });
         }
 
     } catch (taskError) {
