@@ -1,3 +1,15 @@
+svg.menuIcon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  padding: 18px;
+  margin: 0 28px;
+}
+
+svg.menuIcon:hover path {
+  fill: #5dbfbc;
+}
+
 .menu {
   display: none;
   opacity: 0;
@@ -8,24 +20,42 @@
   top: 50px; /* Adjust as needed */
   right: 10px; /* Adjust as needed */
   width: 250px; /* Adjust as needed */
-  border-radius: 8px;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .menu.show {
   display: block;
   opacity: 1;
+  border-radius: 10px;
 }
 
-.menu-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  /* Add more styles as needed */
+.menuItem {
+  margin: 8px 0;
+  padding: 4px 8px;
+  display: flex;
+  max-height: 34px;
+  align-items: center;
+  border-radius: 8px;
+  text-decoration: none;
 }
-
-.menu-item:last-child {
-  border-bottom: none;
+.menuItem:hover {
+  color: #fafafa;
+  background-color: #1CC5CB;
 }
-
-/* Add more styling for menu items, icons, and hover effects as needed */
+.menuItem svg {
+  height: 18px;
+  width: 18px;
+}
+.menuLabel {
+  margin-left: 11px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #284646;
+}
+.menuItem:hover #icon path,
+.menuItem:hover #icon polygon,
+.menuItem:hover .menuLabel {
+  fill: #fafafa;
+  color: #fafafa;
+}
 
