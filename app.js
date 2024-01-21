@@ -445,7 +445,6 @@ const fetchIsComplete = async (req, res, next) => {
 app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, res) => {
     try {
         const taskId = req.params.id;
-         console.log(`this is the taskId for the endpoint: ${taskId}`);
         const newIsCompleteValue = !req.isComplete; // Determine the new value
         console.log(`this is the after status of is_complete: ${newIsCompleteValue}`);
 
