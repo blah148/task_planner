@@ -255,7 +255,7 @@ app.get('/fetchtasks/:isComplete', verifyJWT, async (req, res) => {
         const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
         const isComplete = req.params.isComplete;
         console.log(`This is the raw isComplete parameter: ${isComplete}`);
-        const isCompleteBool = isComplete === 'true' ? true : false;
+        const isCompleteBool = isComplete === 'true' ? 'true' : 'false';
         console.log(`This is the booleanized isComplete parameter: ${isCompleteBool}`);
         
         // Use Supabase client to fetch tasks
