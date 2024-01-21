@@ -5,9 +5,10 @@ import LogoutButton from './e_button_Logout';
 import LoginButton from './e_button_Login';
 import Sidebar from './1_Sidebar';
 import Menu from './Menu.js';
-import TaskRetrieval from './1_Task-Retrieval';
+import TaskRetrievalComplete from './1_Task-Retrieval-Complete';
+import TaskRetrievalIncomplete from './1_Task-Retrieval-Incomplete';
 
-function HomePage({ tasks, setTasks }) {
+function HomePage({ tasks, setTasks, completedTasks, setCompletedTasks }) {
   
   return (
     <>
@@ -16,11 +17,11 @@ function HomePage({ tasks, setTasks }) {
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
             <TaskForm tasks={tasks} setTasks={setTasks} />
             <h2 className="task_feed_title">Incomplete tasks</h2>
-            <TaskRetrieval is_complete={true} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrievalIncomplete tasks={tasks} setTasks={setTasks} />
           </div>
           <div className="task_feed complete">
             <h2 className="task_feed_title">Completed tasks</h2>
-            <TaskRetrieval is_complete={false} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrievalComplete completedTasks={completedTasks} setCompletedTasks={setCompletedTasks} />
           </div>
         </div>
         <Menu setTasks={setTasks} />

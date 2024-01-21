@@ -250,13 +250,9 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetchtasks/:isComplete', verifyJWT, async (req, res) => {
+app.get('/fetchtasksincomplete', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
-        const isComplete = req.params.isComplete;
-        console.log(`This is the raw isComplete parameter: ${isComplete}`);
-        const isCompleteBool = isComplete === 'true' ? 'true' : 'false';
-        console.log(`This is the booleanized isComplete parameter: ${isCompleteBool}`);
         
         // Use Supabase client to fetch tasks
         const { data: tasks, error } = await supabase
@@ -266,14 +262,13 @@ app.get('/fetchtasks/:isComplete', verifyJWT, async (req, res) => {
             .eq('is_complete', false);
 
         if (error) {
-            res.status(500).json({ message: "Error fetching tasks from Supabase" });
+            res.status(500).json({ message: "Error fetching tasks incomplete from Supabase" });
             return;
         }
 
         if (tasks) {
             // Decrypt the task_description for each task
             const decryptedTasks = tasks.map(task => {
-                console.log(`This is the is_complete status of each task: ${task.is_complete}`);
                 if (task.task_description) {
                     task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
                 }
@@ -284,10 +279,45 @@ app.get('/fetchtasks/:isComplete', verifyJWT, async (req, res) => {
         }
 
     } catch (taskError) {
-        console.error("Error fetching tasks:", taskError);
-        res.status(500).json({ message: "Error fetching tasks" });
+        console.error("Error fetching incomplete tasks:", taskError);
+        res.status(500).json({ message: "Error fetching incomplete tasks" });
     }
 });
+
+app.get('/fetchtaskscomplete', verifyJWT, async (req, res) => {
+    try {
+        const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
+        
+        // Use Supabase client to fetch tasks
+        const { data: tasks, error } = await supabase
+            .from('tasks')
+            .select()
+            .eq('user_id', user_id)
+            .eq('is_complete', true);
+
+        if (error) {
+            res.status(500).json({ message: "Error fetching tasks complete from Supabase" });
+            return;
+        }
+
+        if (tasks) {
+            // Decrypt the task_description for each task
+            const decryptedTasks = tasks.map(task => {
+                if (task.task_description) {
+                    task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
+                }
+                return task;
+            });
+
+            res.status(200).json({ tasks: decryptedTasks });
+        }
+
+    } catch (taskError) {
+        console.error("Error fetching complete tasks:", taskError);
+        res.status(500).json({ message: "Error fetching complete tasks" });
+    }
+});
+
 
 // Middleware for inserting a new task
 app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);

@@ -5,14 +5,12 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrieval({ tasks, setTasks, is_complete }) {
-
-  console.log(`The requested completion type is: ${is_complete}`);
+function TaskRetrievalIncomplete({ tasks, setTasks }) {
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`/fetchtasks/${is_complete}`, {
+        const response = await fetch('/fetchtasksincomplete', {
           method: 'GET',
           credentials: 'include' // Ensures that cookies are sent with the request
         });
@@ -22,11 +20,11 @@ function TaskRetrieval({ tasks, setTasks, is_complete }) {
           setTasks(data.tasks); // Update the tasks state with the fetched data
           sortTasks(data.tasks); // Make sure you have the sortTasks function defined
         } else {
-          console.error('Failed to fetch tasks');
+          console.error('Failed to fetch incomplete tasks');
           // Handle failure to fetch tasks here
         }
       } catch (error) {
-        console.error('Error fetching tasks:', error);
+        console.error('Error fetching incomplete tasks:', error);
         // Handle errors in fetching tasks here
       }
     };
@@ -35,6 +33,8 @@ function TaskRetrieval({ tasks, setTasks, is_complete }) {
   }, []); // The empty dependency array ensures this runs only once on component mount
 
   const handleCheckbox = async (id, isComplete) => {
+    
+
     try {
       await axios.patch(`/tasks/toggleComplete/${id}/${isComplete}`);
       setTasks((prevTasks) =>
@@ -141,5 +141,5 @@ function TaskRetrieval({ tasks, setTasks, is_complete }) {
   );
 }
 
-export default TaskRetrieval;
+export default TaskRetrievalIncomplete;
 
