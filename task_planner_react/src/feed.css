@@ -18,18 +18,11 @@
   margin: 0 4px;
 }
 
-.header_task-list {
+div.header_task-list {
   display: flex;
 }
-.header_title.time {
+h3.header_title {
   width: 15ch;
-  font-size: 16px;
-  font-weight: 600;
-}
-.header_title.description {
-  width: 30ch;
-}
-h2.header_title {
   font-size: 16px;
   font-weight: 600;
 }
@@ -44,19 +37,25 @@ h2.header_title {
 .buffered_task {
   display: flex;
   border-bottom: 1px solid #d9d9d9;
-  height: 75px;
 }
 .buffer {
   align-self: center;
 }
 .buffer.time {
-  width: 15ch;
+  width: 15.3ch;
 }
 .buffer.description {
-  width: 30ch;
+  width: 60ch;
 }
 
-.row_item {
+div.row_item {
+  border-bottom: 2px solid #e6e5f1;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  height: 20px;
+  padding: 12px;
+  margin-left: -12px;
 }
 
 .edit_panel {

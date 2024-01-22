@@ -118,18 +118,18 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
   return (
     <div className="task_table">
       <div className="header_task-list">
-        <h2 className="header_title time">Start time</h2>
-        <h2 className="header_title time">End time</h2>
-        <h2 className="header_title description">Task description</h2>
+        <h3 className="header_title time">Start time</h3>
+        <h3 className="header_title time">End time</h3>
+        <h3 className="header_title description">Task description</h3>
       </div>
 
-      <div className="buffer_container">
         <div className="buffer_task-list">
           {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
               return (
                 <div
                   key={task.id}
                   className="row_item buffered_task"
+                  style={{ opacity: task.is_complete === true ? 0.6 : 1}}
                 >
                   <div className="buffer time">
                     {convertIsoTo12HourFormat(task.start_time)}
@@ -153,19 +153,16 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                   ></label>
 
                   {/* Edit and Delete buttons */}
-                  <div className="edit_panel">
                     <button
                       className="edit_button delete"
                       onClick={() => rowDeletion(task.id)}
                     >
                       Delete
                     </button>
-                  </div>
                 </div>
               );
           })}
         </div>
-      </div>
     </div>
   );
 }
