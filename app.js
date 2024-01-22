@@ -440,7 +440,7 @@ const timestampCompletionDate = async (req, res, next) => {
     }
 };
 
-app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, res) => {
+app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, timestampCompletionDate, async (req, res) => {
     try {
         const taskId = req.params.id;
         const newIsCompleteValue = !req.isComplete; // Determine the new value
