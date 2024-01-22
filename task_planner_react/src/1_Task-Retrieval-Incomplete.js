@@ -6,6 +6,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
+
+  const [checkboxUpdate, setCheckboxUpdate] = useState(false);
   
   useEffect(() => {
     const fetchTasks = async () => {
@@ -29,7 +31,7 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
     };
 
     fetchTasks();
-  }, []); // The empty dependency array ensures this runs only once on component mount
+  }, [checkboxUpdate]);
 
   const handleCheckbox = async id => {
     try {
@@ -40,6 +42,8 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
             item.id === id ? { ...item, isComplete: response.data.isComplete } : item
           )
         );
+
+        setCheckboxUpdate(prev => !prev);
       }
     } catch (error) {
       console.error('Error toggling is_complete', error);
@@ -94,7 +98,7 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
           {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
               return (
                 <div
-                  key={index}
+                  key={task.id}
                   className="row_item buffered_task"
                 >
                   <div className="buffer time">
