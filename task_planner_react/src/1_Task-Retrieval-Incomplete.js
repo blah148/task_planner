@@ -34,7 +34,7 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask, setIsLo
       // Handle errors in fetching tasks here
     } finally {
       const loadingDuration = Date.now() - loadingStarted;
-      const minLoadingTime = 500;
+      const minLoadingTime = 1100;
       if (loadingDuration < minLoadingTime) {
         setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
       } else {

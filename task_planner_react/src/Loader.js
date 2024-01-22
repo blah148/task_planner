@@ -3,9 +3,8 @@ import './loader.css';
 
 function Loader ({ isLoading }) {
   
-
   return (
-  <div>
+  <div className="loaderContainer">
    {isLoading && ( <div className="lds-ellipsis">
       <div></div>
       <div></div>
