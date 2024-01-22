@@ -112,7 +112,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
     hours = hours ? hours : 12;
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
 
-    return `${month} ${day}, ${year} ${hours}:${minutesStr} ${ampm}`;
+    return `${hours}:${minutesStr} ${ampm}`;
   }
 
   return (
