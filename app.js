@@ -249,21 +249,23 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetch-tasks/:selectedDate', verifyJWT, async (req, res) => {
+app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub;
+        const timestampComparison = req.params.timestampComparison;
+        console.log(`this is the filter column: ${timestampComparison}`);
+
         const selectedDate = new Date(req.params.selectedDate);
-        console.log(`this is the date-ified selectedDate: ${selectedDate}`);
          // Format selectedDate to YYYY-MM-DD to compare dates only
         const formattedDate = selectedDate.toISOString().split('T')[0];
-        console.log(`this is the formattedDate: ${formattedDate}`);
+
         // Use Supabase client to fetch tasks
         const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
             .eq('user_id', user_id)
-            .gte('start_time', `${formattedDate}T00:00:00.000Z`) // Greater than or equal to the start of the day
-            .lt('start_time', `${formattedDate}T23:59:59.999Z`); // Less than the end of the day
+            .gte(timestampComparison, `${formattedDate}T00:00:00.000Z`) // Greater than or equal to the start of the day
+            .lt(timestampComparison, `${formattedDate}T23:59:59.999Z`); // Less than the end of the day
 
 
         if (error) {

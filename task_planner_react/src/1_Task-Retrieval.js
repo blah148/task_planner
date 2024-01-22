@@ -5,7 +5,7 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, selectedDate }) {
+function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, selectedDate, timestampComparison }) {
 
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
   const [loadingStarted, setLoadingStarted] = useState(null);
@@ -17,7 +17,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
     try {
       setIsLoading(true);
       loadingStarted = Date.now(); // Assign a value to loadingStarted
-      const response = await fetch(`/fetch-tasks/${selectedDate}`, {
+      const response = await fetch(`/fetch-tasks/${timestampComparison}/${selectedDate}`, {
         method: 'GET',
         credentials: 'include' // Ensures that cookies are sent with the request
       });

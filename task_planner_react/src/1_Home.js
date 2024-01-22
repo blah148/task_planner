@@ -23,11 +23,11 @@ function HomePage() {
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
             <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
             <h2 className="task_feed_title">Incomplete tasks</h2>
-            <TaskRetrieval setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+            <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
           </div>
           <div className="task_feed complete">
             <h2 className="task_feed_title">Completed tasks</h2>
-            <TaskRetrieval setIsLoading={setIsLoading} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
+            <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
           </div>
         </div>
         <Menu setTasks={setTasks} />
