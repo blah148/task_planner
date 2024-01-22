@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
+import './headerFooter.css';
 
 function Register() {
     const [email, setEmail] = useState('');
@@ -34,22 +37,26 @@ function Register() {
         }
     };
 
-    return (
-        <div>
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-                </label>
-                <label>
-                    Password:
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                </label>
-                <button type="submit">Register</button>
-            </form>
-        </div>
-    );
+  return (
+    <div className="bodyVertical">
+      <Header />
+      <div className="subHeader">
+        <h1>Register</h1>
+      </div>
+      <form className="registerForm" onSubmit={handleSubmit}>
+        <label>
+            Enter email:
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        </label>
+        <label>
+            Set password:
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        </label>
+        <button type="submit">Register</button>
+      </form>
+      <Footer />
+    </div>
+  );
 }
 
 export default Register;

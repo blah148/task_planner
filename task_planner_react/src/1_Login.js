@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
+import './headerFooter.css';
 
 function Login({ setIsLoggedIn }) {
     const [email, setEmail] = useState('');
@@ -33,30 +36,34 @@ function Login({ setIsLoggedIn }) {
         }
     };
 
-    return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Email: {/* Updated label */}
-                    <input 
-                        type="email" // Set the type to email to get email-specific validations
-                        value={email} 
-                        onChange={e => setEmail(e.target.value)} 
-                    />
-                </label>
-                <label>
-                    Password:
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={e => setPassword(e.target.value)} 
-                    />
-                </label>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    );
+  return (
+    <div className="bodyVertical">
+      <Header />
+      <div className="subHeader">
+        <h1>Login</h1>
+      </div>
+      <form className="registerForm" onSubmit={handleSubmit}>
+        <label>
+            Enter email: 
+            <input 
+              type="email" // Set the type to email to get email-specific validations
+              value={email} 
+              onChange={e => setEmail(e.target.value)} 
+            />
+        </label>
+        <label>
+            Set password:
+            <input 
+              type="password" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)} 
+            />
+        </label>
+        <button type="submit">Login</button>
+      </form>
+      <Footer />
+    </div>
+  );
 }
 
 export default Login;
