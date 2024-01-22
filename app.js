@@ -411,6 +411,35 @@ const fetchIsComplete = async (req, res, next) => {
     }
 };
 
+// Middleware to timestamp completion_date
+const timestampCompletionDate = async (req, res, next) => {
+    try {
+        const taskId = req.params.id;
+
+        console.log(`this is the before state of is_complete: ${req.isComplete}`);
+
+        if (!req.isComplete) {
+            const completionDate = new Date().toISOString(); // Current timestamp
+
+            const { error } = await supabase
+                .from('tasks')
+                .update({ completion_date: completionDate })
+                .eq('id', taskId);
+
+            if (error) {
+                throw error;
+            }
+
+            console.log(`this is the timestamp value for completionDate: ${completionDate}`);
+        }
+
+        next(); // Proceed to the next middleware or route handler
+    } catch (error) {
+        console.error('Timestamp completion_date - server error:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
 app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, res) => {
     try {
         const taskId = req.params.id;
