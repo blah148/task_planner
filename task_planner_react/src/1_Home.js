@@ -19,11 +19,11 @@ function HomePage() {
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
             <TaskForm tasks={tasks} setTasks={setTasks} />
             <h2 className="task_feed_title">Incomplete tasks</h2>
-            <TaskRetrievalIncomplete tasksStatus={false} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrievalIncomplete taskStatus={false} tasks={tasks} setTasks={setTasks} />
           </div>
           <div className="task_feed complete">
             <h2 className="task_feed_title">Completed tasks</h2>
-            <TaskRetrievalIncomplete tasksStatus={true} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrievalIncomplete taskStatus={true} tasks={tasks} setTasks={setTasks} />
           </div>
         </div>
         <Menu setTasks={setTasks} />

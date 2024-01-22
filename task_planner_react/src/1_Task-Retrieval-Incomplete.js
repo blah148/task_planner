@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
-
+  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -14,7 +14,6 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
           method: 'GET',
           credentials: 'include' // Ensures that cookies are sent with the request
         });
-
         if (response.ok) {
           const data = await response.json();
           setTasks(data.tasks); // Update the tasks state with the fetched data
