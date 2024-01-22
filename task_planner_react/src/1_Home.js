@@ -7,6 +7,7 @@ import Sidebar from './1_Sidebar';
 import Menu from './Menu.js';
 import TaskRetrieval from './1_Task-Retrieval';
 import Loader from './Loader';
+import Footer from './Footer';
 
 function HomePage() {
 
@@ -47,22 +48,25 @@ function HomePage() {
   return (
     <>
       <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-      <div className="feedContainer">
-        <Loader isLoading={isLoading} />
-        <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
-        <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
-          <h2 className="task_feed_title">
-            {formatDate(selectedDate)}
-          </h2>
-          <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+      <div className="feedContainer_Major">
+        <div className="feedContainer">
+          <div className="taskTools">
+            <Loader isLoading={isLoading} />
+            <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
+            <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
+              <h2 className="task_feed_title">
+                {formatDate(selectedDate)}
+              </h2>
+              <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+            </div>
+            <div className="task_feed complete">
+              <h2 className="task_feed_title">Completed tasks</h2>
+              <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
+            </div>
+          </div>
+          <Menu setTasks={setTasks} />
         </div>
-        <div className="task_feed complete">
-          <h2 className="task_feed_title">Completed tasks</h2>
-          <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
-        </div>
-      </div>
-      <div className="navigationColumn">
-        <Menu setTasks={setTasks} />
+        <Footer />
       </div>
   </>
   );

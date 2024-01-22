@@ -8,7 +8,6 @@ body {
 
 div#root{
   display: flex;
-  column-gap: 84px;
   min-height: 100vh;
   background-color: #f0f3f3;
 }
@@ -33,10 +32,14 @@ a.sitename {
   margin: 0;
   text-align: center;
   color: #fafafa;
-  font-weight: 400;
-  font-size: 24px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 2px;
   text-decoration: none;
   padding: 8px 18px;
+}
+a.sitename:hover {
+  opacity: 0.8;
 }
 p.day {
  font-size: 20px;
@@ -80,14 +83,35 @@ div.react-datepicker__day--selected {
   background-color: #1cc5cb !important;
   filter: saturate(140%);
 }
-
+.react-datepicker-time__header{
+  color: #fff !important;
+}
+.react-datepicker__time-list-item.react-datepicker__time-list-item--selected {
+  background-color: #28e2e8 !important;
+}
+.react-datepicker__time-list-item {
+  height: 15px !important;
+  padding: 15px 0px !important;
+}
+div.feedContainer_Major {
+  width: 100%;
+}
 div.feedContainer {
- width: 60vw;
+  display: flex;
+  justify-content: space-between;
+}
+div.feedContainer .menuIcon path {
+  fill: #c3c7c7;
+}
+div.taskTools {
+ width: 50vw;
  display: flex;
  flex-direction: column;
  justify-content: flex-start;
+ padding: 0 6vw;
 }
 form.form_create-task {
+  margin-top: 3rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -142,7 +166,10 @@ button.form_button:hover {
   filter: saturate(120%);
 }
 div.task_feed.incomplete {
-  height: 50vh;
+ min-height: 40vh;
+}
+div.task_feed.complete {
+ min-height: 30vh;
 }
 
 div.navigationColumn {

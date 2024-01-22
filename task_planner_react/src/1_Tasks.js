@@ -76,6 +76,7 @@ function TaskForm({ tasks, setTasks, pingNewTask, selectedDate}) {
                 start_time: date
               }));
             }}
+            required
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={1}
@@ -94,6 +95,7 @@ function TaskForm({ tasks, setTasks, pingNewTask, selectedDate}) {
                 end_time: date
               }));
             }}
+            required
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={1}

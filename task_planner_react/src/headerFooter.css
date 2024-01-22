@@ -20,10 +20,10 @@ a.logoText {
 a.logoText:hover {
   opacity: 0.85;
 }
-svg.menuIcon path {
+.bodyVertical svg.menuIcon path {
   fill: #eee !important;
-} 
-svg.menuIcon:hover path {
+}
+.bodyVertical svg.menuIcon:hover path {
   opacity: 0.85;
 }
 div.subHeader {

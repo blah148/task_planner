@@ -18,7 +18,7 @@ function Sidebar ({ selectedDate, setSelectedDate }) {
   return (
     <div className="sidebarBody">
       <div className="sidebar header">
-        <a href="/" className="sitename">2Dooz.Today</a>
+        <a href="/" className="sitename">2DOOZ.TODAY</a>
       </div>
       <div className="sidebar restOfBody">
         <p className="day">{dayOfTheWeek(selectedDate)}</p>

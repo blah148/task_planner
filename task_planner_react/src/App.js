@@ -6,6 +6,7 @@ import Register from './1_Register.js';
 import Login from './1_Login.js';
 import TermsAndConditions from './1_Terms-and-Conditions';
 import PrivacyPolicy from './1_Privacy-Policy';
+import MyAccount from './1_My-account';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/my-account" element={<MyAccount />} />
         </Routes>
       </Router>
     </>
