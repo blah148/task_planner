@@ -3,7 +3,8 @@ svg.menuIcon {
   height: 24px;
   cursor: pointer;
   padding: 18px;
-  margin: 0 28px;
+  margin-left: auto;
+  margin-right: 28px;
 }
 
 svg.menuIcon:hover path {

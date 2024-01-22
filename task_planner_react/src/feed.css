@@ -17,11 +17,6 @@
   border-radius: 7px;
   margin: 0 4px;
 }
-.form_field.description {
-  width: 35ch;
-  height: 7ch;
-  margin-right: 8px;
-}
 
 .header_task-list {
   display: flex;

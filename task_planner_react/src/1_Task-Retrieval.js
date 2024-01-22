@@ -149,7 +149,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                   <label
                     className="custom-checkbox"
                     onClick={() => handleCheckbox(task.id)}
-                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#b9b9b9' }}
+                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#1cc5cb' }}
                   ></label>
 
                   {/* Edit and Delete buttons */}

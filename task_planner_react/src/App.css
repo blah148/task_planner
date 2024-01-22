@@ -8,7 +8,7 @@ body {
 
 div#root{
   display: flex;
-  column-gap: 16px;
+  column-gap: 84px;
   min-height: 100vh;
   background-color: #f0f3f3;
 }
@@ -17,7 +17,7 @@ div#root{
   background: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
   color: #fafafa;
   text-align: center;
-  max-width: 370px;
+  max-width: 20vw;
   width: 100%;
 }
 .sidebar.header {
@@ -49,9 +49,71 @@ p.date {
   line-height: 72px;
 }
 
-div.homeBanner {
- width: 100%; 
-} 
+div.feedContainer {
+ width: 60vw;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+}
+form.form_create-task {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+input.form_field.description {
+  width: 100%;
+  border-radius: 50px;
+  border: 1px solid #d9dddd;
+  box-sizing: border-box;
+  background-color: #fff;
+  padding: 0 7px 0 20px;
+  margin-left: 7px;
+  height: 5ch;
+  font-size: 0.875rem;
+}
+input.form_field.description::placeholder {
+  color: #848686;
+}
+div.formSubmitBottomRow {
+  display: flex;
+  width: 100%;
+  margin-top: 8px;
+  align-items: center;
+}
+div.datesContainer {
+display: flex;
+}
+input.form_field.time_input {
+  border: 1px solid #d9dddd;
+  background-color: #fff;
+  border-radius: 20px;
+  text-align: center;
+  width: 18ch;
+  height: 2.5ch;
+  font-size: 12px;
+  color: #404242;
+  padding: 4px 8px;
+}
+button.form_button {
+  background: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
+  color: #fff;
+  border-radius: 5px;
+  text-align: center;
+  height: 3.5ch;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  box-shadow: 0 2px 15px rgba(28, 197, 203, 0.5);
+  margin-left: 12px;
+}
+button.form_button:hover {
+  filter: saturate(120%);
+}
+
+div.navigationColumn {
+  width: 20vw;
+  display: flex;
+}
 
 h1 {
   font-family: 'Baloo 2', sans-serif;
@@ -63,10 +125,3 @@ p {
   font-weight: 400;
 }
 
-.pageContainer {
-  height: 100vh;
-  width: 95vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}

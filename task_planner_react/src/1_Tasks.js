@@ -52,58 +52,61 @@ function TaskForm({ tasks, setTasks, pingNewTask, selectedDate}) {
   };
 
   return (
-    <>  
-      <form className = "form_create-task" onSubmit={handleSubmit}>
-        <DatePicker
-          selected={taskObject.start_time}
-          onChange={(date) => {
-            setStartDate(date);
-            setTaskObject((prevTaskObject) => ({
-              ...prevTaskObject,
-              start_time: date
+    <form className = "form_create-task" onSubmit={handleSubmit}>
+      <input
+        name="task_description"
+        placeholder="What do you want to get done?"
+        onChange={(e) => {
+          const description = e.target.value;
+          setTaskObject((prevTaskObject) => ({
+            ...prevTaskObject,
+            task_description: description
             }));
           }}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={1}
-          timeCaption="time"
-          dateFormat="MMMM d, yyyy h:mm aa"
-          name="start_time"
-          className="form_field time_input start"
-          type="time"
-        />
-        <DatePicker
-          selected={taskObject.end_time}
-          onChange={(date) => {
-            setStartDate(date);
-            setTaskObject((prevTaskObject) => ({
-              ...prevTaskObject,
-              end_time: date
-            }));
-          }}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={1}
-          timeCaption="time"
-          dateFormat="MMMM d, yyyy h:mm aa"
-          name="end_time"
-          className="form_field time_input end"
-          type="time"
-        />
-        <textarea
-          name="task_description"
-          onChange={(e) => {
-            const description = e.target.value;
-            setTaskObject((prevTaskObject) => ({
-              ...prevTaskObject,
-              task_description: description
+        className="form_field description"
+      />
+      <div className="formSubmitBottomRow">
+        <div className="datesContainer">
+          <DatePicker
+            selected={taskObject.start_time}
+            onChange={(date) => {
+              setStartDate(date);
+              setTaskObject((prevTaskObject) => ({
+                ...prevTaskObject,
+                start_time: date
               }));
             }}
-          className="form_field description"
-        />
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={1}
+            timeCaption="time"
+            dateFormat="MMMM d, h:mm aa"
+            name="start_time"
+            className="form_field time_input start"
+            type="time"
+          />
+          <DatePicker
+            selected={taskObject.end_time}
+            onChange={(date) => {
+              setStartDate(date);
+              setTaskObject((prevTaskObject) => ({
+                ...prevTaskObject,
+                end_time: date
+              }));
+            }}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={1}
+            timeCaption="time"
+            dateFormat="MMMM d, h:mm aa"
+            name="end_time"
+            className="form_field time_input end"
+            type="time"
+          />
+        </div>
         <button type="submit" className="form_button submit">Add task</button>
-      </form>
-    </>
+      </div>
+    </form>
   );
 }
 
