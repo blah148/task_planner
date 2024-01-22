@@ -10,6 +10,7 @@ import TaskRetrievalIncomplete from './1_Task-Retrieval-Incomplete';
 function HomePage() {
 
   const [tasks, setTasks] = useState([]);
+  const [newTask, pingNewTask] = useState([false]);
   // const [completedTasks, setCompletedTasks] = useState([]);
   
   return (
@@ -17,9 +18,9 @@ function HomePage() {
         <Sidebar />
         <div className="homeBanner">
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
-            <TaskForm tasks={tasks} setTasks={setTasks} />
+            <TaskForm tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
             <h2 className="task_feed_title">Incomplete tasks</h2>
-            <TaskRetrievalIncomplete taskStatus={false} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrievalIncomplete taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
           </div>
           <div className="task_feed complete">
             <h2 className="task_feed_title">Completed tasks</h2>

@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
-function TaskForm({ tasks, setTasks }) {
+function TaskForm({ tasks, setTasks, pingNewTask }) {
 
   const [startDate, setStartDate] = useState(new Date());
 
@@ -22,21 +22,22 @@ function TaskForm({ tasks, setTasks }) {
 
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await axios.post('/tasks/new', taskObject);
-    const taskObject_withId = { ...taskObject, id: response.data.id };
+    try {
+      const response = await axios.post('/tasks/new', taskObject);
+      const taskObject_withId = { ...taskObject, id: response.data.id };
 
-    setTasks(prevTasks => {
-      const updatedTasks = [...prevTasks, taskObject_withId];
-      return updatedTasks; // Return the updated tasks array
-    });
-  } catch (error) {
-    console.error('Error in task submission:', error);
-    // Handle the error appropriately (e.g., show an error message to the user)
-  }
-};
+      setTasks(prevTasks => {
+        const updatedTasks = [...prevTasks, taskObject_withId];
+        pingNewTask(prev => !prev);
+        return updatedTasks; // Return the updated tasks array
+      });
+    } catch (error) {
+      console.error('Error in task submission:', error);
+      // Handle the error appropriately (e.g., show an error message to the user)
+    }
+  };
 
   return (
     <>  

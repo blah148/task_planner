@@ -5,7 +5,7 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
+function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
 
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
   
@@ -31,7 +31,7 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
     };
 
     fetchTasks();
-  }, [checkboxUpdate]);
+  }, [checkboxUpdate, newTask]);
 
   const handleCheckbox = async id => {
     try {
