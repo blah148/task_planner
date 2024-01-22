@@ -34,7 +34,7 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask, setIsLo
       // Handle errors in fetching tasks here
     } finally {
       const loadingDuration = Date.now() - loadingStarted;
-      const minLoadingTime = 1100;
+      const minLoadingTime = 800;
       if (loadingDuration < minLoadingTime) {
         setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
       } else {
@@ -67,15 +67,31 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask, setIsLo
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
   }
-
+  
   const rowDeletion = async (id) => {
+    let loadingStarted = Date.now();  // Record start time of loading
+    setIsLoading(true);  // Set loading state to true
+
     try {
       const response = await axios.delete(`/tasks/delete/${id}`);
-      setTasks(tasks.filter((task) => task.id !== id));
+      if (response.status === 200) {
+        setTasks(tasks.filter((task) => task.id !== id));
+      }
+      // Handle other response statuses if needed
     } catch (error) {
       console.error('Error deleting task:', error);
+      // Handle errors in deleting task
+    } finally {
+      const loadingDuration = Date.now() - loadingStarted;
+      const minLoadingTime = 600;
+      if (loadingDuration < minLoadingTime) {
+        setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+      } else {
+        setIsLoading(false);
+      }
     }
   };
+
 
   function convertIsoTo12HourFormat(isoString) {
     const date = new Date(isoString);
