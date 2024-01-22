@@ -17,6 +17,7 @@ function HomePage() {
   return (
     <>
         <Sidebar isLoading={isLoading} />
+        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
         <div className="homeBanner">
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
             <TaskForm tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />

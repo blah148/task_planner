@@ -8,32 +8,44 @@ import "react-datepicker/dist/react-datepicker.css";
 function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask, setIsLoading }) {
 
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
+  const [loadingStarted, setLoadingStarted] = useState(null);
   
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/fetchtasksincomplete', {
-          method: 'GET',
-          credentials: 'include' // Ensures that cookies are sent with the request
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setTasks(data.tasks); // Update the tasks state with the fetched data
-          sortTasks(data.tasks); // Make sure you have the sortTasks function defined
-        } else {
-          console.error('Failed to fetch incomplete tasks');
-          // Handle failure to fetch tasks here
-        }
-      } catch (error) {
-        console.error('Error fetching incomplete tasks:', error);
-        // Handle errors in fetching tasks here
-      }
-      setIsLoading(false);
-    };
+  let loadingStarted; // Define loadingStarted in the higher scope
 
-    fetchTasks();
-  }, [checkboxUpdate, newTask]);
+  const fetchTasks = async () => {
+    try {
+      setIsLoading(true);
+      loadingStarted = Date.now(); // Assign a value to loadingStarted
+      const response = await fetch('/fetchtasksincomplete', {
+        method: 'GET',
+        credentials: 'include' // Ensures that cookies are sent with the request
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data.tasks); // Update the tasks state with the fetched data
+        sortTasks(data.tasks); // Make sure you have the sortTasks function defined
+      } else {
+        console.error('Failed to fetch incomplete tasks');
+        // Handle failure to fetch tasks here
+      }
+    } catch (error) {
+      console.error('Error fetching incomplete tasks:', error);
+      // Handle errors in fetching tasks here
+    } finally {
+      const loadingDuration = Date.now() - loadingStarted;
+      const minLoadingTime = 500;
+      if (loadingDuration < minLoadingTime) {
+        setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+      } else {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  fetchTasks();
+}, [checkboxUpdate, newTask]);
+
 
   const handleCheckbox = async id => {
     try {
