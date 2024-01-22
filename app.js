@@ -150,7 +150,6 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        console.log("Received login request:", req.body);
         const { email, password } = req.body;
 
         // Ensure email and password are provided
@@ -250,15 +249,22 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetch-tasks', verifyJWT, async (req, res) => {
+app.get('/fetch-tasks/:selectedDate', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub;
-        
+        const selectedDate = new Date(req.params.selectedDate);
+        console.log(`this is the date-ified selectedDate: ${selectedDate}`);
+         // Format selectedDate to YYYY-MM-DD to compare dates only
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        console.log(`this is the formattedDate: ${formattedDate}`);
         // Use Supabase client to fetch tasks
         const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
-            .eq('user_id', user_id);
+            .eq('user_id', user_id)
+            .gte('start_time', `${formattedDate}T00:00:00.000Z`) // Greater than or equal to the start of the day
+            .lt('start_time', `${formattedDate}T23:59:59.999Z`); // Less than the end of the day
+
 
         if (error) {
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
@@ -393,7 +399,6 @@ const fetchIsComplete = async (req, res, next) => {
     if (tasks.length > 0) {
         const task = tasks[0]; // Corrected variable name
         req.isComplete = task.is_complete;
-        console.log(`this is the status of is_complete: ${req.isComplete}`);
         next();
     } else {
         // Handle the case where no task was found
@@ -410,7 +415,6 @@ app.patch('/tasks/toggleComplete/:id', verifyJWT, fetchIsComplete, async (req, r
     try {
         const taskId = req.params.id;
         const newIsCompleteValue = !req.isComplete; // Determine the new value
-        console.log(`this is the after status of is_complete: ${newIsCompleteValue}`);
 
         // Toggle the is_complete status
         const { error } = await supabase

@@ -13,21 +13,21 @@ function HomePage() {
   const [tasks, setTasks] = useState([]);
   const [newTask, pingNewTask] = useState([false]);
   const [isLoading, setIsLoading] = useState(false);
-  // const [completedTasks, setCompletedTasks] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   
   return (
     <>
-        <Sidebar />
+        <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         <div className="homeBanner">
           <Loader isLoading={isLoading} />
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
-            <TaskForm tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
+            <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
             <h2 className="task_feed_title">Incomplete tasks</h2>
-            <TaskRetrieval setIsLoading={setIsLoading} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+            <TaskRetrieval setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
           </div>
           <div className="task_feed complete">
             <h2 className="task_feed_title">Completed tasks</h2>
-            <TaskRetrieval setIsLoading={setIsLoading} taskStatus={true} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrieval setIsLoading={setIsLoading} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
           </div>
         </div>
         <Menu setTasks={setTasks} />

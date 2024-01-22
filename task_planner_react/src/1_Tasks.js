@@ -7,18 +7,30 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
-function TaskForm({ tasks, setTasks, pingNewTask }) {
+function TaskForm({ tasks, setTasks, pingNewTask, selectedDate}) {
 
   const [startDate, setStartDate] = useState(new Date());
 
+  const selectedDateOffset = new Date(selectedDate);
+  selectedDateOffset.setMinutes(selectedDate.getMinutes() + 15);
+
   const [taskObject, setTaskObject] = useState({
-    start_time: new Date(),
-    end_time: new Date(),
+    start_time: selectedDate,
+    end_time: selectedDateOffset,
     task_description: "",
     isComplete: false,
     display_none: false,
     visibility: "flex"
   });
+
+  // Update taskObject whenever selectedDate changes
+  useEffect(() => {
+    setTaskObject(prevTaskObject => ({
+      ...prevTaskObject,
+      start_time: selectedDate,
+      end_time: new Date(selectedDate.getTime() + 15 * 60000) // 15 minutes later
+    }));
+  }, [selectedDate]);
 
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
