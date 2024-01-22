@@ -14,6 +14,7 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
     const fetchTasks = async () => {
       try {
         setIsLoading(true);
+        console.log(`this is the state of isLoading: ${isLoading}`);
         const response = await fetch('/fetchtasksincomplete', {
           method: 'GET',
           credentials: 'include' // Ensures that cookies are sent with the request
@@ -30,7 +31,9 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
         console.error('Error fetching incomplete tasks:', error);
         // Handle errors in fetching tasks here
       }
-      setIsLoading(false)
+      setIsLoading(false);
+        console.log(`this is the state of isLoading after: ${isLoading}`);
+ 
     };
 
     fetchTasks();
@@ -90,9 +93,9 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
 
   return (
     <div className="task_table">
-
+      <div>
       {isLoading && <div className="loader"></div>}
-
+      </div>
       <div className="header_task-list">
         <h2 className="header_title time">Start time</h2>
         <h2 className="header_title time">End time</h2>
