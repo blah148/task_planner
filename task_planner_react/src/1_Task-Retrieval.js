@@ -44,7 +44,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
   };
 
   fetchTasks();
-}, [checkboxUpdate, newTask]);
+}, [checkboxUpdate, newTask, selectedDate]);
 
 
   const handleCheckbox = async id => {
