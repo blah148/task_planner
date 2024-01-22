@@ -5,42 +5,59 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
+function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading }) {
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch('/fetchtaskscomplete', {
-          method: 'GET',
-          credentials: 'include' // Ensures that cookies are sent with the request
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setCompletedTasks(data.completedTasks); // Update the tasks state with the fetched data
-          sortTasks(data.completedTasks); // Make sure you have the sortTasks function defined
-        } else {
-          console.error('Failed to fetch complete tasks');
-          // Handle failure to fetch tasks here
-        }
-      } catch (error) {
-        console.error('Error fetching complete tasks:', error);
-        // Handle errors in fetching tasks here
-      }
-    };
-
-    fetchTasks();
-  }, []); // The empty dependency array ensures this runs only once on component mount
+  const [checkboxUpdate, setCheckboxUpdate] = useState(false);
+  const [loadingStarted, setLoadingStarted] = useState(null);
   
+  useEffect(() => {
+  let loadingStarted; // Define loadingStarted in the higher scope
+
+  const fetchTasks = async () => {
+    try {
+      setIsLoading(true);
+      loadingStarted = Date.now(); // Assign a value to loadingStarted
+      const response = await fetch('/fetch-tasks', {
+        method: 'GET',
+        credentials: 'include' // Ensures that cookies are sent with the request
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data.tasks); // Update the tasks state with the fetched data
+        sortTasks(data.tasks); // Make sure you have the sortTasks function defined
+      } else {
+        console.error('Failed to fetch tasks');
+        // Handle failure to fetch tasks here
+      }
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      // Handle errors in fetching tasks here
+    } finally {
+      const loadingDuration = Date.now() - loadingStarted;
+      const minLoadingTime = 800;
+      if (loadingDuration < minLoadingTime) {
+        setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+      } else {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  fetchTasks();
+}, [checkboxUpdate, newTask]);
+
+
   const handleCheckbox = async id => {
     try {
       const response = await axios.patch(`/tasks/toggleComplete/${id}`);
       if (response.status === 200) {
-        setCompletedTasks(prevTasks =>
+        setTasks(prevTasks =>
           prevTasks.map(item =>
             item.id === id ? { ...item, isComplete: response.data.isComplete } : item
           )
         );
+
+        setCheckboxUpdate(prev => !prev);
       }
     } catch (error) {
       console.error('Error toggling is_complete', error);
@@ -50,15 +67,31 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
   }
-
+  
   const rowDeletion = async (id) => {
+    let loadingStarted = Date.now();  // Record start time of loading
+    setIsLoading(true);  // Set loading state to true
+
     try {
       const response = await axios.delete(`/tasks/delete/${id}`);
-      setCompletedTasks(completedTasks.filter((task) => task.id !== id));
+      if (response.status === 200) {
+        setTasks(tasks.filter((task) => task.id !== id));
+      }
+      // Handle other response statuses if needed
     } catch (error) {
       console.error('Error deleting task:', error);
+      // Handle errors in deleting task
+    } finally {
+      const loadingDuration = Date.now() - loadingStarted;
+      const minLoadingTime = 450;
+      if (loadingDuration < minLoadingTime) {
+        setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+      } else {
+        setIsLoading(false);
+      }
     }
   };
+
 
   function convertIsoTo12HourFormat(isoString) {
     const date = new Date(isoString);
@@ -92,10 +125,10 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
 
       <div className="buffer_container">
         <div className="buffer_task-list">
-          {completedTasks.map((task, index) => {
+          {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
               return (
                 <div
-                  key={index}
+                  key={task.id}
                   className="row_item buffered_task"
                 >
                   <div className="buffer time">
@@ -116,7 +149,7 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
                   <label
                     className="custom-checkbox"
                     onClick={() => handleCheckbox(task.id)}
-                    style={{ backgroundColor: '#b9b9b9' }}
+                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#b9b9b9' }}
                   ></label>
 
                   {/* Edit and Delete buttons */}
@@ -137,5 +170,5 @@ function TaskRetrievalComplete({ completedTasks, setCompletedTasks }) {
   );
 }
 
-export default TaskRetrievalComplete;
+export default TaskRetrieval;
 

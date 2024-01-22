@@ -250,7 +250,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get('/fetchtasksincomplete', verifyJWT, async (req, res) => {
+app.get('/fetch-tasks', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub;
         
@@ -282,41 +282,6 @@ app.get('/fetchtasksincomplete', verifyJWT, async (req, res) => {
         res.status(500).json({ message: "Error fetching tasks" });
     }
 });
-
-app.get('/fetchtaskscomplete', verifyJWT, async (req, res) => {
-    try {
-        const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
-        
-        // Use Supabase client to fetch tasks
-        const { data: tasks, error } = await supabase
-            .from('tasks')
-            .select()
-            .eq('user_id', user_id)
-            .eq('is_complete', true);
-
-        if (error) {
-            res.status(500).json({ message: "Error fetching tasks complete from Supabase" });
-            return;
-        }
-
-        if (tasks) {
-            // Decrypt the task_description for each task
-            const decryptedTasks = tasks.map(task => {
-                if (task.task_description) {
-                    task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
-                }
-                return task;
-            });
-
-            res.status(200).json({ completedTasks: decryptedTasks });
-        }
-
-    } catch (taskError) {
-        console.error("Error fetching complete tasks:", taskError);
-        res.status(500).json({ message: "Error fetching complete tasks" });
-    }
-});
-
 
 // Middleware for inserting a new task
 app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
