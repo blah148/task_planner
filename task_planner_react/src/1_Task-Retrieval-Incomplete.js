@@ -5,16 +5,14 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
+function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask, setIsLoading }) {
 
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         setIsLoading(true);
-        console.log(`this is the state of isLoading: ${isLoading}`);
         const response = await fetch('/fetchtasksincomplete', {
           method: 'GET',
           credentials: 'include' // Ensures that cookies are sent with the request
@@ -32,8 +30,6 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
         // Handle errors in fetching tasks here
       }
       setIsLoading(false);
-        console.log(`this is the state of isLoading after: ${isLoading}`);
- 
     };
 
     fetchTasks();
@@ -93,9 +89,6 @@ function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks, newTask }) {
 
   return (
     <div className="task_table">
-      <div>
-      {isLoading && <div className="loader"></div>}
-      </div>
       <div className="header_task-list">
         <h2 className="header_title time">Start time</h2>
         <h2 className="header_title time">End time</h2>

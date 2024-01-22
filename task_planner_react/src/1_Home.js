@@ -11,20 +11,21 @@ function HomePage() {
 
   const [tasks, setTasks] = useState([]);
   const [newTask, pingNewTask] = useState([false]);
+  const [isLoading, setIsLoading] = useState(false);
   // const [completedTasks, setCompletedTasks] = useState([]);
   
   return (
     <>
-        <Sidebar />
+        <Sidebar isLoading={isLoading} />
         <div className="homeBanner">
           <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
             <TaskForm tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
             <h2 className="task_feed_title">Incomplete tasks</h2>
-            <TaskRetrievalIncomplete taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+            <TaskRetrievalIncomplete setIsLoading={setIsLoading} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
           </div>
           <div className="task_feed complete">
             <h2 className="task_feed_title">Completed tasks</h2>
-            <TaskRetrievalIncomplete taskStatus={true} tasks={tasks} setTasks={setTasks} />
+            <TaskRetrievalIncomplete setIsLoading={setIsLoading} taskStatus={true} tasks={tasks} setTasks={setTasks} />
           </div>
         </div>
         <Menu setTasks={setTasks} />
