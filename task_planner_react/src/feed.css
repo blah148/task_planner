@@ -18,6 +18,9 @@
   margin: 0 4px;
 }
 
+h2.task_feed_title {
+  color: #1c1e1e;
+}
 div.header_task-list {
   display: flex;
 }
@@ -25,6 +28,7 @@ h3.header_title {
   width: 15ch;
   font-size: 16px;
   font-weight: 600;
+  color: #1c1e1e;
 }
 
 .buffer_container {

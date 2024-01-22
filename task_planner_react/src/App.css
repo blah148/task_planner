@@ -28,6 +28,9 @@ div#root{
   justify-content: center;
   height: 60px;
 }
+div.sidebar p {
+  color: #fafafa;
+}
 a.sitename {
   margin: 0;
   text-align: center;
@@ -179,11 +182,13 @@ div.navigationColumn {
 
 h1 {
   font-family: 'Baloo 2', sans-serif;
-  font-weight: 700; /* Black weight */
+  font-weight: 700;
+  color: #1c1e1e;
 }
 
 p {
   font-family: 'Baloo 2', sans-serif;
   font-weight: 400;
+  color: #1c1e1e;
 }
 
