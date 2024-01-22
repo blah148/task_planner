@@ -5,7 +5,7 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TaskRetrievalIncomplete({ tasks, setTasks }) {
+function TaskRetrievalIncomplete({ taskStatus, tasks, setTasks }) {
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -92,7 +92,7 @@ function TaskRetrievalIncomplete({ tasks, setTasks }) {
 
       <div className="buffer_container">
         <div className="buffer_task-list">
-          {tasks.map((task, index) => {
+          {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
               return (
                 <div
                   key={index}
@@ -116,7 +116,7 @@ function TaskRetrievalIncomplete({ tasks, setTasks }) {
                   <label
                     className="custom-checkbox"
                     onClick={() => handleCheckbox(task.id)}
-                    style={{ backgroundColor: 'transparent' }}
+                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#b9b9b9' }}
                   ></label>
 
                   {/* Edit and Delete buttons */}

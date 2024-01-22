@@ -252,17 +252,16 @@ app.use((err, req, res, next) => {
 
 app.get('/fetchtasksincomplete', verifyJWT, async (req, res) => {
     try {
-        const user_id = req.user.sub; // Assuming your JWT contains the user's ID in the 'sub' field
+        const user_id = req.user.sub;
         
         // Use Supabase client to fetch tasks
         const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
-            .eq('user_id', user_id)
-            .eq('is_complete', false);
+            .eq('user_id', user_id);
 
         if (error) {
-            res.status(500).json({ message: "Error fetching tasks incomplete from Supabase" });
+            res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
 
@@ -279,8 +278,8 @@ app.get('/fetchtasksincomplete', verifyJWT, async (req, res) => {
         }
 
     } catch (taskError) {
-        console.error("Error fetching incomplete tasks:", taskError);
-        res.status(500).json({ message: "Error fetching incomplete tasks" });
+        console.error("Error fetching tasks:", taskError);
+        res.status(500).json({ message: "Error fetching tasks" });
     }
 });
 
