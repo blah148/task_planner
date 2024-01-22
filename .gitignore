@@ -1,3 +1,8 @@
 node_modules
 .env
 *.log
+*.env.*
+*.swl
+*.swm.*
+*.swo
+*.swm
