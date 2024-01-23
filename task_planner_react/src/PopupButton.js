@@ -29,7 +29,7 @@ const PopupButton = ({ selectedDate, tasks, setTasks, pingNewTask }) => {
 
   return (
     <>
-      <button onClick={togglePopup}>Open Task Form</button>
+      <button className="mobile_new-task" onClick={togglePopup}>Create new task</button>
       {isPopupVisible && (
         <div className="popup-overlay" ref={popupRef}>
           <TaskForm

@@ -20,6 +20,8 @@ function HomePage() {
   const [newTask, pingNewTask] = useState([false]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [activeTab, setActiveTab] = useState('tab1');
+
   console.log(`this is initially selectedDate.... ${selectedDate}`);
 
   const formatDate = (date) => {
@@ -94,10 +96,20 @@ function HomePage() {
                 <h2 className="task_feed_title">
                   {formatDate(selectedDate)}
                 </h2>
+                <div className="header_task-list">
+                  <h3 className="header_title time">Start time</h3>
+                  <h3 className="header_title time">End time</h3>
+                  <h3 className="header_title description">Task description</h3>
+                </div>
                 <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
               </div>
               <div className="task_feed complete">
                 <h2 className="task_feed_title">Completed tasks</h2>
+                <div className="header_task-list">
+                  <h3 className="header_title time">Start time</h3>
+                  <h3 className="header_title time">End time</h3>
+                  <h3 className="header_title description">Task description</h3>
+                </div>
                 <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
               </div>
             </div>
@@ -133,7 +145,20 @@ function HomePage() {
             setTasks={setTasks}
             pingNewTask={pingNewTask}
           />
-          <TabComponent />
+        <div className="tab-component">
+          <div className="tab-buttons">
+            <button onClick={() => setActiveTab('tab1')} className={activeTab === 'tab1' ? 'active' : ''}>2 Dooz</button>
+            <button onClick={() => setActiveTab('tab2')} className={activeTab === 'tab2' ? 'active' : ''}>Finished tasks</button>
+          </div>
+          <div className="tab-content">
+            {activeTab === 'tab1' && <div className="content">
+              <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+            </div>}
+            {activeTab === 'tab2' && <div className="content">
+               <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} /> 
+            </div>}
+          </div>
+        </div>
       </div>
     </>
   );

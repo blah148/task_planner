@@ -117,27 +117,15 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
 
   return (
     <div className="task_table">
-      <div className="header_task-list">
-        <h3 className="header_title time">Start time</h3>
-        <h3 className="header_title time">End time</h3>
-        <h3 className="header_title description">Task description</h3>
-      </div>
-
-        <div className="buffer_task-list">
-          {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
-              return (
-                <div
-                  key={task.id}
-                  className="row_item buffered_task"
-                  style={{ opacity: task.is_complete === true ? 0.6 : 1}}
-                >
-                  <div className="buffer time">
-                    {convertIsoTo12HourFormat(task.start_time)}
-                  </div>
-                  <div className="buffer time">
-                    {convertIsoTo12HourFormat(task.end_time)}
-                  </div>
-                  <div className="buffer description">{task.task_description}</div>
+      <div className="buffer_task-list">
+        {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
+            return (
+              <div
+                key={task.id}
+                className="row_item buffered_task"
+                style={{ opacity: task.is_complete === true ? 0.6 : 1}}
+              > 
+                <div className="columnsContainer">
                   <input
                     type="checkbox"
                     checked={task.isComplete}
@@ -151,18 +139,28 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                     onClick={() => handleCheckbox(task.id)}
                     style={{ backgroundColor: taskStatus === false ? 'transparent' : '#1cc5cb' }}
                   ></label>
-
-                  {/* Edit and Delete buttons */}
-                    <button
-                      className="edit_button delete"
-                      onClick={() => rowDeletion(task.id)}
-                    >
-                      Delete
-                    </button>
+                  <div className="taskInformation">
+                    <div className="buffer description">{task.task_description}</div>  
+                    <div className="bottomRow">
+                      <div className="buffer time">
+                        {convertIsoTo12HourFormat(task.start_time)}
+                      </div>
+                      <div className="buffer time">
+                        {convertIsoTo12HourFormat(task.end_time)}
+                      </div>
+                      <button
+                        className="edit_button delete"
+                        onClick={() => rowDeletion(task.id)}
+                        >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              );
-          })}
-        </div>
+              </div>
+            );
+        })}
+      </div>
     </div>
   );
 }

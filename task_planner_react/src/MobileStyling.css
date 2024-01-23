@@ -8,6 +8,7 @@
     flex-direction: column;
     background-color: #212227;
     color: #ebecee;
+    height: 100vh;
   }
 }
 /* HEADER */
@@ -15,7 +16,7 @@ div.header_mobile {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 16px 10px 16px;
+  padding: 0px 16px 10px 16px;
 }
 div.mobileOnly h2 {
   color: #ebecee;
@@ -24,7 +25,9 @@ div.mobileOnly h2 {
   margin: 0;
 }
 div.mobileOnly .loaderContainer {
-  margin: -5px auto 0 10px;
+  margin: -10px auto 0 10px;
+  overflow: hidden;
+  height: 35px;
 }
 div.mobileOnly svg.menuIcon {
   margin: 0;
@@ -105,39 +108,78 @@ div.mobileOnly .tab-component {
   display: flex;
   flex-direction: column;
   height: 100%;
+  margin-top: 16px;
 }
 
 div.mobileOnly .tab-content {
   flex-grow: 1; /* Allows content to take up the rest of the space */
 }
-
-div.mobileOnly .content {
-  padding: 20px;
-  /* Styles for your content */
+div.mobileOnly .header_task-list {
+  width: 93%;
+  margin: 0 auto;
 }
-
+div.mobileOnly h3.header_title {
+  font-size: 15px;
+  font-weight: 500;
+}
+div.mobileOnly h3.header_title.time {
+  width: 9ch;
+}
+div.mobileOnly .content {
+  width: 93%;
+  margin: 12px auto;
+  overflow: hidden;
+}
+div.mobileOnly .row_item {
+  margin: 0 0 8px 0;
+  background-color: transparent;
+  border: none; 
+  padding: 0;
+  height: auto;
+}
 div.mobileOnly .tab-buttons {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  width: 95%;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto;
   display: flex;
   justify-content: space-around;
-  background: #f1f1f1;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
 }
 
 div.mobileOnly .tab-buttons button {
   flex-grow: 1;
+  width: 50%;
   padding: 10px 20px;
-  border: none;
   background: none;
+  margin: 0 2px;
+  border-radius: 5px;
+  border: 2px solid #ebeceeb8;
+  color: #ebecee;
 }
 
 div.mobileOnly .tab-buttons button.active {
-  background: #ddd; /* Highlight the active tab */
+  border: 2px solid #00a39c;
+  font-weight: 500;
 }
 /* NEW TASK - FORM POPUP */
+div.mobileOnly .mobile_new-task {
+  background: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
+  color: #fff;
+  border-radius: 5px;
+  text-align: center;
+  height: 3.5ch;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  box-shadow: 0 2px 15px rgba(28, 197, 203, 0.5);
+  width: 95%;
+  margin: 5px auto;
+}
+div.mobileOnly .mobile_new-task:hover {
+  filter: saturate(120%);
+}
 div.mobileOnly .popup-overlay {
   position: fixed;
   top: 0;
