@@ -63,3 +63,54 @@ div.header_mobile {
   background: rgba(0, 0, 0, 0.5);
   z-index: 5; /* Below the calendar but above other content */
 }
+.tab-component {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.tab-content {
+  flex-grow: 1; /* Allows content to take up the rest of the space */
+}
+
+.content {
+  padding: 20px;
+  /* Styles for your content */
+}
+
+.tab-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #f1f1f1;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tab-buttons button {
+  flex-grow: 1;
+  padding: 10px 20px;
+  border: none;
+  background: none;
+}
+
+.tab-buttons button.active {
+  background: #ddd; /* Highlight the active tab */
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+/* Style your TaskForm and the rest of your components as needed */
+

@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
-function TaskForm({ tasks, setTasks, pingNewTask, selectedDate}) {
+function TaskForm({ tasks, setTasks, pingNewTask, selectedDate, closePopup }) {
 
   const [startDate, setStartDate] = useState(new Date());
 
@@ -45,6 +45,9 @@ function TaskForm({ tasks, setTasks, pingNewTask, selectedDate}) {
         pingNewTask(prev => !prev);
         return updatedTasks; // Return the updated tasks array
       });
+        if (closePopup) {
+    closePopup();
+  }
     } catch (error) {
       console.error('Error in task submission:', error);
       // Handle the error appropriately (e.g., show an error message to the user)

@@ -11,6 +11,8 @@ import Footer from './Footer';
 import DaysCarousel from './1_Home-mobile';
 import './MobileStyling.css';
 import DatePicker from "react-datepicker";
+import PopupButton from "./PopupButton";
+import TabComponent from "./1_HomeMobileTabs";
 
 function HomePage() {
 
@@ -97,28 +99,35 @@ function HomePage() {
         </div>
         </div>
         <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
-        <div className="header_mobile">
-          <h2 className="task_feed_title" onClick={toggleCalendar}>
-            {formatDate(selectedDate)}
-          </h2>
-          <Loader isLoading={isLoading} />
-          <Menu setTasks={setTasks} />
-        </div>
-        {isCalendarVisible && (
-          <div className="calendarContainer">
-            <DatePicker
-              inline
-              selected={selectedDate}
-              onChange={(date) => {
-                setSelectedDate(date);
-                toggleCalendar(); // Close the calendar after a date is selected
-              }}
-            />
+          <div className="header_mobile">
+            <h2 className="task_feed_title" onClick={toggleCalendar}>
+              {formatDate(selectedDate)}
+            </h2>
+            <Loader isLoading={isLoading} />
+            <Menu setTasks={setTasks} />
           </div>
-        )}
-        <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          {isCalendarVisible && (
+            <div className="calendarContainer">
+              <DatePicker
+                inline
+                selected={selectedDate}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  toggleCalendar(); // Close the calendar after a date is selected
+                }}
+              />
+            </div>
+          )}
+          <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+                <PopupButton
+        selectedDate={selectedDate}
+        tasks={tasks}
+        setTasks={setTasks}
+        pingNewTask={pingNewTask}
+      />
+          <TabComponent />
       </div>
- </>
+    </>
   );
 }
 
