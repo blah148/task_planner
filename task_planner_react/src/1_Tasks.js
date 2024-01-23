@@ -11,12 +11,11 @@ function TaskForm({ tasks, setTasks, pingNewTask, selectedDate, closePopup }) {
 
   const [startDate, setStartDate] = useState(new Date());
 
-  const selectedDateOffset = new Date(selectedDate);
-  selectedDateOffset.setMinutes(selectedDate.getMinutes() + 15);
+  const endDate = new Date(startDate.getTime() + 15 * 60000);
 
   const [taskObject, setTaskObject] = useState({
-    start_time: selectedDate,
-    end_time: selectedDateOffset,
+    start_time: startDate,
+    end_time: endDate,
     task_description: "",
     isComplete: false,
     display_none: false,
@@ -24,14 +23,21 @@ function TaskForm({ tasks, setTasks, pingNewTask, selectedDate, closePopup }) {
   });
 
   // Update taskObject whenever selectedDate changes
-  useEffect(() => {
-    setTaskObject(prevTaskObject => ({
-      ...prevTaskObject,
-      start_time: selectedDate,
-      end_time: new Date(selectedDate.getTime() + 15 * 60000) // 15 minutes later
-    }));
-  }, [selectedDate]);
+useEffect(() => {
+  // Create new date objects for start and end times
+  const newStartTime = new Date(selectedDate);
+  const newEndTime = new Date(selectedDate);
 
+  // Preserve the time from the current start_time and end_time
+  newStartTime.setHours(taskObject.start_time.getHours(), taskObject.start_time.getMinutes());
+  newEndTime.setHours(taskObject.end_time.getHours(), taskObject.end_time.getMinutes());
+
+  setTaskObject(prevTaskObject => ({
+    ...prevTaskObject,
+    start_time: newStartTime,
+    end_time: newEndTime
+  }));
+}, [selectedDate]);
   // Asynchronous function for submitting the form data
   const handleSubmit = async (e) => {
     e.preventDefault();

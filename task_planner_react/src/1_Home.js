@@ -20,35 +20,36 @@ function HomePage() {
   const [newTask, pingNewTask] = useState([false]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  console.log(`this is initially selectedDate.... ${selectedDate}`);
 
   const formatDate = (date) => {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-  // Formatting the date to remove the time part
-  const dateToCompare = new Date(date.setHours(0, 0, 0, 0));
-  today.setHours(0, 0, 0, 0);
-  yesterday.setHours(0, 0, 0, 0);
-  tomorrow.setHours(0, 0, 0, 0);
+    // Formatting the date to remove the time part
+    const dateToCompare = new Date(date.setHours(0, 0, 0, 0));
+    today.setHours(0, 0, 0, 0);
+    yesterday.setHours(0, 0, 0, 0);
+    tomorrow.setHours(0, 0, 0, 0);
 
-  if (dateToCompare.getTime() === today.getTime()) {
-    return "Today";
-  } else if (dateToCompare.getTime() === yesterday.getTime()) {
-    return "Yesterday";
-  } else if (dateToCompare.getTime() === tomorrow.getTime()) {
-    return "Tomorrow";
-  } else {
-    // Return formatted date for other cases
-    return dateToCompare.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-    });
-  }
-};
+    if (dateToCompare.getTime() === today.getTime()) {
+      return "Today";
+    } else if (dateToCompare.getTime() === yesterday.getTime()) {
+      return "Yesterday";
+    } else if (dateToCompare.getTime() === tomorrow.getTime()) {
+      return "Tomorrow";
+    } else {
+      // Return formatted date for other cases
+      return dateToCompare.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+  };
 
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
