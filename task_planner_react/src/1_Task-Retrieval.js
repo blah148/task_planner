@@ -152,7 +152,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                         className="edit_button delete"
                         onClick={() => rowDeletion(task.id)}
                         >
-                        Delete
+                        Remove
                       </button>
                     </div>
                   </div>

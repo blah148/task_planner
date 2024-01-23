@@ -37,7 +37,7 @@ div.mobileOnly svg.menuIcon {
 }
 div.mobileOnly .carousel {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 100%;
 }
 div.mobileOnly .carouselContainer {
@@ -113,30 +113,47 @@ div.mobileOnly .tab-component {
 
 div.mobileOnly .tab-content {
   flex-grow: 1; /* Allows content to take up the rest of the space */
+  margin-top: 22px;
 }
 div.mobileOnly .header_task-list {
   width: 93%;
   margin: 0 auto;
 }
-div.mobileOnly h3.header_title {
-  font-size: 15px;
-  font-weight: 500;
-}
-div.mobileOnly h3.header_title.time {
-  width: 9ch;
-}
 div.mobileOnly .content {
   width: 93%;
   margin: 12px auto;
   overflow: hidden;
+  max-width: 95%;
 }
 div.mobileOnly .row_item {
-  margin: 0 0 8px 0;
+  margin: 0 0 18px 0;
   background-color: transparent;
   border: none; 
   padding: 0;
   height: auto;
 }
+div.mobileOnly .columnsContainer {
+  display: grid;
+  grid-template-columns: 1fr 20fr;
+  width: 100%;
+
+}
+div.mobileOnly div.buffer.description {
+  font-size: 13.5px;
+  font-weight: 500;
+  padding-bottom: 6px;
+  width: auto;
+  word-wrap: anywhere;
+}
+div.mobileOnly .custom-checkbox {
+  margin-right: 3.5vw;
+}
+div.mobileOnly div.bottomRow {
+  display: flex;
+  padding-top: 3px;
+  border-top: 1px solid #ffffff1a;
+}
+
 div.mobileOnly .tab-buttons {
   width: 95%;
   border-radius: 5px;
@@ -147,7 +164,21 @@ div.mobileOnly .tab-buttons {
   justify-content: space-around;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
 }
-
+div.mobileOnly .buffer.time {
+  margin-right: 10px;
+  font-size: 12px;
+  width: auto;
+}
+div.mobileOnly .edit_button.delete {
+  margin-left: auto;
+  color: #ebecee;
+  border: 1px solid #ebecee;
+  background-color: transparent;
+  border-radius: 20px;
+  font-size: 9.5px;
+  padding: 2px 5px;
+  opacity: 0.87;
+}
 div.mobileOnly .tab-buttons button {
   flex-grow: 1;
   width: 50%;
