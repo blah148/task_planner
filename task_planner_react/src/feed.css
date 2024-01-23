@@ -21,15 +21,6 @@ div.desktopOnly .h1_home {
 div.desktopOnly h2.task_feed_title {
   color: #1c1e1e;
 }
-div.header_task-list {
-  display: flex;
-}
-div.desktopOnly h3.header_title {
-  width: 15ch;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1c1e1e;
-}
 
 .buffer_container {
   display: flex;
@@ -45,27 +36,22 @@ div.desktopOnly h3.header_title {
 .buffer {
   align-self: center;
 }
-.buffer.time {
-  width: 15.3ch;
-}
-.buffer.description {
-  width: 60ch;
-}
-
 div.row_item {
   border-bottom: 2px solid #e6e5f1;
-  border-radius: 5px;
+  border-radius: 14px;
   margin-bottom: 10px;
   background-color: #fff;
-  height: 20px;
-  padding: 12px;
-  margin-left: -12px;
+  box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+  height: auto;
+  padding: 8px 14px;
+  margin: 0 12px 12px -12px;
 }
-
-.edit_panel {
+div.columnsContainer {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  width: 100%;
+}
+div.taskInformation {
+  width: 100%;
 }
 .custom-checkbox {
   width: 10px;
@@ -74,10 +60,34 @@ div.row_item {
   border-radius: 50%;
   border: 2px solid #a4a4a4;
   cursor: pointer;
-  margin-right: 5vw;
+  margin-right: 16px;
   align-self: center;
 }
-.edit_button {
-  margin: 3px;
+div.buffer.description {
+  padding-bottom: 6px;
 }
-
+div.bottomRow {
+  display: flex;
+  color: #242424;
+  padding-top: 6px;
+  border-top: 1px solid #e8e8e8;
+}
+div.buffer.time {
+  margin-right: 5px;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+button.edit_button {
+  margin: 0 12px 0 auto;
+  background-color: transparent;
+  border-radius: 10px;
+  border: 1px solid #a7a7a7;
+  color: #434343;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+  padding: 2px 6px;
+  opacity: 0.85;
+  box-shadow: inset 0 -4px 5px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset -1px -4px 5px rgba(0, 0, 0, 0.11);
+  -moz-box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.6);
+}

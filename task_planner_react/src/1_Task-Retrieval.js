@@ -145,6 +145,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                       <div className="buffer time">
                         {convertIsoTo12HourFormat(task.start_time)}
                       </div>
+                      <div className="timespan"> to </div>
                       <div className="buffer time">
                         {convertIsoTo12HourFormat(task.end_time)}
                       </div>

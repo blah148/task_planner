@@ -136,6 +136,7 @@ input.form_field.description {
   margin-left: 7px;
   height: 5ch;
   font-size: 0.875rem;
+  box-shadow: inset 0 -4px 5px rgba(0, 0, 0, 0.09);
 }
 input.form_field.description::placeholder {
   color: #848686;
@@ -154,6 +155,8 @@ input.form_field.time_input {
   background-color: #fff;
   border-radius: 20px;
   text-align: center;
+  -webkit-box-shadow: inset -1px -4px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 -4px 5px rgba(0, 0, 0, 0.11);
   width: 18ch;
   height: 2.5ch;
   font-size: 12px;

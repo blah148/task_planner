@@ -96,20 +96,10 @@ function HomePage() {
                 <h2 className="task_feed_title">
                   {formatDate(selectedDate)}
                 </h2>
-                <div className="header_task-list">
-                  <h3 className="header_title time">Start time</h3>
-                  <h3 className="header_title time">End time</h3>
-                  <h3 className="header_title description">Task description</h3>
-                </div>
                 <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
               </div>
               <div className="task_feed complete">
                 <h2 className="task_feed_title">Completed tasks</h2>
-                <div className="header_task-list">
-                  <h3 className="header_title time">Start time</h3>
-                  <h3 className="header_title time">End time</h3>
-                  <h3 className="header_title description">Task description</h3>
-                </div>
                 <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
               </div>
             </div>
