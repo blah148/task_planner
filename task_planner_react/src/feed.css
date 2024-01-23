@@ -68,6 +68,7 @@ div.buffer.description {
 }
 div.bottomRow {
   display: flex;
+  align-items: center;
   color: #242424;
   padding-top: 6px;
   border-top: 1px solid #e8e8e8;
@@ -76,6 +77,11 @@ div.buffer.time {
   margin-right: 5px;
   font-size: 13px;
   letter-spacing: 0.2px;
+}
+div.timespan {
+  font-size: 12.5px;
+  margin-right: 8px;
+  padding: 0 1.5px;
 }
 button.edit_button {
   margin: 0 12px 0 auto;
@@ -86,6 +92,7 @@ button.edit_button {
   font-size: 11px;
   letter-spacing: 0.2px;
   padding: 2px 6px;
+  cursor: pointer;
   opacity: 0.85;
   box-shadow: inset 0 -4px 5px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: inset -1px -4px 5px rgba(0, 0, 0, 0.11);
