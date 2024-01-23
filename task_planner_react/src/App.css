@@ -60,7 +60,7 @@ p.date {
   margin: 16px 0;
   line-height: 72px;
 }
-div.calendarContainer {
+div.desktopOnly div.calendarContainer {
   margin-top: 72px;
 }
 div.react-datepicker {

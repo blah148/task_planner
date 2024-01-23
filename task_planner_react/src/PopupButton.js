@@ -10,9 +10,9 @@ const PopupButton = ({ selectedDate, tasks, setTasks, pingNewTask }) => {
     setIsPopupVisible(!isPopupVisible);
   };
 
-  // Function to close the popup when clicking outside of it
   const handleClickOutside = (event) => {
-    if (popupRef.current && !popupRef.current.contains(event.target)) {
+    // Check if the click is on the .popup-overlay directly
+    if (event.target.classList.contains('popup-overlay')) {
       setIsPopupVisible(false);
     }
   };

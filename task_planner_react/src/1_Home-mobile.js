@@ -36,10 +36,9 @@ const DaysCarousel = ({ selectedDate, setSelectedDate }) => {
   };
 
   const weekDates = getWeekDates(weekStartDate);
-
   return (
     <div className="carouselContainer">
-      <button onClick={() => navigateWeeks(-1)} className="weekNavButton">Left</button>
+      <button onClick={() => navigateWeeks(-1)} className="weekNavButton">«</button>
       <div className="carousel">
         {weekDates.map((date, index) => {
           const dayLetter = date.toLocaleDateString('default', { weekday: 'short' }).charAt(0);
@@ -51,12 +50,14 @@ const DaysCarousel = ({ selectedDate, setSelectedDate }) => {
               className={`day ${isSameDay(date, selectedDate) ? 'selected' : ''}`}
               onClick={() => handleDayClick(date)}
             >
-              {`${dayLetter} ${dayNumber}`} {/* E.g., 'M 21' */}
+              {/* Separate elements for dayLetter and dayNumber */}
+              <span className="dayLetter">{dayLetter}</span> {/* E.g., 'M' */}
+              <span className="dayNumber">{dayNumber}</span> {/* E.g., '21' */}
             </button>
           );
         })}
       </div>
-      <button onClick={() => navigateWeeks(1)} className="weekNavButton">Right</button>
+      <button onClick={() => navigateWeeks(1)} className="weekNavButton">»</button>
     </div>
   );
 };

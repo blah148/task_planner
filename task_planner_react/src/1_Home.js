@@ -51,7 +51,7 @@ function HomePage() {
     }
   };
 
-    const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   const toggleCalendar = () => {
     setIsCalendarVisible(!isCalendarVisible);
@@ -60,11 +60,18 @@ function HomePage() {
   // Close the calendar if the user clicks outside of it
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (isCalendarVisible && !event.target.closest('.calendarContainer')) {
-        setIsCalendarVisible(false);
-      }
-    };
+    if (isCalendarVisible) {
+      const withinCalendarContainer = event.target.closest('.calendarContainer');
+      const withinDatePicker = event.target.closest('.react-datepicker');
 
+      if (!withinCalendarContainer || withinDatePicker) {
+        // Don't close the calendar if the click is within the .react-datepicker
+        return;
+      }
+
+      setIsCalendarVisible(false); // Close the calendar in other cases
+    }
+  };  
     // Add event listener when the component is mounted
     document.addEventListener('mousedown', handleOutsideClick);
 
@@ -100,11 +107,11 @@ function HomePage() {
         </div>
         </div>
         <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
+          <Loader isLoading={isLoading} />
           <div className="header_mobile">
             <h2 className="task_feed_title" onClick={toggleCalendar}>
               {formatDate(selectedDate)}
             </h2>
-            <Loader isLoading={isLoading} />
             <Menu setTasks={setTasks} />
           </div>
           {isCalendarVisible && (
@@ -120,12 +127,12 @@ function HomePage() {
             </div>
           )}
           <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-                <PopupButton
-        selectedDate={selectedDate}
-        tasks={tasks}
-        setTasks={setTasks}
-        pingNewTask={pingNewTask}
-      />
+          <PopupButton
+            selectedDate={selectedDate}
+            tasks={tasks}
+            setTasks={setTasks}
+            pingNewTask={pingNewTask}
+          />
           <TabComponent />
       </div>
     </>

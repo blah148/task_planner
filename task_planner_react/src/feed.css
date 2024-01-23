@@ -1,10 +1,10 @@
-.homeBanner {
+div.desktopOnly .homeBanner {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.h1_home {
+div.desktopOnly .h1_home {
   margin-bottom: 12px;
 }
 
@@ -18,13 +18,13 @@
   margin: 0 4px;
 }
 
-h2.task_feed_title {
+div.desktopOnly h2.task_feed_title {
   color: #1c1e1e;
 }
 div.header_task-list {
   display: flex;
 }
-h3.header_title {
+div.desktopOnly h3.header_title {
   width: 15ch;
   font-size: 16px;
   font-weight: 600;

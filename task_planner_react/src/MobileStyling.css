@@ -1,3 +1,4 @@
+/* ISOLATE FOR MOBILE */
 @media only screen and (max-width: 768px) {
   div.desktopOnly {
     display: none;
@@ -5,53 +6,89 @@
   div.mobileOnly {
     display: flex;
     flex-direction: column;
+    background-color: #212227;
+    color: #ebecee;
   }
 }
+/* HEADER */
 div.header_mobile {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 6px 16px 10px 16px;
+}
+div.mobileOnly h2 {
+  color: #ebecee;
+  font-weight: 500;
+  font-size: 18px;
+  margin: 0;
+}
+div.mobileOnly .loaderContainer {
+  margin: -5px auto 0 10px;
+}
+div.mobileOnly svg.menuIcon {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  padding: 0 12px;
 }
 div.mobileOnly .carousel {
   display: flex;
-  overflow-x: auto;
-  gap: 10px; /* Adjust the space between days */
+  justify-content: space-between;
+  width: 100%;
 }
 div.mobileOnly .carouselContainer {
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
-
 div.mobileOnly .weekNavButton {
-  padding: 10px;
-  margin: 0 5px;
-  background-color: #ddd; /* Or any other color */
-  border: 1px solid #ccc; /* Or any other styling */
+  color: #ebecee;
+  background-color: transparent;
   cursor: pointer;
+  border: none;
+  font-size: 17px;
+  padding: 12px 12px;
+}
+div.mobileOnly .day.selected {
+  background-color: #00a39c;
 }
 div.mobileOnly .day {
-  flex: 0 0 auto;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  background-color: transparent;
   border: none;
-  background-color: #eee;
-  margin: 5px;
+  color: #ebecee; 
+  border-radius: 6px;
   cursor: pointer;
 }
-
+span.dayNumber {
+  font-weight: 500;
+  margin-top: 3px;
+}
 div.mobileOnly .selected {
   background-color: #00f; /* Highlight color for the selected day */
   color: #fff;
 }
+/* TAP DAY TO OPEN CALENDAR SELECTOR */
 div.mobileOnly .calendarContainer {
   position: fixed; /* or 'absolute' depending on your layout */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10; /* Ensure it's above other content */
-  background: white;
+  background: #00000045;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 div.mobileOnly .mobileOnly.showingCalendar::before {
   content: '';
@@ -63,6 +100,7 @@ div.mobileOnly .mobileOnly.showingCalendar::before {
   background: rgba(0, 0, 0, 0.5);
   z-index: 5; /* Below the calendar but above other content */
 }
+/* TASKS TABS CONTAINER */
 div.mobileOnly .tab-component {
   display: flex;
   flex-direction: column;
@@ -99,6 +137,7 @@ div.mobileOnly .tab-buttons button {
 div.mobileOnly .tab-buttons button.active {
   background: #ddd; /* Highlight the active tab */
 }
+/* NEW TASK - FORM POPUP */
 div.mobileOnly .popup-overlay {
   position: fixed;
   top: 0;
@@ -108,7 +147,35 @@ div.mobileOnly .popup-overlay {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: #00000045;
   z-index: 1000; /* Ensure it's above other content */
+}
+div.mobileOnly .form_create-task {
+  padding: 20px 16px;
+  margin: 18px auto;
+  background-color: #595959f7;
+  border-radius: 20px;
+  align-items: center;
+  width: 80%;
+}
+div.mobileOnly .formSubmitBottomRow {
+  flex-direction: column;
+}
+div.mobileOnly .datesContainer {
+  width: 100%;
+}
+div.mobileOnly .react-datepicker-wrapper {
+  width: 50%;
+}
+div.mobileOnly .react-datepicker__input-container {
+  display: flex;
+}
+div.mobileOnly .time_input {
+  margin: auto;
+  width: 80%;
+}
+div.mobileOnly .form_button.submit {
+  width: 100%;
+  margin-top: 12px;
 }
 
