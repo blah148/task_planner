@@ -12,24 +12,24 @@ div.header_mobile {
   justify-content: space-between;
   align-items: center;
 }
-.carousel {
+div.mobileOnly .carousel {
   display: flex;
   overflow-x: auto;
   gap: 10px; /* Adjust the space between days */
 }
-.carouselContainer {
+div.mobileOnly .carouselContainer {
   display: flex;
   align-items: center;
 }
 
-.weekNavButton {
+div.mobileOnly .weekNavButton {
   padding: 10px;
   margin: 0 5px;
   background-color: #ddd; /* Or any other color */
   border: 1px solid #ccc; /* Or any other styling */
   cursor: pointer;
 }
-.day {
+div.mobileOnly .day {
   flex: 0 0 auto;
   padding: 10px;
   border: none;
@@ -38,11 +38,11 @@ div.header_mobile {
   cursor: pointer;
 }
 
-.selected {
+div.mobileOnly .selected {
   background-color: #00f; /* Highlight color for the selected day */
   color: #fff;
 }
-.calendarContainer {
+div.mobileOnly .calendarContainer {
   position: fixed; /* or 'absolute' depending on your layout */
   top: 50%;
   left: 50%;
@@ -53,7 +53,7 @@ div.header_mobile {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.mobileOnly.showingCalendar::before {
+div.mobileOnly .mobileOnly.showingCalendar::before {
   content: '';
   position: fixed;
   top: 0;
@@ -63,22 +63,22 @@ div.header_mobile {
   background: rgba(0, 0, 0, 0.5);
   z-index: 5; /* Below the calendar but above other content */
 }
-.tab-component {
+div.mobileOnly .tab-component {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.tab-content {
+div.mobileOnly .tab-content {
   flex-grow: 1; /* Allows content to take up the rest of the space */
 }
 
-.content {
+div.mobileOnly .content {
   padding: 20px;
   /* Styles for your content */
 }
 
-.tab-buttons {
+div.mobileOnly .tab-buttons {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -89,17 +89,17 @@ div.header_mobile {
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.tab-buttons button {
+div.mobileOnly .tab-buttons button {
   flex-grow: 1;
   padding: 10px 20px;
   border: none;
   background: none;
 }
 
-.tab-buttons button.active {
+div.mobileOnly .tab-buttons button.active {
   background: #ddd; /* Highlight the active tab */
 }
-.popup-overlay {
+div.mobileOnly .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -111,6 +111,4 @@ div.header_mobile {
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   z-index: 1000; /* Ensure it's above other content */
 }
-
-/* Style your TaskForm and the rest of your components as needed */
 
