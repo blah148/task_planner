@@ -8,6 +8,9 @@ import Menu from './Menu.js';
 import TaskRetrieval from './1_Task-Retrieval';
 import Loader from './Loader';
 import Footer from './Footer';
+import DaysCarousel from './1_Home-mobile';
+import './MobileStyling.css';
+import DatePicker from "react-datepicker";
 
 function HomePage() {
 
@@ -44,31 +47,78 @@ function HomePage() {
     });
   }
 };
+
+    const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+
+  const toggleCalendar = () => {
+    setIsCalendarVisible(!isCalendarVisible);
+  };
+
+  // Close the calendar if the user clicks outside of it
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (isCalendarVisible && !event.target.closest('.calendarContainer')) {
+        setIsCalendarVisible(false);
+      }
+    };
+
+    // Add event listener when the component is mounted
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    // Remove event listener on cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isCalendarVisible]); // Only re-run the effect if isCalendarVisible changes
   
   return (
     <>
-      <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-      <div className="feedContainer_Major">
-        <div className="feedContainer">
-          <div className="taskTools">
-            <Loader isLoading={isLoading} />
-            <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
-            <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
-              <h2 className="task_feed_title">
-                {formatDate(selectedDate)}
-              </h2>
-              <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+      <div className="desktopOnly">
+        <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <div className="feedContainer_Major">
+          <div className="feedContainer">
+            <div className="taskTools">
+              <Loader isLoading={isLoading} />
+              <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
+              <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
+                <h2 className="task_feed_title">
+                  {formatDate(selectedDate)}
+                </h2>
+                <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+              </div>
+              <div className="task_feed complete">
+                <h2 className="task_feed_title">Completed tasks</h2>
+                <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
+              </div>
             </div>
-            <div className="task_feed complete">
-              <h2 className="task_feed_title">Completed tasks</h2>
-              <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
-            </div>
+            <Menu setTasks={setTasks} />
           </div>
+          <Footer />
+        </div>
+        </div>
+        <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
+        <div className="header_mobile">
+          <h2 className="task_feed_title" onClick={toggleCalendar}>
+            {formatDate(selectedDate)}
+          </h2>
+          <Loader isLoading={isLoading} />
           <Menu setTasks={setTasks} />
         </div>
-        <Footer />
+        {isCalendarVisible && (
+          <div className="calendarContainer">
+            <DatePicker
+              inline
+              selected={selectedDate}
+              onChange={(date) => {
+                setSelectedDate(date);
+                toggleCalendar(); // Close the calendar after a date is selected
+              }}
+            />
+          </div>
+        )}
+        <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       </div>
-  </>
+ </>
   );
 }
 

@@ -6,10 +6,16 @@ body {
   margin: 0;
 }
 
-div#root{
+div.desktopOnly{
   display: flex;
   min-height: 100vh;
   background-color: #f0f3f3;
+}
+
+@media only screen and (min-width: 769px) {
+  div.mobileOnly {
+    display: none;
+  }
 }
 
 .sidebarBody {
@@ -29,7 +35,7 @@ div#root{
   height: 60px;
 }
 div.sidebar p {
-  color: #fafafa;
+  color: #fff;
 }
 a.sitename {
   margin: 0;
