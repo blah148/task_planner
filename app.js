@@ -285,39 +285,49 @@ async function retrieveUserTimezone(req, res, next) {
 app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub;
-        const timestampComparison = req.params.timestampComparison;
-        console.log(`this is the filter column: ${timestampComparison}`);
+        // For incomplete tasks, use "start_time" as the timestampComparison
+        // For complete tasks, use "completion_date" as the timestampComparison
+        // Query "start_time" or "completion_date" against the selected date to retrieve tasks
 
+        const timestampComparison = req.params.timestampComparison; // "start_time" or "completion_date"
         const selectedDate = new Date(req.params.selectedDate);
-         // Format selectedDate to YYYY-MM-DD to compare dates only
-        const formattedDate = selectedDate.toISOString().split('T')[0];
 
-        // Use Supabase client to fetch tasks
+        // Convert selectedDate to the user's local time
+        const localStartOfDay = moment.tz(selectedDate, req.userTimezone).startOf('day').format();
+        const localEndOfDay = moment.tz(selectedDate, req.userTimezone).endOf('day').format();
+
+        // Fetch tasks from the database
         const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
-            .eq('user_id', user_id)
-            .gte(timestampComparison, `${formattedDate}T00:00:00.000Z`) // Greater than or equal to the start of the day
-            .lt(timestampComparison, `${formattedDate}T23:59:59.999Z`); // Less than the end of the day
-
+            .eq('user_id', user_id);
 
         if (error) {
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
 
-        if (tasks) {
-            // Decrypt the task_description for each task
-            const decryptedTasks = tasks.map(task => {
+        // Filter and convert times to local timezone
+        const decryptedTasks = tasks
+            .map(task => {
+                // Convert times to local timezone
+                task.start_time = moment.tz(task.start_time, 'UTC').tz(req.userTimezone).format();
+                task.completion_date = moment.tz(task.completion_date, 'UTC').tz(req.userTimezone).format();
+
+                // Decrypt task_description
                 if (task.task_description) {
                     task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
                 }
+
                 return task;
+            })
+            .filter(task => {
+                // Apply gte/lt filters based on local time
+                const taskTime = task[timestampComparison];
+                return taskTime >= localStartOfDay && taskTime < localEndOfDay;
             });
 
-            res.status(200).json({ tasks: decryptedTasks });
-        }
-
+        res.status(200).json({ tasks: decryptedTasks });
     } catch (taskError) {
         console.error("Error fetching tasks:", taskError);
         res.status(500).json({ message: "Error fetching tasks" });
