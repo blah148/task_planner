@@ -164,7 +164,7 @@ div.mobileOnly .custom-checkbox {
   cursor: pointer;
   align-self: center;
 }
-div.mobileOnly .custom-checkbox:active {
+div.mobileOnly .custom-checkbox:hover {
   background-color: #1cc5cb;
 }
 div.mobileOnly div.bottomRow {
