@@ -135,6 +135,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                   {/* Custom label for the checkbox */}
                   <label
                     className="custom-checkbox"
+                    checked={taskStatus === true ? true : task.isComplete}
                     onClick={() => handleCheckbox(task.id)}
                     style={{ backgroundColor: taskStatus === false ? 'transparent' : '#1cc5cb' }}
                   ></label>
