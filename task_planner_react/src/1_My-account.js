@@ -33,36 +33,13 @@ function MyAccount() {
         fetchData();
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('/update-account', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password, timezone }),
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Update failed');
-            }
-            const data = await response.json();
-            console.log("Account updated successfully", data);
-            // Handle successful update (e.g., navigate or show message)
-        } catch (error) {
-            console.error(error.message);
-            // Handle update error (show message to the user, etc.)
-        }
-    };
-
     return (
         <div className="bodyVertical">
             <Header />
             <div className="subHeader">
                 <h1>My Account</h1>
             </div>
-            <form className="registerForm" onSubmit={handleSubmit}>
+            <form className="registerForm" >
                 <label>
                     Email:
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
