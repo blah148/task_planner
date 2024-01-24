@@ -48,9 +48,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
         const fetchedTasks = data.tasks;
         // Merge new tasks with existing tasks
         setTasks(prevTasks => {
-          const existingTaskIds = new Set(prevTasks.map(task => task.id));
-          const newTasks = fetchedTasks.filter(task => !existingTaskIds.has(task.id));
-          return [...prevTasks, ...newTasks];
+          return [...prevTasks, ...fetchedTasks];
         });
 
         sortTasks(data.tasks); // Make sure you have the sortTasks function defined
