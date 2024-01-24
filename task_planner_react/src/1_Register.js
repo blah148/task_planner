@@ -23,13 +23,22 @@ function Register() {
                 },
                 body: JSON.stringify({ email, password, timezone }), // Include timezone in the payload
             });
+            if (!response.ok) {
+                throw new Error('Registration failed');
+            }
 
-            // ... rest of your submit logic
+            const data = await response.json();
+            console.log("Registration successful", data);
+
+            // Explicitly check for the redirectTo value
+            if (data.redirectTo) {
+                navigate(data.redirectTo);
+            }
         } catch (error) {
             console.error(error.message);
-            // ... error handling
+            // Handle the error (show message to the user, etc.)
         }
-    };
+    };  
 
   return (
     <div className="bodyVertical">
