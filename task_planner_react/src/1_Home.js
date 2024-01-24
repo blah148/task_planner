@@ -17,8 +17,10 @@ import TabComponent from "./1_HomeMobileTabs";
 function HomePage() {
 
   const [tasks, setTasks] = useState([]);
+  const [doneTasks, setDoneTasks] = useState([]);
   const [newTask, pingNewTask] = useState([false]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDone, setIsLoadingDone] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('tab1');
 
@@ -156,6 +158,7 @@ return (
               </div>
               <div className="task_feed complete">
                 <h2 className="task_feed_title">Completed tasks</h2>
+                <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
               </div>
             </div>
             <Menu setTasks={setTasks} />
