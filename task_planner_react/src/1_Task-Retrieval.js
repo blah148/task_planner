@@ -55,23 +55,42 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
         }
     };
 
-  const handleCheckbox = async id => {
-    try {
-      const response = await axios.patch(`/tasks/toggleComplete/${id}`);
-      if (response.status === 200) {
-        setTasks(prevTasks =>
-          prevTasks.map(item =>
-            item.id === id ? { ...item, isComplete: response.data.isComplete } : item
-          )
-        );
-
-        setCheckboxUpdate(prev => !prev);
-      }
-    } catch (error) {
-      console.error('Error toggling is_complete', error);
+const handleCheckbox = async id => {
+  try {
+    // Set temporary style based on current taskStatus
+    const currentTask = tasks.find(task => task.id === id);
+    if (currentTask) {
+      setTempStyle(prev => ({
+        ...prev,
+        [id]: currentTask.isComplete ? 'transparent' : '#1cc5cb'
+      }));
     }
-  };
 
+    const response = await axios.patch(`/tasks/toggleComplete/${id}`);
+    if (response.status === 200) {
+      setTasks(prevTasks =>
+        prevTasks.map(item =>
+          item.id === id ? { ...item, isComplete: response.data.isComplete } : item
+        )
+      );
+
+      setCheckboxUpdate(prev => !prev);
+
+      // Reset temporary style after updating tasks
+      setTempStyle(prev => ({
+        ...prev,
+        [id]: undefined
+      }));
+    }
+  } catch (error) {
+    console.error('Error toggling is_complete', error);
+    // Reset temporary style in case of error
+    setTempStyle(prev => ({
+      ...prev,
+      [id]: undefined
+    }));
+  }
+};
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
   }
