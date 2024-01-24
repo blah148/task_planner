@@ -303,19 +303,17 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
-        console.log(`running tests`);
-        const start = moment.tz("2021-12-08T10:00:00", "UTC");
-        console.log(start.tz("America/Los_Angeles").format());
-        console.log(start.tz("Asia/Calcutta").format());
-        console.log(start.tz("Canada/Eastern").format());
 
         const decryptedTasks = tasks.map(task => {
             // Convert times to local timezone
             
-            let startTimeUTC = moment.tz(task.start_time, "UTC");
-            console.log(`initial raw UTC time: ${startTimeUTC}`);
-            console.log(`this is the timezone: ${req.userTimezone}`);
-            console.log(`this should be the converted time: ${startTimeUTC.tz(req.userTimezone).format()}`);
+            task.start_time = moment.tz(task.start_time, "UTC").tz(req.userTimezone).format();
+            task.end_time = moment.tz(task.end_time, "UTC").tz(req.userTimezone).format();
+            if (task.is_complete) {
+              task.completion_date = moment.tz(task.completion_date, "UTC").tz(req.userTimezone).format();
+            }
+
+           // console.log(`this should be the converted time: ${startTimeUTC.tz(req.userTimezone).format()}`);
 
             // Decrypt task_description
             if (task.task_description) {
@@ -324,11 +322,14 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
 
             return task;
         })
-        .filter(task => {
-            const taskTime = task[timestampComparison]; // use the already converted time
-            return taskTime >= localStartOfDay && taskTime < localEndOfDay;
-        });
-
+.filter(task => {
+    if (timestampComparison === "start_time") {
+        return task.start_time >= localStartOfDay && task.start_time < localEndOfDay;
+    } else if (timestampComparison === "completion_date" && task.is_complete) {
+        return task.completion_date >= localStartOfDay && task.completion_date < localEndOfDay;
+    }
+    return false; // Exclude the task if it doesn't match the criteria
+});
         res.status(200).json({ tasks: decryptedTasks });
     } catch (taskError) {
         console.error("Error fetching tasks:", taskError);
