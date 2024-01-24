@@ -337,6 +337,74 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
     }
 });
 
+// Get user's email and timezone
+app.get('/my-account', verifyJWT, async (req, res) => {
+    try {
+        const userId = req.user.sub; // Extract user ID from JWT payload
+
+        // Query the database for the user's email and timezone
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('email, timezone')
+            .eq('auth_id', userId);
+
+        if (error) {
+            throw new Error('Database query error');
+        }
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Send the email and timezone back to the client
+        res.json({ email: user.email, timezone: user.timezone });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+app.post('/update-account', verifyJWT, async (req, res) => {
+    try {
+        const userId = req.user.sub; // Get the user's ID from the JWT
+        const { email, password, timezone } = req.body;
+        let hashedPassword;
+
+        // If a new password is provided, hash it before updating
+        if (password) {
+            const saltRounds = 10;
+            hashedPassword = await bcrypt.hash(password, saltRounds);
+        }
+
+        // Construct update payload conditionally
+        const updatePayload = {
+            ...(email && { email }), 
+            ...(hashedPassword && { hashed_password: hashedPassword }),
+            ...(timezone && { timezone })
+        };
+
+        // Check if there's anything to update
+        if (Object.keys(updatePayload).length === 0) {
+            return res.status(400).json({ message: 'No update information provided' });
+        }
+
+        // Execute the update query
+        const { error: updateError } = await supabase
+            .from('users')
+            .update(updatePayload)
+            .eq('auth_id', userId);
+
+        if (updateError) {
+            throw updateError;
+        }
+        res.json({ message: 'Account updated successfully' });
+    } catch (error) {
+        console.error('Error updating user data:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 // Middleware for inserting a new task
 app.post('/tasks/new', verifyJWT, retrieveUserTimezone, insertTaskMiddleware, retrieveTaskId);
 
