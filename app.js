@@ -303,9 +303,15 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
+        console.log(`running tests`);
+        const start = moment.tz("2021-12-08T10:00:00", "UTC");
+        console.log(start.tz("America/Los_Angeles").format());
+        console.log(start.tz("Asia/Calcutta").format());
+        console.log(start.tz("Canada/Eastern").format());
 
         const decryptedTasks = tasks.map(task => {
             // Convert times to local timezone
+
           task.start_time2 = moment(task.start_time).tz(req.userTimezone).format('YYYY-MM-DD HH:mm:ss');
           console.log(`this is the start_time ${task.start_time}`);
           console.log(`this is the start_time2 ${task.start_time2}`);
