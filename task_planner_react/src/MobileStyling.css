@@ -164,6 +164,9 @@ div.mobileOnly .custom-checkbox {
   cursor: pointer;
   align-self: center;
 }
+div.mobileOnly .custom-checkbox:focus {
+  background-color: #1cc5cb;
+}
 div.mobileOnly div.bottomRow {
   display: flex;
   align-items: center;
