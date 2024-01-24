@@ -311,12 +311,12 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
 
         const decryptedTasks = tasks.map(task => {
             // Convert times to local timezone
+            
+            let startTimeUTC = moment.tz(task.start_time, "UTC");
+            console.log(`initial start_time5: ${task.start_time5}`);
+            console.log(`this is the timezone: ${req.userTimezone}`);
+            console.log(`this should be the converted time: ${startTimeUTC.tz(req.userTimezone).format()}`);
 
-         // task.start_time2 = moment(task.start_time).tz(req.userTimezone).format('YYYY-MM-DD HH:mm:ss');
-         // console.log(`this is the start_time ${task.start_time}`);
-         // console.log(`this is the start_time2 ${task.start_time2}`);
-         // task.completion_date2 = moment(task.completion_date).tz(req.userTimezone).format('YYYY-MM-DD HH:mm:ss');
-         // console.log(`this is the end_time2 ${task.completion_date2}`);
             // Decrypt task_description
             if (task.task_description) {
                 task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
