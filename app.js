@@ -342,8 +342,6 @@ app.get('/my-account', verifyJWT, async (req, res) => {
     try {
         const userId = req.user.sub; // Extract user ID from JWT payload
 
-        console.log(`entering the my-account endpoint: ${userId}`);
-
         // Query the database for the user's email and timezone
         const { data: user, error } = await supabase
             .from('users')
@@ -357,6 +355,9 @@ app.get('/my-account', verifyJWT, async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
+        console.log(`this is the server side email return: ${user.email}`);
+        console.log(`this is the server side timezone: ${user.timezone}`);
 
         // Send the email and timezone back to the client
         res.json({ email: user.email, timezone: user.timezone });

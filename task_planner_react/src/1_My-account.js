@@ -20,6 +20,8 @@ function MyAccount() {
                     throw new Error('Failed to fetch account details');
                 }
                 const data = await response.json();
+                console.log(`this is the returned email: ${data.email}`);
+                console.log(`this is the returned timezone: ${data.timezone}`);
                 setEmail(data.email);
                 setTimezone(data.timezone);
                 // Do not set password as it should not be retrieved from the server
@@ -58,7 +60,7 @@ function MyAccount() {
         <div className="bodyVertical">
             <Header />
             <div className="subHeader">
-                <h1>My Account</h1>
+                <h1>Account</h1>
             </div>
             <form className="registerForm" onSubmit={handleSubmit}>
                 <label>
