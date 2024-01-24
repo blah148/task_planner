@@ -367,8 +367,36 @@ app.get('/my-account', verifyJWT, async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+// Verify old password before allowing changes to /account page
+const verifyOldPassword = async (req, res, next) => {
+    try {
+        const userId = req.user.sub;
+        const { oldPassword } = req.body;
 
-app.post('/update-account', verifyJWT, async (req, res) => {
+        const { data: user, error: userFetchError } = await supabase
+            .from('users')
+            .select('hashed_password')
+            .eq('auth_id', userId)
+            .single();
+
+        if (userFetchError || !user) {
+            return res.status(400).json({ message: 'Error fetching user data' });
+        }
+
+        const isOldPasswordValid = await bcrypt.compare(oldPassword, user.hashed_password);
+        if (!isOldPasswordValid) {
+            return res.status(403).json({ message: 'Invalid old password' });
+        }
+
+        // Old password is verified, proceed to next middleware
+        next();
+    } catch (error) {
+        console.error('Error verifying old password:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+app.post('/update-account', verifyJWT, verifyOldPassword, async (req, res) => {
     try {
         const userId = req.user.sub; // Get the user's ID from the JWT
         const { email, password, timezone } = req.body;

@@ -7,6 +7,7 @@ import timezones from './timezones'; // Assuming timezones is an array of timezo
 
 function MyAccount() {
     const [email, setEmail] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [timezone, setTimezone] = useState('');
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ function MyAccount() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password, timezone }),
+                body: JSON.stringify({ email, oldPassword, password, timezone }),
                 credentials: 'include'
             });
             if (!response.ok) {
@@ -66,6 +67,10 @@ function MyAccount() {
                 <label>
                     Email:
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                </label>
+                <label>
+                    Old Password:
+                    <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
                 </label>
                 <label>
                     New Password:
