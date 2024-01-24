@@ -11,6 +11,8 @@ function MyAccount() {
     const [timezone, setTimezone] = useState('');
     const navigate = useNavigate();
 
+    console.log('entering the my account page on the react side');
+
     useEffect(() => {
         // Fetch the current user data from the server
         const fetchData = async () => {

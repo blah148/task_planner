@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import './headerFooter.css';
-
-// Import or define your list of timezones
 import timezones from './timezones'; // Assuming timezones is an array of timezone strings
 
 function Register() {
