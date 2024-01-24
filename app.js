@@ -256,10 +256,11 @@ async function retrieveUserTimezone(req, res, next) {
         const userId = req.user.sub;
 
         // Query the database to retrieve the user's timezone
-        const { data, error } = await supabase
+        const { data: user, error } = await supabase
             .from('users')
             .select('timezone')
             .eq('auth_id', userId);
+        console.log(`this is the user: ${user}`);
 
         if (error) {
             throw new Error('Error fetching user timezone');
