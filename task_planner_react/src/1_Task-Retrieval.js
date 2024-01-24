@@ -9,6 +9,7 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
 
   const [loadingStarted, setLoadingStarted] = useState(null);
   const [isHovering, setIsHovering] = useState({});
+  const [tempStyle, setTempStyle] = useState({});
 
   useEffect(() => {
   let loadingStarted; // Define loadingStarted in the higher scope
