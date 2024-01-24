@@ -157,7 +157,8 @@ div.mobileOnly .custom-checkbox {
 }
 div.mobileOnly div.bottomRow {
   display: flex;
-  padding-top: 3px;
+  align-items: center;
+  padding-top: 5px;
   border-top: 1px solid #ffffff1a;
 }
 
@@ -175,6 +176,11 @@ div.mobileOnly .buffer.time {
   margin-right: 10px;
   font-size: 12px;
   width: auto;
+}
+div.mobileOnly .timespan {
+  margin-right: 10px;
+  font-size: 11px;
+  padding: 0 1.5px;
 }
 div.mobileOnly .edit_button.delete {
   margin-left: auto;
@@ -250,12 +256,12 @@ div.mobileOnly .react-datepicker__input-container {
   display: flex;
 }
 div.mobileOnly .form_field.description {
-  font-size: 16px;
+  font-size: 12px;
 }
 div.mobileOnly .time_input {
   margin: auto;
   width: 90%;
-  font-size: 16px;
+  font-size: 12px;
 }
 div.mobileOnly .form_button.submit {
   width: 100%;
