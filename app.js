@@ -260,7 +260,7 @@ async function retrieveUserTimezone(req, res, next) {
             .from('users')
             .select('timezone')
             .eq('auth_id', userId);
-        console.log(`this is the user: ${user}`);
+        console.log(`this is the user: ${user.timezone}`);
 
         if (error) {
             throw new Error('Error fetching user timezone');
