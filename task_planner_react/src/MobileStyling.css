@@ -265,12 +265,12 @@ div.mobileOnly .react-datepicker__input-container {
   display: flex;
 }
 div.mobileOnly .form_field.description {
-  font-size: 12px;
+  font-size: 18px;
 }
 div.mobileOnly .time_input {
   margin: auto;
-  width: 90%;
-  font-size: 12px;
+  width: 80%;
+  font-size: 18px;
 }
 div.mobileOnly .form_button.submit {
   width: 100%;
