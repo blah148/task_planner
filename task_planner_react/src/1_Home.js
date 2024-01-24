@@ -69,7 +69,7 @@ function HomePage() {
       if (!withinCalendarContainer || withinDatePicker) {
         // Don't close the calendar if the click is within the .react-datepicker
         return;
-      }
+        }
 
       setIsCalendarVisible(false); // Close the calendar in other cases
     }
@@ -82,9 +82,65 @@ function HomePage() {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [isCalendarVisible]); // Only re-run the effect if isCalendarVisible changes
-  
-  return (
-    <>
+
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+return (
+  <>
+    {window.innerWidth < 768 ? (
+      // Mobile View
+      <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
+        <Loader isLoading={isLoading} />
+        <div className="header_mobile">
+          <h2 className="task_feed_title" onClick={toggleCalendar}>
+            {formatDate(selectedDate)}
+          </h2>
+          <Menu setTasks={setTasks} />
+        </div>
+        {isCalendarVisible && (
+          <div className="calendarContainer">
+            <DatePicker
+              inline
+              selected={selectedDate}
+              onChange={(date) => {
+                setSelectedDate(date);
+                toggleCalendar(); // Close the calendar after a date is selected
+              }}
+            />
+          </div>
+        )}
+        <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <PopupButton
+          selectedDate={selectedDate}
+          tasks={tasks}
+          setTasks={setTasks}
+          pingNewTask={pingNewTask}
+        />
+        <div className="tab-component">
+          <div className="tab-buttons">
+            <button onClick={() => setActiveTab('tab1')} className={activeTab === 'tab1' ? 'active' : ''}>2 Dooz</button>
+            <button onClick={() => setActiveTab('tab2')} className={activeTab === 'tab2' ? 'active' : ''}>Finished tasks</button>
+          </div>
+          <div className="tab-content">
+            {activeTab === 'tab1' && <div className="content">
+              <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+            </div>}
+            {activeTab === 'tab2' && <div className="content">
+              {/* Content for tab 2 */}
+            </div>}
+          </div>
+        </div>
+      </div>
+    ) : (
+      // Desktop View
       <div className="desktopOnly">
         <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         <div className="feedContainer_Major">
@@ -96,7 +152,7 @@ function HomePage() {
                 <h2 className="task_feed_title">
                   {formatDate(selectedDate)}
                 </h2>
-                <TaskRetrieval timestampComparison={'start_time'}setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+                <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
               </div>
               <div className="task_feed complete">
                 <h2 className="task_feed_title">Completed tasks</h2>
@@ -107,50 +163,11 @@ function HomePage() {
           </div>
           <Footer />
         </div>
-        </div>
-        <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
-          <Loader isLoading={isLoading} />
-          <div className="header_mobile">
-            <h2 className="task_feed_title" onClick={toggleCalendar}>
-              {formatDate(selectedDate)}
-            </h2>
-            <Menu setTasks={setTasks} />
-          </div>
-          {isCalendarVisible && (
-            <div className="calendarContainer">
-              <DatePicker
-                inline
-                selected={selectedDate}
-                onChange={(date) => {
-                  setSelectedDate(date);
-                  toggleCalendar(); // Close the calendar after a date is selected
-                }}
-              />
-            </div>
-          )}
-          <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-          <PopupButton
-            selectedDate={selectedDate}
-            tasks={tasks}
-            setTasks={setTasks}
-            pingNewTask={pingNewTask}
-          />
-        <div className="tab-component">
-          <div className="tab-buttons">
-            <button onClick={() => setActiveTab('tab1')} className={activeTab === 'tab1' ? 'active' : ''}>2 Dooz</button>
-            <button onClick={() => setActiveTab('tab2')} className={activeTab === 'tab2' ? 'active' : ''}>Finished tasks</button>
-          </div>
-          <div className="tab-content">
-            {activeTab === 'tab1' && <div className="content">
-              <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
-            </div>}
-            {activeTab === 'tab2' && <div className="content">
-            </div>}
-          </div>
-        </div>
       </div>
-    </>
-  );
+    )}
+  </>
+);
+  
 }
 
 export default HomePage;
