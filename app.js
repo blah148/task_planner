@@ -299,6 +299,9 @@ async function insertTaskMiddleware(req, res, next) {
     try {
         const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
+        
+        console.log(`this is the start_time logged: ${start_time}`);
+        console.log(`this is the end_time logged: ${end_time}`);
 
         // Encrypt the task_description
         const encryptedTaskDescription = encrypt(task_description, cryptoKey);

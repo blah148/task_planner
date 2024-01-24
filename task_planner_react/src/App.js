@@ -7,6 +7,8 @@ import Login from './1_Login.js';
 import TermsAndConditions from './1_Terms-and-Conditions';
 import PrivacyPolicy from './1_Privacy-Policy';
 import MyAccount from './1_My-account';
+import Desktop from './desktop-only.js';
+import Mobile from './mobile-only.js';
 
 function App() {
 
@@ -20,6 +22,8 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/my-account" element={<MyAccount />} />
+          <Route path="/desktop" element={<Desktop />} />
+          <Route path="/mobile" element={<Mobile />} />
         </Routes>
       </Router>
     </>
