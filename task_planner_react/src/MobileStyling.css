@@ -3,6 +3,11 @@
   div.desktopOnly {
     display: none;
   }
+  
+  body {
+    background-color: #212227;
+  }
+
   div.mobileOnly {
     display: flex;
     flex-direction: column;
