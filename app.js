@@ -259,7 +259,7 @@ async function retrieveUserTimezone(req, res, next) {
         const { data, error } = await supabase
             .from('users')
             .select('timezone')
-            .eq('id', userId);
+            .eq('auth_id', userId);
 
         if (error) {
             throw new Error('Error fetching user timezone');
