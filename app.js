@@ -291,7 +291,8 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
         // Convert selectedDate to the user's local time
         const localStartOfDay = moment.tz(selectedDate, req.userTimezone).startOf('day').format();
         const localEndOfDay = moment.tz(selectedDate, req.userTimezone).endOf('day').format();
-
+        console.log(`localStartOfDay: ${localStartOfDay}`);
+        console.log(`localEndOfDay: ${localEndOfDay}`);
         // Fetch tasks from the database
         const { data: tasks, error } = await supabase
             .from('tasks')
@@ -305,10 +306,11 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
 
         const decryptedTasks = tasks.map(task => {
             // Convert times to local timezone
-task.start_time2 = moment.utc(task.start_time).local(req.userTimezone).format();
-console.log(`this is the start_time ${task.start_time2}`);
-task.completion_date2 = moment.utc(task.completion_date).local(req.userTimezone).format();
-console.log(`this is the end_time ${task.completion_date2}`);
+          task.start_time2 = moment(task.start_time).tz(req.userTimezone).format();
+          console.log(`this is the start_time ${task.start_time}`);
+          console.log(`this is the start_time2 ${task.start_time2}`);
+          task.completion_date2 = moment.utc(task.completion_date).local(req.userTimezone).format();
+          console.log(`this is the end_time ${task.completion_date2}`);
             // Decrypt task_description
             if (task.task_description) {
                 task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
