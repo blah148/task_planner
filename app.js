@@ -16,6 +16,7 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const cryptoKey = process.env.CRYPTO_KEY;
+const moment = require('moment-timezone');
 
 app.use(cors());
 
@@ -334,13 +335,19 @@ async function insertTaskMiddleware(req, res, next) {
         console.log(`this is the timezone: ${req.userTimezone}`);
         // Encrypt the task_description
         const encryptedTaskDescription = encrypt(task_description, cryptoKey);
+        // Convert start and end times to UTC
+        const utcStartTime = moment.tz(start_time, userTimezone).utc().format();
+        const utcEndTime = moment.tz(end_time, userTimezone).utc().format();
+        
+        console.log(`this is the utc start time: ${utcStartTime}`);
+        console.log(`this is the utc end time: ${utcEndTime}`);
 
         // Use Supabase client to insert a new task
         const { error } = await supabase
             .from('tasks')
             .insert({
-                    start_time: start_time,
-                    end_time: end_time,
+                    start_time: utcStartTime,
+                    end_time: utcEndTime,
                     task_description: encryptedTaskDescription,
                     is_complete: false,
                     display_none: display_none,
