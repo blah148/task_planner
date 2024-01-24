@@ -38,18 +38,23 @@ function Register() {
         <h1>Register</h1>
       </div>
       <form className="registerForm" onSubmit={handleSubmit}>
-        {/* ... email and password fields */}
-        
         <label>
-            Choose your timezone:
-            <select value={timezone} onChange={e => setTimezone(e.target.value)}>
-                <option value="">Select a timezone</option>
-                {timezones.map(tz => (
-                    <option key={tz} value={tz}>{tz}</option>
-                ))}
-            </select>
+          Enter email:
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
         </label>
-
+        <label>
+          Set password:
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        </label>
+        <label>
+          Choose your timezone:
+          <select value={timezone} onChange={e => setTimezone(e.target.value)}>
+          <option value="">Select a timezone</option>
+          {timezones.map(tz => (
+            <option key={tz} value={tz}>{tz}</option>
+          ))}
+          </select>
+        </label>
         <button type="submit">Register</button>
       </form>
       <Footer />

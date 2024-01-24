@@ -113,8 +113,8 @@ app.post('/register', async (req, res) => {
                 {
                     auth_id: user.id,
                     email: email,
-                    hashed_password: hashedPassword, // Store the hashed password for your custom use
-                    // Other fields...
+                    hashed_password: hashedPassword,
+                    timezone: timezone,
                 }
             );
 
