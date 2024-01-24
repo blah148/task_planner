@@ -136,7 +136,7 @@ return (
               <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
             </div>}
             {activeTab === 'tab2' && <div className="content">
-              {/* Content for tab 2 */}
+              <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
             </div>}
           </div>
         </div>
