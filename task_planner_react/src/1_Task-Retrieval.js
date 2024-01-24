@@ -9,6 +9,8 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
 
   const [loadingStarted, setLoadingStarted] = useState(null);
   const [isHovering, setIsHovering] = useState({});
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
 
   useEffect(() => {
   let loadingStarted; // Define loadingStarted in the higher scope
@@ -69,7 +71,20 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
     } catch (error) {
       console.error('Error toggling is_complete', error);
     }
-  };
+};
+
+    useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
@@ -139,14 +154,23 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
                     onChange={() => handleCheckbox(task.id)}
                     className="buffer_is_Complete"
                   />
-                    <label
-                        key={task.id}
-                        className="custom-checkbox"
-                        onClick={() => handleCheckbox(task.id)}
-                        onMouseEnter={() => setIsHovering({ ...isHovering, [task.id]: true })}
-                        onMouseLeave={() => setIsHovering({ ...isHovering, [task.id]: false })}
-                        style={{ backgroundColor: getBackgroundColor(task.id, taskStatus) }}
-                    ></label>
+                                  {isMobileView ? (
+                  // Mobile label
+                  <label
+                    className="custom-checkbox"
+                    onClick={() => handleCheckbox(task.id)}
+                    onMouseEnter={() => setIsHovering({ ...isHovering, [task.id]: true })}
+                    onMouseLeave={() => setIsHovering({ ...isHovering, [task.id]: false })}
+                    style={{ backgroundColor: getBackgroundColor(task.id, taskStatus) }}
+                  ></label>
+                ) : (
+                  // Desktop label
+                  <label
+                    className={`custom-checkbox ${taskStatus ? 'task-complete' : 'task-incomplete'}`}
+                    onClick={() => handleCheckbox(task.id)}
+                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#1cc5cb' }}
+                  ></label>
+                )}
                   <div className="taskInformation">
                     <div className="buffer description">{task.task_description}</div>  
                     <div className="bottomRow">
