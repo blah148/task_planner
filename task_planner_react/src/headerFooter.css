@@ -96,6 +96,22 @@ a.footer_lower-item {
 a.footer_lower-item:hover {
   opacity: 0.8;
 }
+@media only screen and (max-width: 768px) {
+  div.footerContainer {
+    padding: 1vh 0 2vh 0;
+  }
+  div.footer_higher-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  div.footer_column {
+    width: 100%;
+    align-items: center;
+  }
+  div.footer_lower-row {
+    height: auto;
+  }
+}
 /*For the Register Page */
 form.registerForm {
   width: 20vw;
@@ -127,7 +143,6 @@ form.registerForm button {
   color: #fff;
   border-radius: 5px;
   text-align: center;
-  height: 3.5ch;
   border: none;
   cursor: pointer;
   padding: 4px 8px;

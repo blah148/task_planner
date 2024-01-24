@@ -75,7 +75,7 @@ function MyAccount() {
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
                 </label>
                 <label>
-                    Old Password:
+                    Confirm Old Password:
                     <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
                 </label>
                 <label>
