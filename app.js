@@ -287,6 +287,9 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
         const user_id = req.user.sub;
         const timestampComparison = req.params.timestampComparison; // "start_time" or "completion_date"
         const selectedDate = new Date(req.params.selectedDate);
+        
+
+        console.log(`this is the FETCHTASKS timezone: ${req.userTimezone}`);
 
         // Convert selectedDate to the user's local time
         const localStartOfDay = moment.tz(selectedDate, req.userTimezone).startOf('day').format();
