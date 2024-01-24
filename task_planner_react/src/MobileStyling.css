@@ -152,11 +152,18 @@ div.mobileOnly div.buffer.description {
   width: auto;
   word-wrap: anywhere;
 }
+div.mobileOnly input.buffer_is_complete {
+  display: block;
+  cursor: pointer;
+  margin: auto 16px auto 0;
+  align-self: center;
+}
 div.mobileOnly .custom-checkbox {
   margin-right: 3.5vw;
+  display: none;
   width: 10px;
   height: 10px;
-  background-color: white;
+  background-color: white !important;
   border-radius: 50%;
   border: 2px solid #a4a4a4;
   cursor: pointer;
