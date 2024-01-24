@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, setTasks, newTask, setIsLoading, selectedDate, timestampComparison }) {
 
   const [loadingStarted, setLoadingStarted] = useState(null);
+  const [isHovering, setIsHovering] = useState({});
 
   useEffect(() => {
   let loadingStarted; // Define loadingStarted in the higher scope
@@ -45,6 +46,13 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
   fetchTasks();
 }, [checkboxUpdate, newTask, selectedDate]);
 
+    const getBackgroundColor = (taskId, taskStatus) => {
+        if (taskStatus) {
+            return isHovering[taskId] ? 'transparent' : '#1cc5cb';
+        } else {
+            return isHovering[taskId] ? '#1cc5cb' : 'transparent';
+        }
+    };
 
   const handleCheckbox = async id => {
     try {
@@ -131,12 +139,14 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
                     onChange={() => handleCheckbox(task.id)}
                     className="buffer_is_Complete"
                   />
-                  {/* Custom label for the checkbox */}
-                  <label
-                    className={`custom-checkbox ${taskStatus ? 'task-complete' : 'task-incomplete'}`}
-                    onClick={() => handleCheckbox(task.id)}
-                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#1cc5cb' }}
-                  ></label>
+                    <label
+                        key={task.id}
+                        className="custom-checkbox"
+                        onClick={() => handleCheckbox(task.id)}
+                        onMouseEnter={() => setIsHovering({ ...isHovering, [task.id]: true })}
+                        onMouseLeave={() => setIsHovering({ ...isHovering, [task.id]: false })}
+                        style={{ backgroundColor: getBackgroundColor(task.id, taskStatus) }}
+                    ></label>
                   <div className="taskInformation">
                     <div className="buffer description">{task.task_description}</div>  
                     <div className="bottomRow">
