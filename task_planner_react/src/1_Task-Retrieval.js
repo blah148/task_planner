@@ -131,7 +131,6 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
                     checked={task.isComplete}
                     onChange={() => handleCheckbox(task.id)}
                     className="buffer_is_Complete"
-                    style={{ display: 'none' }}
                   />
                   {/* Custom label for the checkbox */}
                   <label

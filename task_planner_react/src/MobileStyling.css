@@ -152,7 +152,7 @@ div.mobileOnly div.buffer.description {
   width: auto;
   word-wrap: anywhere;
 }
-div.mobileOnly input.buffer_is_complete {
+div.mobileOnly input.buffer_is_Complete {
   display: block;
   cursor: pointer;
   margin: auto 16px auto 0;

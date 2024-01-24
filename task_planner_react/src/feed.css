@@ -53,6 +53,9 @@ div.desktopOnly div.columnsContainer {
 div.desktopOnly div.taskInformation {
   width: 100%;
 }
+div.desktopOnly input.buffer_is_Complete {
+  display: none;
+}
 div.desktopOnly .custom-checkbox {
   width: 10px;
   height: 10px;
