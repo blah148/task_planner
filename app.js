@@ -309,8 +309,8 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
           task.start_time2 = moment(task.start_time).tz(req.userTimezone).format('YYYY-MM-DD HH:mm:ss');
           console.log(`this is the start_time ${task.start_time}`);
           console.log(`this is the start_time2 ${task.start_time2}`);
-          task.completion_date2 = moment.utc(task.completion_date).local(req.userTimezone).format();
-          console.log(`this is the end_time ${task.completion_date2}`);
+          task.completion_date2 = moment(task.completion_date).tz(req.userTimezone).format('YYYY-MM-DD HH:mm:ss');
+          console.log(`this is the end_time2 ${task.completion_date2}`);
             // Decrypt task_description
             if (task.task_description) {
                 task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
