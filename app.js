@@ -288,8 +288,6 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
         const timestampComparison = req.params.timestampComparison; // "start_time" or "completion_date"
         const selectedDate = new Date(req.params.selectedDate);
 
-        console.log(`this is the FETCHTASKS timezone: ${req.userTimezone}`);
-
         // Convert selectedDate to the user's local time
         const localStartOfDay = moment.tz(selectedDate, req.userTimezone).startOf('day').format();
         const localEndOfDay = moment.tz(selectedDate, req.userTimezone).endOf('day').format();
@@ -315,7 +313,7 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
             // Convert times to local timezone
             
             let startTimeUTC = moment.tz(task.start_time, "UTC");
-            console.log(`initial start_time5: ${task.start_time5}`);
+            console.log(`initial raw UTC time: ${startTimeUTC}`);
             console.log(`this is the timezone: ${req.userTimezone}`);
             console.log(`this should be the converted time: ${startTimeUTC.tz(req.userTimezone).format()}`);
 
