@@ -23,6 +23,7 @@ function HomePage() {
   const [isLoadingDone, setIsLoadingDone] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('tab1');
+  const [checkboxUpdate, setCheckboxUpdate] = useState(false);
 
   const formatDate = (date) => {
     const today = new Date();
@@ -131,10 +132,10 @@ return (
           </div>
           <div className="tab-content">
             {activeTab === 'tab1' && <div className="content">
-              <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+              <TaskRetrieval checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
             </div>}
             {activeTab === 'tab2' && <div className="content">
-              <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
+              <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
             </div>}
           </div>
         </div>
@@ -152,11 +153,11 @@ return (
                 <h2 className="task_feed_title">
                   {formatDate(selectedDate)}
                 </h2>
-                <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+                <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} setTasks={setTasks} newTask={newTask} />
               </div>
               <div className="task_feed complete">
                 <h2 className="task_feed_title">Completed tasks</h2>
-                <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
+                <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} />
               </div>
             </div>
             <Menu setTasks={setTasks} />
