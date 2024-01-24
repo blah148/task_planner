@@ -299,7 +299,7 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUs
         const { data: tasks, error } = await supabase
             .from('tasks')
             .select()
-            .eq('user_id', user_id);
+            .eq('user_id', req.user.sub);
 
         if (error) {
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
