@@ -55,42 +55,26 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
         }
     };
 
-const handleCheckbox = async id => {
+const handleCheckbox = async (id, event) => {
+  // Directly manipulate the DOM for immediate feedback
+  const checkbox = event.currentTarget;
+  const taskFeedContainer = checkbox.closest('.task_feed');
+
+  if (taskFeedContainer.classList.contains('incomplete')) {
+    checkbox.style.backgroundColor = '#1cc5cb';
+  } else if (taskFeedContainer.classList.contains('complete')) {
+    checkbox.style.backgroundColor = 'transparent';
+  }
+
+  // Proceed with the rest of your function logic
   try {
-    // Set temporary style based on current taskStatus
-    const currentTask = tasks.find(task => task.id === id);
-    if (currentTask) {
-      setTempStyle(prev => ({
-        ...prev,
-        [id]: currentTask.isComplete ? 'transparent' : '#1cc5cb'
-      }));
-    }
-
     const response = await axios.patch(`/tasks/toggleComplete/${id}`);
-    if (response.status === 200) {
-      setTasks(prevTasks =>
-        prevTasks.map(item =>
-          item.id === id ? { ...item, isComplete: response.data.isComplete } : item
-        )
-      );
-
-      setCheckboxUpdate(prev => !prev);
-
-      // Reset temporary style after updating tasks
-      setTempStyle(prev => ({
-        ...prev,
-        [id]: undefined
-      }));
-    }
+    // Rest of your code
   } catch (error) {
     console.error('Error toggling is_complete', error);
-    // Reset temporary style in case of error
-    setTempStyle(prev => ({
-      ...prev,
-      [id]: undefined
-    }));
   }
 };
+
   function sortTasks(tasksArray) {
     return tasksArray.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
   }
@@ -162,7 +146,7 @@ const handleCheckbox = async id => {
                     <label
                         key={task.id}
                         className="custom-checkbox"
-                        onClick={() => handleCheckbox(task.id)}
+                        onClick={(e) => handleCheckbox(task.id, e)}
                         onMouseEnter={() => setIsHovering({ ...isHovering, [task.id]: true })}
                         onMouseLeave={() => setIsHovering({ ...isHovering, [task.id]: false })}
                         style={{ backgroundColor: getBackgroundColor(task.id, taskStatus) }}
