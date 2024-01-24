@@ -306,27 +306,22 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
+const decryptedTasks = tasks.map(task => {
+    // Convert times to local timezone
+    task.start_time = moment.tz(task.start_time, 'UTC').tz(req.userTimezone).format();
+    task.completion_date = task.completion_date ? moment.tz(task.completion_date, 'UTC').tz(req.userTimezone).format() : null;
 
-        // Filter and convert times to local timezone
-        const decryptedTasks = tasks
-            .map(task => {
-                // Convert times to local timezone
-                task.start_time = moment.tz(task.start_time, 'UTC').tz(req.userTimezone).format();
-                task.completion_date = moment.tz(task.completion_date, 'UTC').tz(req.userTimezone).format();
+    // Decrypt task_description
+    if (task.task_description) {
+        task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
+    }
 
-                // Decrypt task_description
-                if (task.task_description) {
-                    task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
-                }
-
-                return task;
-            })
-            .filter(task => {
-                // Apply gte/lt filters based on local time
-                const taskTime = task[timestampComparison];
-                return taskTime >= localStartOfDay && taskTime < localEndOfDay;
-            });
-
+    return task;
+})
+.filter(task => {
+    const taskTime = task[timestampComparison]; // use the already converted time
+    return taskTime >= localStartOfDay && taskTime < localEndOfDay;
+});
         res.status(200).json({ tasks: decryptedTasks });
     } catch (taskError) {
         console.error("Error fetching tasks:", taskError);
