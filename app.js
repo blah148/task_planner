@@ -205,9 +205,9 @@ app.post('/login', async (req, res) => {
 
         console.log("Cookies set, sending response...");
         // Respond with success message
-        res.json({
+        res.status(201).json({
             message: "Login successful",
-            redirectTo: "/fetch-tasks"
+            redirectTo: "/"
         });
     } catch (error) {
         console.error("Error during login:", error);

@@ -21,15 +21,15 @@ function Login({ setIsLoggedIn }) {
             body: JSON.stringify({ email, password }), // Send email instead of username
             credentials: 'include' // Ensure cookies are included with the request
         });
+        
+        const data = await response.json(); // Get JSON response body
 
-        if (response.ok) {
+        if (data.redirectTo) {
             // If the login is successful
             console.log("Login successful");
-            setIsLoggedIn(true); // Update the login state
-            navigate('/'); // Navigate to the home page or dashboard
+            navigate(data.redirectTo);
         } else {
             // If the login fails, handle it accordingly
-            const data = await response.json(); // Get JSON response body
             console.error("Login failed:", data.message);
             alert("Login failed: " + data.message);
             // Additional logic for failed login can be added here
