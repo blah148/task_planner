@@ -306,10 +306,11 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
-const decryptedTasks = tasks.map(task => {
     // Convert times to local timezone
-    task.start_time = moment.tz(task.start_time, 'UTC').tz(req.userTimezone).format();
-    task.completion_date = task.completion_date ? moment.tz(task.completion_date, 'UTC').tz(req.userTimezone).format() : null;
+    task.start_time = moment.utc(task.start_time).local(req.userTimezone).format();
+    console.log(`this is the start_time ${task.start_time}`);
+    task.completion_date = moment.utc(task.completion_date).local(req.userTimezone).format('YYYY-MM-DDTHH:mm:ss');
+    console.log(`this is the end_time ${task.completion_date}`);
 
     // Decrypt task_description
     if (task.task_description) {
