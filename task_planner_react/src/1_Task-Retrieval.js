@@ -45,7 +45,14 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
       });
       if (response.ok) {
         const data = await response.json();
-        setTasks(data.tasks); // Update the tasks state with the fetched data
+        const fetchedTasks = data.tasks;
+        // Merge new tasks with existing tasks
+        setTasks(prevTasks => {
+          const existingTaskIds = new Set(prevTasks.map(task => task.id));
+          const newTasks = fetchedTasks.filter(task => !existingTaskIds.has(task.id));
+          return [...prevTasks, ...newTasks];
+        });
+
         sortTasks(data.tasks); // Make sure you have the sortTasks function defined
       } else {
         console.error('Failed to fetch tasks');
