@@ -284,10 +284,9 @@ async function retrieveUserTimezone(req, res, next) {
 
 app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, retrieveUserTimezone, async (req, res) => {
     try {
-        const user_id = req.user.sub;
+
         const timestampComparison = req.params.timestampComparison; // "start_time" or "completion_date"
         const selectedDate = new Date(req.params.selectedDate);
-        
 
         console.log(`this is the FETCHTASKS timezone: ${req.userTimezone}`);
 
