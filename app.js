@@ -267,12 +267,12 @@ async function retrieveUserTimezone(req, res, next) {
             throw new Error('Error fetching user timezone');
         }
 
-        if (!data || !data.timezone) {
+        if (!JSON.stringify(user)) {
             throw new Error('Timezone not found for user');
         }
 
         // Attach the timezone to the request object so it can be accessed in subsequent middleware or route handlers
-        req.userTimezone = data.timezone;
+        req.userTimezone = JSON.stringify(user);
 
         next();
     } catch (error) {
