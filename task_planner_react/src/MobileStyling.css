@@ -153,14 +153,10 @@ div.mobileOnly div.buffer.description {
   word-wrap: anywhere;
 }
 div.mobileOnly input.buffer_is_Complete {
-  display: block;
-  cursor: pointer;
-  margin: auto 16px auto 0;
-  align-self: center;
+  display: none;
 }
 div.mobileOnly .custom-checkbox {
   margin-right: 3.5vw;
-  display: none;
   width: 10px;
   height: 10px;
   background-color: white !important;
