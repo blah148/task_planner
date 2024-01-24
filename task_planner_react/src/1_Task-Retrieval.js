@@ -9,29 +9,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
 
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
   const [loadingStarted, setLoadingStarted] = useState(null);
-      const [checkboxStates, setCheckboxStates] = useState({});
 
-    useEffect(() => {
-        // Initialize the local checkbox states based on the tasks
-        const initialStates = {};
-        tasks.forEach(task => {
-            initialStates[task.id] = task.isComplete;
-        });
-        setCheckboxStates(initialStates);
-    }, [tasks]);
-    console.log();
-    const handleCheckboxClick = async (id) => {
-        // Immediately update local state for visual feedback
-        setCheckboxStates(prevStates => ({
-            ...prevStates,
-            [id]: !prevStates[id]
-        }));
-
-        // Proceed with your existing handleCheckbox logic
-        handleCheckbox(id);
-    };
-
-  
   useEffect(() => {
   let loadingStarted; // Define loadingStarted in the higher scope
 
@@ -141,7 +119,6 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
     <div className="task_table">
       <div className="buffer_task-list">
         {tasks.filter(task => task.is_complete === taskStatus).map((task, index) => {
-          const isChecked = checkboxStates[task.id];
             return (
               <div
                 key={task.id}
