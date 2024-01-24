@@ -285,10 +285,6 @@ async function retrieveUserTimezone(req, res, next) {
 app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub;
-        // For incomplete tasks, use "start_time" as the timestampComparison
-        // For complete tasks, use "completion_date" as the timestampComparison
-        // Query "start_time" or "completion_date" against the selected date to retrieve tasks
-
         const timestampComparison = req.params.timestampComparison; // "start_time" or "completion_date"
         const selectedDate = new Date(req.params.selectedDate);
 
@@ -306,23 +302,25 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
             res.status(500).json({ message: "Error fetching tasks from Supabase" });
             return;
         }
-    // Convert times to local timezone
-    task.start_time = moment.utc(task.start_time).local(req.userTimezone).format();
-    console.log(`this is the start_time ${task.start_time}`);
-    task.completion_date = moment.utc(task.completion_date).local(req.userTimezone).format('YYYY-MM-DDTHH:mm:ss');
-    console.log(`this is the end_time ${task.completion_date}`);
 
-    // Decrypt task_description
-    if (task.task_description) {
-        task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
-    }
+        const decryptedTasks = tasks.map(task => {
+            // Convert times to local timezone
+task.start_time = moment.utc(task.start_time).local(req.userTimezone).format();
+console.log(`this is the start_time ${task.start_time}`);
+task.completion_date = moment.utc(task.completion_date).local(req.userTimezone).format('YYYY-MM-DDTHH:mm:ss');
+console.log(`this is the end_time ${task.completion_date}`);
+            // Decrypt task_description
+            if (task.task_description) {
+                task.task_description = decrypt(task.task_description, process.env.CRYPTO_KEY);
+            }
 
-    return task;
-})
-.filter(task => {
-    const taskTime = task[timestampComparison]; // use the already converted time
-    return taskTime >= localStartOfDay && taskTime < localEndOfDay;
-});
+            return task;
+        })
+        .filter(task => {
+            const taskTime = task[timestampComparison]; // use the already converted time
+            return taskTime >= localStartOfDay && taskTime < localEndOfDay;
+        });
+
         res.status(200).json({ tasks: decryptedTasks });
     } catch (taskError) {
         console.error("Error fetching tasks:", taskError);
