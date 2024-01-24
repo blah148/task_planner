@@ -80,7 +80,7 @@ app.post('/logout', (req, res) => {
 
 app.post('/register', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, timezone } = req.body;
 
         // Use Supabase client to create a new user with the plaintext password
         const signUpResponse = await supabase.auth.signUp({
