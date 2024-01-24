@@ -19,7 +19,7 @@ function TaskRetrieval({ taskStatus, tasks, setTasks, newTask, setIsLoading, sel
         });
         setCheckboxStates(initialStates);
     }, [tasks]);
-
+    console.log();
     const handleCheckboxClick = async (id) => {
         // Immediately update local state for visual feedback
         setCheckboxStates(prevStates => ({
