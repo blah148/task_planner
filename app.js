@@ -346,7 +346,8 @@ app.get('/my-account', verifyJWT, async (req, res) => {
         const { data: user, error } = await supabase
             .from('users')
             .select('email, timezone')
-            .eq('auth_id', userId);
+            .eq('auth_id', userId)
+            .single();
 
         if (error) {
             throw new Error('Database query error');
