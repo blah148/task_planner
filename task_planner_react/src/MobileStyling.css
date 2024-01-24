@@ -167,6 +167,12 @@ div.mobileOnly .custom-checkbox {
 div.mobileOnly .custom-checkbox:focus {
   background-color: #1cc5cb;
 }
+div.mobileOnly .custom-checkbox:hover {
+  background-color: #1cc5cb;
+}
+div.mobileOnly .custom-checkbox:active {
+  background-color: #1cc5cb;
+}
 div.mobileOnly div.bottomRow {
   display: flex;
   align-items: center;
