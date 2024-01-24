@@ -24,8 +24,6 @@ function HomePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('tab1');
 
-  console.log(`this is initially selectedDate.... ${selectedDate}`);
-
   const formatDate = (date) => {
     const today = new Date();
     const yesterday = new Date(today);

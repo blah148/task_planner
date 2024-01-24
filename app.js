@@ -249,6 +249,37 @@ app.use((err, req, res, next) => {
   }
 });
 
+// Middleware to retrieve the user's timezone
+async function retrieveUserTimezone(req, res, next) {
+    try {
+        // Assuming the user ID is stored in the JWT token and available as req.user.sub
+        const userId = req.user.sub;
+
+        // Query the database to retrieve the user's timezone
+        const { data, error } = await supabase
+            .from('users')
+            .select('timezone')
+            .eq('id', userId)
+            .single(); // assuming each user has a unique ID and only one record is returned
+
+        if (error) {
+            throw new Error('Error fetching user timezone');
+        }
+
+        if (!data || !data.timezone) {
+            throw new Error('Timezone not found for user');
+        }
+
+        // Attach the timezone to the request object so it can be accessed in subsequent middleware or route handlers
+        req.userTimezone = data.timezone;
+
+        next();
+    } catch (error) {
+        console.error('Error in retrieveUserTimezone middleware:', error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req, res) => {
     try {
         const user_id = req.user.sub;
@@ -292,14 +323,14 @@ app.get('/fetch-tasks/:timestampComparison/:selectedDate', verifyJWT, async (req
 });
 
 // Middleware for inserting a new task
-app.post('/tasks/new', verifyJWT, insertTaskMiddleware, retrieveTaskId);
+app.post('/tasks/new', verifyJWT, retrieveUserTimezone, insertTaskMiddleware, retrieveTaskId);
 
 // Middleware function for inserting a task
 async function insertTaskMiddleware(req, res, next) {
     try {
         const { start_time, end_time, task_description, isComplete, display_none, visibility } = req.body;
         const user_id = req.user.sub; // Replace 'sub' with the appropriate field from your JWT payload
-
+        console.log(`this is the timezone: ${req.userTimezone}`);
         // Encrypt the task_description
         const encryptedTaskDescription = encrypt(task_description, cryptoKey);
 
