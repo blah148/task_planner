@@ -154,7 +154,7 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
                     onChange={() => handleCheckbox(task.id)}
                     className="buffer_is_Complete"
                   />
-                                  {isMobileView ? (
+                  {isMobileView ? (
                   // Mobile label
                   <label
                     className="custom-checkbox"
