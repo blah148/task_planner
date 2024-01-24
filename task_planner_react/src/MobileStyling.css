@@ -164,8 +164,11 @@ div.mobileOnly .custom-checkbox {
   cursor: pointer;
   align-self: center;
 }
-div.mobileOnly .custom-checkbox:hover {
+.custom-checkbox.task-incomplete:hover {
   background-color: #1cc5cb;
+}
+.custom-checkbox.task-complete:hover {
+  background-color: transparent;
 }
 div.mobileOnly div.bottomRow {
   display: flex;

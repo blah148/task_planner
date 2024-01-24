@@ -133,8 +133,9 @@ function TaskRetrieval({ checkboxUpdate, setCheckboxUpdate, taskStatus, tasks, s
                   />
                   {/* Custom label for the checkbox */}
                   <label
-                    className="custom-checkbox"
+                    className={`custom-checkbox ${taskStatus ? 'task-complete' : 'task-incomplete'}`}
                     onClick={() => handleCheckbox(task.id)}
+                    style={{ backgroundColor: taskStatus === false ? 'transparent' : '#1cc5cb' }}
                   ></label>
                   <div className="taskInformation">
                     <div className="buffer description">{task.task_description}</div>  
