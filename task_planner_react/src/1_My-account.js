@@ -45,6 +45,7 @@ function MyAccount() {
                 credentials: 'include'
             });
             if (!response.ok) {
+                alert("An error occurred");
                 throw new Error('Update failed');
             }
             const data = await response.json();
@@ -52,6 +53,7 @@ function MyAccount() {
             setShowUpdateAlert(true);
             setTimeout(() => setShowUpdateAlert(false), 3000); // Hide
         } catch (error) {
+            alert("An error occurred");
             console.error(error.message);
             // Handle update error (show message to the user, etc.)
         }

@@ -142,11 +142,11 @@ form.registerForm button:hover {
     position: fixed;
     bottom: 10px;
     left: 10px;
-    background-color: #4CAF50; /* Green background */
+    background-color: #1dc6ca;
     color: white;
     padding: 15px;
     border-radius: 5px;
-    animation: fadeInOut 3s;
+    animation: fadeInOut 2.5s;
 }
 
 @keyframes fadeInOut {
