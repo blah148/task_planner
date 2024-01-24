@@ -45,7 +45,6 @@ function MyAccount() {
                 credentials: 'include'
             });
             if (!response.ok) {
-                alert("An error occurred");
                 throw new Error('Update failed');
             }
             const data = await response.json();

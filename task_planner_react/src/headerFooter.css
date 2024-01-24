@@ -146,7 +146,7 @@ form.registerForm button:hover {
     color: white;
     padding: 15px;
     border-radius: 5px;
-    animation: fadeInOut 2.5s;
+    animation: fadeInOut 3s;
 }
 
 @keyframes fadeInOut {
