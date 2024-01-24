@@ -145,7 +145,6 @@ function HomePage() {
               <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
             </div>}
             {activeTab === 'tab2' && <div className="content">
-               <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} /> 
             </div>}
           </div>
         </div>
