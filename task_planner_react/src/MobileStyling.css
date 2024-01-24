@@ -61,6 +61,8 @@ div.mobileOnly .day.selected {
 div.mobileOnly .day {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 6px 10px;
   background-color: transparent;
   border: none;
@@ -200,10 +202,9 @@ div.mobileOnly .mobile_new-task {
   color: #fff;
   border-radius: 5px;
   text-align: center;
-  height: 3.5ch;
   border: none;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 8px 12px;
   box-shadow: 0 2px 15px rgba(28, 197, 203, 0.5);
   width: 95%;
   margin: 5px auto;
@@ -243,9 +244,13 @@ div.mobileOnly .react-datepicker-wrapper {
 div.mobileOnly .react-datepicker__input-container {
   display: flex;
 }
+div.mobileOnly .form_field.description {
+  font-size: 16px;
+}
 div.mobileOnly .time_input {
   margin: auto;
-  width: 80%;
+  width: 90%;
+  font-size: 16px;
 }
 div.mobileOnly .form_button.submit {
   width: 100%;
