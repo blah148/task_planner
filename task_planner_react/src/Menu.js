@@ -83,7 +83,7 @@ function Menu({ setTasks }) {
       <div ref={menuRef} className={`menu ${showMenu ? 'show' : ''}`}>
       {isAuthenticated ? (
           <>
- <a href="/my-account" className="menuItem">
+ <a href="/account" className="menuItem">
           <svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
             <polygon points="28.07 21 22 15 28.07 9 29.5 10.41 24.86 15 29.5 19.59 28.07 21"/>
             <path d="M22,30H20V25a5,5,0,0,0-5-5H9a5,5,0,0,0-5,5v5H2V25a7,7,0,0,1,7-7h6a7,7,0,0,1,7,7Z"/>

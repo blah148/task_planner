@@ -9,6 +9,7 @@ function MyAccount() {
     const [email, setEmail] = useState('');
     const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
+    const [showUpdateAlert, setShowUpdateAlert] = useState(false);
     const [timezone, setTimezone] = useState('');
     const navigate = useNavigate();
 
@@ -21,8 +22,6 @@ function MyAccount() {
                     throw new Error('Failed to fetch account details');
                 }
                 const data = await response.json();
-                console.log(`this is the returned email: ${data.email}`);
-                console.log(`this is the returned timezone: ${data.timezone}`);
                 setEmail(data.email);
                 setTimezone(data.timezone);
                 // Do not set password as it should not be retrieved from the server
@@ -49,8 +48,9 @@ function MyAccount() {
                 throw new Error('Update failed');
             }
             const data = await response.json();
-            console.log("Account updated successfully", data);
-            // Handle successful update (e.g., navigate or show message)
+
+            setShowUpdateAlert(true);
+            setTimeout(() => setShowUpdateAlert(false), 3000); // Hide
         } catch (error) {
             console.error(error.message);
             // Handle update error (show message to the user, etc.)
@@ -60,6 +60,11 @@ function MyAccount() {
     return (
         <div className="bodyVertical">
             <Header />
+            {showUpdateAlert && (
+                <div className="updateAlert">
+                    Account updated successfully!
+                </div>
+            )}
             <div className="subHeader">
                 <h1>Account</h1>
             </div>

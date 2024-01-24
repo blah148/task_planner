@@ -11,7 +11,7 @@ function Footer () {
           <h2 className="footer_header">Usage</h2>
           <a href="/register" className="footer_link-item">Create account</a>
           <a href="/login" className="footer_link-item">Login</a>
-          <a href="/my-account" className="footer_link-item">My account</a>
+          <a href="/account" className="footer_link-item">My account</a>
           <div className="footer_link-item">Logout</div>
         </div>
         <div className="footer_column">
