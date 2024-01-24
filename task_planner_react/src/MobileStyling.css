@@ -257,23 +257,26 @@ div.mobileOnly .formSubmitBottomRow {
 }
 div.mobileOnly .datesContainer {
   width: 100%;
+  flex-direction: column;
 }
 div.mobileOnly .react-datepicker-wrapper {
-  width: 50%;
+  width: 100%;
+  margin: 12px 0;
 }
 div.mobileOnly .react-datepicker__input-container {
   display: flex;
 }
 div.mobileOnly .form_field.description {
-  font-size: 18px;
+  font-size: 17px;
 }
 div.mobileOnly .time_input {
   margin: auto;
-  width: 80%;
-  font-size: 18px;
+  width: 100%;
+  font-size: 17px;
 }
 div.mobileOnly .form_button.submit {
   width: 100%;
-  margin-top: 12px;
+  margin-top: 20px;
+  font-size: 17px;
 }
 
