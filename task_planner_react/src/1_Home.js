@@ -156,7 +156,6 @@ return (
               </div>
               <div className="task_feed complete">
                 <h2 className="task_feed_title">Completed tasks</h2>
-                <TaskRetrieval setIsLoading={setIsLoading} timestampComparison={'completion_date'} taskStatus={true} tasks={tasks} setTasks={setTasks} selectedDate={selectedDate} />
               </div>
             </div>
             <Menu setTasks={setTasks} />
