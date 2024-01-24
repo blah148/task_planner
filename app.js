@@ -342,7 +342,7 @@ app.get('/my-account', verifyJWT, async (req, res) => {
     try {
         const userId = req.user.sub; // Extract user ID from JWT payload
 
-        console.log(`entering the my-account endpoint: ${userID}`);
+        console.log(`entering the my-account endpoint: ${userId}`);
 
         // Query the database for the user's email and timezone
         const { data: user, error } = await supabase
