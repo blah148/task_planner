@@ -336,9 +336,9 @@ async function insertTaskMiddleware(req, res, next) {
         // Encrypt the task_description
         const encryptedTaskDescription = encrypt(task_description, cryptoKey);
         // Convert start and end times to UTC
-        const utcStartTime = moment.tz(start_time, userTimezone).utc().format();
-        const utcEndTime = moment.tz(end_time, userTimezone).utc().format();
-        
+        // Convert start and end times to UTC
+        const utcStartTime = moment.tz(start_time, req.userTimezone).utc().format();
+        const utcEndTime = moment.tz(end_time, req.userTimezone).utc().format();
         console.log(`this is the utc start time: ${utcStartTime}`);
         console.log(`this is the utc end time: ${utcEndTime}`);
 
