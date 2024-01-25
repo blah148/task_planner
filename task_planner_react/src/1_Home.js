@@ -24,6 +24,7 @@ function HomePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('tab1');
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const formatDate = (date) => {
     const today = new Date();
@@ -96,75 +97,79 @@ function HomePage() {
   }, []);
 return (
   <>
-    {window.innerWidth < 768 ? (
-      // Mobile View
-      <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
-        <Loader isLoading={isLoading} />
-        <div className="header_mobile">
-          <h2 className="task_feed_title" onClick={toggleCalendar}>
-            {formatDate(selectedDate)}
-          </h2>
-          <Menu setTasks={setTasks} />
-        </div>
-        {isCalendarVisible && (
-          <div className="calendarContainer">
-            <DatePicker
-              inline
-              selected={selectedDate}
-              onChange={(date) => {
-                setSelectedDate(date);
-                toggleCalendar(); // Close the calendar after a date is selected
-              }}
-            />
-          </div>
-        )}
-        <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        <PopupButton
-          selectedDate={selectedDate}
-          tasks={tasks}
-          setTasks={setTasks}
-          pingNewTask={pingNewTask}
-        />
-        <div className="tab-component">
-          <div className="tab-buttons">
-            <button onClick={() => setActiveTab('tab1')} className={activeTab === 'tab1' ? 'active' : ''}>2 Dooz</button>
-            <button onClick={() => setActiveTab('tab2')} className={activeTab === 'tab2' ? 'active' : ''}>Finished tasks</button>
-          </div>
-          <div className="tab-content">
-            {activeTab === 'tab1' && <div className="content">
-              <TaskRetrieval checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
-            </div>}
-            {activeTab === 'tab2' && <div className="content">
-              <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
-            </div>}
-          </div>
-        </div>
-      </div>
-    ) : (
-      // Desktop View
-      <div className="desktopOnly">
-        <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        <div className="feedContainer_Major">
-          <div className="feedContainer">
-            <div className="taskTools">
-              <Loader isLoading={isLoading} />
-              <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
-              <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
-                <h2 className="task_feed_title">
-                  {formatDate(selectedDate)}
-                </h2>
-                <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} setTasks={setTasks} newTask={newTask} />
-              </div>
-              <div className="task_feed complete">
-                <h2 className="task_feed_title">Completed tasks</h2>
-                <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} />
-              </div>
-            </div>
+    {isLoggedIn ? (
+      window.innerWidth < 768 ? (
+        // Mobile View
+        <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
+          <Loader isLoading={isLoading} />
+          <div className="header_mobile">
+            <h2 className="task_feed_title" onClick={toggleCalendar}>
+              {formatDate(selectedDate)}
+            </h2>
             <Menu setTasks={setTasks} />
           </div>
-          <Footer />
+          {isCalendarVisible && (
+            <div className="calendarContainer">
+              <DatePicker
+                inline
+                selected={selectedDate}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  toggleCalendar(); // Close the calendar after a date is selected
+                }}
+              />
+            </div>
+          )}
+          <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          <PopupButton
+            selectedDate={selectedDate}
+            tasks={tasks}
+            setTasks={setTasks}
+            pingNewTask={pingNewTask}
+          />
+          <div className="tab-component">
+            <div className="tab-buttons">
+              <button onClick={() => setActiveTab('tab1')} className={activeTab === 'tab1' ? 'active' : ''}>2 Dooz</button>
+              <button onClick={() => setActiveTab('tab2')} className={activeTab === 'tab2' ? 'active' : ''}>Finished tasks</button>
+            </div>
+            <div className="tab-content">
+              {activeTab === 'tab1' && <div className="content">
+                <TaskRetrieval checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+              </div>}
+              {activeTab === 'tab2' && <div className="content">
+                <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
+              </div>}
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        // Desktop View
+        <div className="desktopOnly">
+          <Sidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          <div className="feedContainer_Major">
+            <div className="feedContainer">
+              <div className="taskTools">
+                <Loader isLoading={isLoading} />
+                <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
+                <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
+                  <h2 className="task_feed_title">
+                    {formatDate(selectedDate)}
+                  </h2>
+                  <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} setTasks={setTasks} newTask={newTask} />
+                </div>
+                <div className="task_feed complete">
+                  <h2 className="task_feed_title">Completed tasks</h2>
+                  <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} />
+                </div>
+              </div>
+              <Menu setTasks={setTasks} />
+            </div>
+            <Footer />
+          </div>
+        </div>
+      )
+    ) : (
+      <div></div>
     )}
   </>
 );
