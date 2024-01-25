@@ -21,6 +21,7 @@ function Menu({ setTasks }) {
       });
 
       if (response.ok) {
+        localStorage.setItem('guest', 'true');
         // Redirect to login or home page
         navigate('/login');
       }

@@ -49,6 +49,7 @@ function Login({ setIsLoggedIn }) {
         const data = await response.json();
 
         if (data.redirectTo) {
+            localStorage.setItem('guest', 'false');
             console.log("Login successful");
             navigate(data.redirectTo);
 

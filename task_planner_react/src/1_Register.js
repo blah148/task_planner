@@ -53,6 +53,7 @@ function Register() {
 
             const data = await response.json();
             console.log("Registration successful", data);
+            localStorage.setItem('guest', 'false');
 
             // Explicitly check for the redirectTo value
             if (data.redirectTo) {

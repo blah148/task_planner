@@ -33,6 +33,7 @@ function Footer () {
 
             if (response.ok) {
                 alert("Logout successful");
+                localStorage.setItem('guest', 'true');
                 navigate('/login');
             }
         } catch (error) {
