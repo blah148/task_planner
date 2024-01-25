@@ -17,6 +17,7 @@ import axios from 'axios';
 
 import TaskFormGuest from './1_Tasks-Guest';
 import TaskRetrievalGuest from './1_Task-Retrieval-Guest';
+import PopupButtonGuest from './PopupButtonGuest';
 
 function HomePage() {
 
@@ -214,7 +215,7 @@ function HomePage() {
             </div>
           )}
           <DaysCarousel selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-          <PopupButton
+          <PopupButtonGuest
             selectedDate={selectedDate}
             tasks={tasks}
             setTasks={setTasks}
@@ -227,10 +228,10 @@ function HomePage() {
             </div>
             <div className="tab-content">
               {activeTab === 'tab1' && <div className="content">
-                <TaskRetrieval checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
+                <TaskRetrievalGuest checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} setTasks={setTasks} newTask={newTask} />
               </div>}
               {activeTab === 'tab2' && <div className="content">
-                <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
+                <TaskRetrievalGuest setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} />
               </div>}
             </div>
           </div>
