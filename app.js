@@ -219,14 +219,12 @@ app.post('/login', async (req, res) => {
 const verifyJWT = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    // Create a new Error object and pass it to next()
-    return next(new Error('No token provided'));
+    return res.status(401);
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
     if (err) {
-      // Pass the error to next()
-      return next(new Error('Invalid token'));
+      return res.status(401);
     }
     // Attach decodedToken to the request so that it can be used in the route handler
     req.user = decodedToken;
