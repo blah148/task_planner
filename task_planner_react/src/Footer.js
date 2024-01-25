@@ -32,6 +32,7 @@ function Footer () {
             });
 
             if (response.ok) {
+                alert("Logout successful");
                 navigate('/login');
             }
         } catch (error) {

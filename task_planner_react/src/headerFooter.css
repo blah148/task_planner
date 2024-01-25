@@ -70,6 +70,9 @@ h2.footer_header {
   font-size: 18px;
   font-weight: 600;
 }
+div.footer_link-item {
+  cursor: pointer;
+}
 div.footer_link-item, a.footer_link-item {
   font-size: 14.5px;
   line-height: 32px;
