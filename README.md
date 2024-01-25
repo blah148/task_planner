@@ -29,4 +29,4 @@ For the React code, the main entry-point begins with the App.js "super-parent" f
 Libraries: react-router-dom, react-date-picker, axios
 
 ## Contact & support
-If one has any questions about the application, please feel welcome to send a message or post in the "issues" panel in case there's a bug. In the "MIT"-fashion, the code is freely distributable; while attribution is much appreciated, it's not strictly needed. Thank you for visiting this repository.
+For any questions, please feel welcome to send a message or post in the "issues" panel in case there are bugs. In the "MIT"-fashion, the code is freely distributable; while attribution is much appreciated, it's not strictly needed! Thank you for visiting this repository.
