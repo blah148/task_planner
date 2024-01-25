@@ -15,6 +15,9 @@ import PopupButton from "./PopupButton";
 import TabComponent from "./1_HomeMobileTabs";
 import axios from 'axios';
 
+import TaskFormGuest from './1_Tasks-Guest';
+import TaskRetrievalGuest from './1_Task-Retrieval-Guest';
+
 function HomePage() {
 
   const [tasks, setTasks] = useState([]);
@@ -188,6 +191,7 @@ function HomePage() {
       )
     ) : (
       window.innerWidth < 768 ? (
+      //FOR GUESTS
         // Mobile View
         <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>
           <Loader isLoading={isLoading} />
@@ -239,16 +243,16 @@ function HomePage() {
             <div className="feedContainer">
               <div className="taskTools">
                 <Loader isLoading={isLoading} />
-                <TaskForm selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
+                <TaskFormGuest selectedDate={selectedDate} tasks={tasks} setTasks={setTasks} pingNewTask={pingNewTask} />
                 <div className="task_feed incomplete" style={{ marginTop: "18px" }}>
                   <h2 className="task_feed_title">
                     {formatDate(selectedDate)}
                   </h2>
-                  <TaskRetrieval timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} setTasks={setTasks} newTask={newTask} />
+                  <TaskRetrievalGuest timestampComparison={'start_time'} setIsLoading={setIsLoading} selectedDate={selectedDate} taskStatus={false} tasks={tasks} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} setTasks={setTasks} newTask={newTask} />
                 </div>
                 <div className="task_feed complete">
                   <h2 className="task_feed_title">Completed tasks</h2>
-                  <TaskRetrieval setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} />
+                  <TaskRetrievalGuest setIsLoading={setIsLoadingDone} timestampComparison={'completion_date'} taskStatus={true} tasks={doneTasks} setTasks={setDoneTasks} selectedDate={selectedDate} checkboxUpdate={checkboxUpdate} setCheckboxUpdate={setCheckboxUpdate} />
                 </div>
               </div>
               <Menu setTasks={setTasks} />
