@@ -11,6 +11,32 @@ function Register() {
     const [timezone, setTimezone] = useState(''); // New state for timezone
     const navigate = useNavigate();
 
+    // Function to save tasks to the database
+    const saveTasksToDatabase = async (tasks) => {
+        for (const task of tasks) {
+            try {
+                const response = await fetch('/tasks/new', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...task, 
+                        // Ensure proper formatting or encryption as required
+                    }),
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save task');
+                }
+            } catch (error) {
+                console.error('Error saving tasks:', error);
+                throw error; // Rethrow to stop the execution
+            }
+        }
+        console.log('All tasks saved successfully');
+        localStorage.removeItem('tasks'); // Clear tasks from localStorage after saving
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -30,6 +56,10 @@ function Register() {
 
             // Explicitly check for the redirectTo value
             if (data.redirectTo) {
+                const localTasks = JSON.parse(localStorage.getItem('tasks'));
+                if (localTasks && localTasks.length > 0) {
+                    await saveTasksToDatabase(localTasks);
+                }
                 navigate(data.redirectTo);
             }
         } catch (error) {
