@@ -19,7 +19,7 @@ import TaskFormGuest from './1_Tasks-Guest';
 import TaskRetrievalGuest from './1_Task-Retrieval-Guest';
 import PopupButtonGuest from './PopupButtonGuest';
 
-function HomePage() {
+function HomePage({ isLoggedIn, setIsLoggedIn }) {
 
   const [tasks, setTasks] = useState([]);
   const [doneTasks, setDoneTasks] = useState([]);
@@ -29,18 +29,22 @@ function HomePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('tab1');
   const [checkboxUpdate, setCheckboxUpdate] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
   const verifyUser = async () => {
     try {
       const response = await axios.get('/verification', { withCredentials: true });
       if (response.status === 200) {
+        setIsLoggedIn(true);
         // Fetch tasks for logged-in users
       } else {
         // Load tasks from localStorage for non-logged-in users
+        setIsLoggedIn(false);
         localStorage.setItem('guest', 'true'); // Setting guest as true in localStorage
       }
     } catch (error) {
+      setIsLoggedIn(false);
       localStorage.setItem('guest', 'true'); // Setting guest as true in localStorage
     }
   };
@@ -119,7 +123,7 @@ function HomePage() {
   }, []);
   return (
   <>
-    {localStorage.getItem('guest') === 'false' ? (
+    {isLoggedIn === true ? (
       window.innerWidth < 768 ? (
         // Mobile View
         <div className={`mobileOnly ${isCalendarVisible ? 'showingCalendar' : ''}`}>

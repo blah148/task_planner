@@ -2,27 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './headerFooter.css';
 
-function Footer () {
+function Footer ({ isLoggedIn, setIsLoggedIn }) {
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const checkAuthentication = async () => {
-            try {
-                const response = await fetch('/verification', {
-                    method: 'GET',
-                    credentials: 'include',
-                });
-
-                setIsAuthenticated(response.ok);
-            } catch (error) {
-                console.error('Authentication check failed:', error);
-            }
-        };
-
-        checkAuthentication();
-    }, []);
 
     const handleLogout = async () => {
         try {
@@ -34,6 +16,7 @@ function Footer () {
             if (response.ok) {
                 alert("Logout successful");
                 localStorage.setItem('guest', 'true');
+                setIsLoggedIn(false);
                 navigate('/login');
             }
         } catch (error) {
@@ -47,13 +30,13 @@ function Footer () {
       <div className="footer_higher-row">
         <div className="footer_column">
             <h2 className="footer_header">Usage</h2>
-            {!isAuthenticated && (
+            {!isLoggedIn && (
                 <>
                     <a href="/register" className="footer_link-item">Create account</a>
                     <a href="/login" className="footer_link-item">Login</a>
                 </>
             )}
-            {isAuthenticated && (
+            {isLoggedIn && (
                 <>
                     <a href="/account" className="footer_link-item">My account</a>
                     <div onClick={handleLogout} className="footer_link-item">Logout</div>

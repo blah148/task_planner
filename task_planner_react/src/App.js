@@ -10,16 +10,18 @@ import MyAccount from './1_My-account';
 
 function App() {
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/account" element={<MyAccount />} />
+          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/account" element={<MyAccount isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
         </Routes>
       </Router>
     </>
